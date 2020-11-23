@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innovate.modules.profess.dao.InnovateProfessAchieveDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.innovate.modules.profess.entity.InnovateProfessAchieveEntity" id="innovateProfessAchieveMap">
+        <result property="professAchieveId" column="profess_achieve_id"/>
+        <result property="professUserId" column="profess_user_id"/>
+        <result property="instituteId" column="institute_id"/>
+        <result property="awardAchieName" column="award_achie_name"/>
+        <result property="professAchieDirector" column="profess_achie_director"/>
+        <result property="teamMenber" column="team_menber"/>
+        <result property="awardTime" column="award_time"/>
+        <result property="professAchieveType" column="profess_achieve_type"/>
+        <result property="professAchieveTypeId" column="profess_achieve_type_id"/>
+        <result property="isDel" column="is_del"/>
+    </resultMap>
+
+
+</mapper>

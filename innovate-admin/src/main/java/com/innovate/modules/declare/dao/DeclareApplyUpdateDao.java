@@ -1,8 +1,8 @@
 package com.innovate.modules.declare.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.innovate.modules.declare.entity.DeclareApplyUpdateEntity;
 import org.apache.ibatis.annotations.Mapper;
+import com.innovate.modules.declare.entity.DeclareApplyUpdateEntity;
 
 import java.util.List;
 import java.util.Map;

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innovate.modules.enterprise.dao.InnovateEnterpriseInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity" id="innovateEnterpriseInfoMap">
+        <result property="settledEnterpId" column="settled_enterp_id"/>
+        <result property="enterpriseName" column="enterprise_name"/>
+        <result property="enterpriseUserId" column="enterprise_user_id"/>
+        <result property="enterpriseDirector" column="enterprise_director"/>
+        <result property="departmentDirector" column="department_director"/>
+        <result property="settledTime" column="settled_time"/>
+        <result property="enterpriseType" column="enterprise_type"/>
+        <result property="business Scope" column="business _scope"/>
+        <result property="applyStatus" column="apply_status"/>
+        <result property="isDel" column="is_del"/>
+    </resultMap>
+
+
+</mapper>
