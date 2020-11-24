@@ -131,7 +131,6 @@
                 'enterpriseType': this.dataForm.enterpriseType,
                 'businessScope': this.dataForm.businessScope,
                 'applyStatus': this.dataForm.applyStatus,
-                'isDel': this.dataForm.isDel
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

@@ -23,46 +23,47 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="integralId"
+        prop=""
+        type="index"
         header-align="center"
         align="center"
-        label="自增主键">
+        label="ID">
       </el-table-column>
       <el-table-column
         prop="participateType"
         header-align="center"
         align="center"
-        label="参加类型">
+        label="申报类型">
       </el-table-column>
       <el-table-column
         prop="raceGrade"
         header-align="center"
         align="center"
-        label="比赛级别（等级、项目）">
+        label="比赛级别、等级或项目">
       </el-table-column>
       <el-table-column
         prop="prizeGrade"
         header-align="center"
         align="center"
         label="奖项等级">
+        <template slot-scope="scope">
+          {{scope.row.prizeGrade? scope.row.prizeGrade:'无'}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="persionType"
         header-align="center"
         align="center"
-        label="参与人类别（1：负责人，2参与成员）">
+        label="参与人类别">
+        <template slot-scope="scope">
+          {{scope.row.persionType == 1 ? '负责人':'参与成员'}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="integral"
         header-align="center"
         align="center"
         label="积分">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -123,7 +124,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'key': this.dataForm.key,
+            'isDel': 0
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

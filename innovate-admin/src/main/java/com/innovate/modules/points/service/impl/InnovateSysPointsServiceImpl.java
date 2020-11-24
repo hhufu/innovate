@@ -1,5 +1,7 @@
 package com.innovate.modules.points.service.impl;
 
+import com.innovate.modules.innovate.entity.UserPersonInfoEntity;
+import com.innovate.modules.points.entity.InnovateStudentPointsEntity;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -18,6 +20,10 @@ public class InnovateSysPointsServiceImpl extends ServiceImpl<InnovateSysPointsD
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        EntityWrapper<InnovateSysPointsEntity> entityWrapper = new EntityWrapper<>();
+
+        if (params.get("isDel")!=null)entityWrapper.eq("is_del",params.get("isDel").toString());
+
         Page<InnovateSysPointsEntity> page = this.selectPage(
                 new Query<InnovateSysPointsEntity>(params).getPage(),
                 new EntityWrapper<>()
