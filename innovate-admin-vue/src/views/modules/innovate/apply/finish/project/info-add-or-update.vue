@@ -291,7 +291,7 @@
             params: this.$http.adornParams({
               // 'userId': this.$store.state.user.id,
               // 'userId': 464,
-              'status': 0
+              'status': 5
             })
           }).then(({data}) => {
             if (data && data.code === 0) {

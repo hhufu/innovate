@@ -1,10 +1,13 @@
 package com.innovate.modules.points.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.innovate.modules.sys.entity.SysUserEntity;
 import lombok.Data;
 
 /**
@@ -25,6 +28,10 @@ public class InnovateStudentPointsApplyEntity implements Serializable {
 	@TableId
 	private Long integralApplyId;
 	/**
+	 * 申请人
+	 */
+	private Long applyUserId;
+	/**
 	 * 申请时间
 	 */
 	private Date applyTime;
@@ -33,11 +40,15 @@ public class InnovateStudentPointsApplyEntity implements Serializable {
 	 */
 	private Integer isDel;
 	/**
-	 * 积分标准表id
+	 * 是否删除
 	 */
-	private Long integralId;
+	private Integer applyStatus;
 	/**
-	 * 参加类型
+	 * 申请积分
+	 */
+	private Long applyIntegral;
+	/**
+	 * 参与人类别（1：负责人，2参与成员）
 	 */
 	private Integer persionType;
 	/**
@@ -49,8 +60,11 @@ public class InnovateStudentPointsApplyEntity implements Serializable {
 	 */
 	private String raceGrade;
 	/**
-	 * 参与人类别（1：负责人，2参与成员）
+	 * 申请类型
 	 */
 	private String participateType;
+	// 用户信息
+	@TableField(exist = false)
+	private SysUserEntity userEntity;
 
 }

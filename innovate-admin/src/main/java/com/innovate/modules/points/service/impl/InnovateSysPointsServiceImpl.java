@@ -22,11 +22,16 @@ public class InnovateSysPointsServiceImpl extends ServiceImpl<InnovateSysPointsD
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateSysPointsEntity> entityWrapper = new EntityWrapper<>();
 
-        if (params.get("isDel")!=null)entityWrapper.eq("is_del",params.get("isDel").toString());
+        if (params.get("isDel")!=null)entityWrapper.eq("is_del", params.get("isDel"));
+        if (params.get("parentId")!=null)entityWrapper.eq("parent_id", params.get("parentId"));
+        if (params.get("key")!=null)entityWrapper.eq(params.get("key").toString(), params.get("keyValue"));
+        if (params.get("prizeGradeIsNull")!=null)entityWrapper.isNotNull("prize_grade");
+        if (params.get("groupBy")!=null)entityWrapper.groupBy(params.get("groupBy").toString());
+//        entityWrapper.orderBy(true, "integral_id", false);
 
         Page<InnovateSysPointsEntity> page = this.selectPage(
                 new Query<InnovateSysPointsEntity>(params).getPage(),
-                new EntityWrapper<>()
+                entityWrapper
         );
 
         return new PageUtils(page);

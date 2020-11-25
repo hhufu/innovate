@@ -33,9 +33,17 @@ public class InnovateSysPointsEntity implements Serializable {
 	 */
 	private String raceGrade;
 	/**
+	 * 父级id（等级、项目）
+	 */
+	private Integer parentId;
+	/**
 	 * 奖项等级
 	 */
 	private String prizeGrade;
+	/**
+	 * 附件要求
+	 */
+	private String fileAskContent;
 	/**
 	 * 参与人类别（1：负责人，2参与成员）
 	 */
@@ -44,6 +52,10 @@ public class InnovateSysPointsEntity implements Serializable {
 	 * 积分
 	 */
 	private Integer integral;
+	/**
+	 * 团队成员比负责人低**积分
+	 */
+	private Integer integralTo;
 	/**
 	 * 是否删除
 	 */

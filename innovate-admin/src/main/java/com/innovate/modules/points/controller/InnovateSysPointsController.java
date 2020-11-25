@@ -38,7 +38,6 @@ public class InnovateSysPointsController {
     @RequiresPermissions("points:innovatesyspoints:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = innovateSysPointsService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
@@ -71,7 +70,7 @@ public class InnovateSysPointsController {
     @RequestMapping("/update")
     @RequiresPermissions("points:innovatesyspoints:update")
     public R update(@RequestBody InnovateSysPointsEntity innovateSysPoints){
-		innovateSysPointsService.updateById(innovateSysPoints);
+		innovateSysPointsService.updateAllColumnById(innovateSysPoints);
 
         return R.ok();
     }
@@ -82,7 +81,13 @@ public class InnovateSysPointsController {
     @RequestMapping("/delete")
     @RequiresPermissions("points:innovatesyspoints:delete")
     public R delete(@RequestBody Long[] integralIds){
-		innovateSysPointsService.deleteBatchIds(Arrays.asList(integralIds));
+        for (Long l: integralIds) {
+            InnovateSysPointsEntity innovateSysPoints = new InnovateSysPointsEntity();
+            innovateSysPoints.setIntegralId(l);
+            innovateSysPoints.setIsDel(1);
+            innovateSysPointsService.updateById(innovateSysPoints);
+        }
+//		innovateSysPointsService.deleteBatchIds(Arrays.asList(integralIds));
 
         return R.ok();
     }

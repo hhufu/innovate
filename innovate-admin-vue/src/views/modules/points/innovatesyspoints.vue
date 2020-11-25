@@ -13,8 +13,6 @@
     <el-table
       :data="dataList"
       border
-      v-loading="dataListLoading"
-      @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
         type="selection"
@@ -29,17 +27,18 @@
         align="center"
         label="ID">
       </el-table-column>
-      <el-table-column
+      <table-tree-column
         prop="participateType"
         header-align="center"
-        align="center"
+        treeKey="integralId"
+        width="320"
         label="申报类型">
-      </el-table-column>
+      </table-tree-column>
       <el-table-column
         prop="raceGrade"
         header-align="center"
         align="center"
-        label="比赛级别、等级或项目">
+        label="项目名称">
       </el-table-column>
       <el-table-column
         prop="prizeGrade"
@@ -47,16 +46,17 @@
         align="center"
         label="奖项等级">
         <template slot-scope="scope">
-          {{scope.row.prizeGrade? scope.row.prizeGrade:'无'}}
+          {{scope.row.prizeGrade? scope.row.prizeGrade:'-'}}
         </template>
       </el-table-column>
       <el-table-column
         prop="persionType"
         header-align="center"
         align="center"
-        label="参与人类别">
+        label="参与人类别"
+      >
         <template slot-scope="scope">
-          {{scope.row.persionType == 1 ? '负责人':'参与成员'}}
+          {{scope.row.persionType? (scope.row.persionType == 1 ?'负责人':'参与成员'): '-'}}
         </template>
       </el-table-column>
       <el-table-column
@@ -64,6 +64,9 @@
         header-align="center"
         align="center"
         label="积分">
+        <template slot-scope="scope">
+          {{scope.row.integral?scope.row.integral +   '积分':''}}
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -77,15 +80,15 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      @size-change="sizeChangeHandle"
-      @current-change="currentChangeHandle"
-      :current-page="pageIndex"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="pageSize"
-      :total="totalPage"
-      layout="total, sizes, prev, pager, next, jumper">
-    </el-pagination>
+<!--    <el-pagination-->
+<!--      @size-change="sizeChangeHandle"-->
+<!--      @current-change="currentChangeHandle"-->
+<!--      :current-page="pageIndex"-->
+<!--      :page-sizes="[10, 20, 50, 100]"-->
+<!--      :page-size="pageSize"-->
+<!--      :total="totalPage"-->
+<!--      layout="total, sizes, prev, pager, next, jumper">-->
+<!--    </el-pagination>-->
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
@@ -93,6 +96,9 @@
 
 <script>
   import AddOrUpdate from './innovatesyspoints-add-or-update'
+  import { treeDataTranslate } from '@/utils'
+  import TableTreeColumn from '@/components/table-tree-column'
+
   export default {
     data () {
       return {
@@ -101,7 +107,7 @@
         },
         dataList: [],
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 100,
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
@@ -109,7 +115,8 @@
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate,
+      TableTreeColumn
     },
     activated () {
       this.getDataList()
@@ -124,12 +131,12 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key,
             'isDel': 0
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            this.dataList = data.page.list
+            // this.dataList = data.page.list
+            this.dataList = treeDataTranslate(data.page.list, 'integralId')
             this.totalPage = data.page.totalCount
           } else {
             this.dataList = []

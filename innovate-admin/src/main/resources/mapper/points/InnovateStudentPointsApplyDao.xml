@@ -7,8 +7,11 @@
     <resultMap type="com.innovate.modules.points.entity.InnovateStudentPointsApplyEntity" id="innovateStudentPointsApplyMap">
         <result property="integralApplyId" column="integral_apply_id"/>
         <result property="applyTime" column="apply_time"/>
+        <result property="applyUserId" column="apply_user_id"/>
         <result property="isDel" column="is_del"/>
-        <result property="integralId" column="integral_id"/>
+        <result property="applyIntegral" column="apply_integral"/>
+        <result property="applyStatus" column="apply_status"/>
+        <result property="fileAskContent" column="file_ask_content"/>
         <result property="persionType" column="persion_type"/>
         <result property="prizeGrade" column="prize_grade"/>
         <result property="raceGrade" column="race_grade"/>

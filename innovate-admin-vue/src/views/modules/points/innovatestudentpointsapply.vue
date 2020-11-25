@@ -23,34 +23,60 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="integralApplyId"
+        type="index"
         header-align="center"
         align="center"
-        label="自增主键">
+        label="ID">
       </el-table-column>
       <el-table-column
-        prop="applyTime"
+        sortable
+        hidden
+        type="expand"
+        prop="applyStatus"
         header-align="center"
         align="center"
-        label="申请时间">
+        width="120"
+        label="展开流程进度">
+        <template slot-scope="props">
+          <el-row>
+            <el-card style=": 0.1rem">
+              <el-col :span="3">
+                <el-tag>积分申请进度</el-tag>
+              </el-col>
+              <el-col :span="21">
+                <el-steps
+                  :active="props.row.applyStatus"
+                  finish-status="success">
+                  <el-step title="待提交"></el-step>
+                  <el-step title="二级学院审批"></el-step>
+                  <el-step title="审批完成"></el-step>
+                </el-steps>
+              </el-col>
+            </el-card>
+          </el-row>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="isDel"
+        prop="participateType"
         header-align="center"
         align="center"
-        label="是否删除">
+        label="参与人类别">
       </el-table-column>
       <el-table-column
-        prop="integralId"
+        prop="raceGrade"
         header-align="center"
         align="center"
-        label="积分标准表id">
+        label="项目名称">
       </el-table-column>
       <el-table-column
         prop="persionType"
         header-align="center"
         align="center"
-        label="参加类型">
+        label="参与人类别"
+      >
+        <template slot-scope="scope">
+          {{scope.row.persionType? (scope.row.persionType == 1 ?'负责人':'参与成员'): '-'}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="prizeGrade"
@@ -59,16 +85,16 @@
         label="奖项等级">
       </el-table-column>
       <el-table-column
-        prop="raceGrade"
+        prop="applyIntegral"
         header-align="center"
         align="center"
-        label="比赛级别（等级、项目）">
+        label="申请积分">
       </el-table-column>
       <el-table-column
-        prop="participateType"
+        prop="applyTime"
         header-align="center"
         align="center"
-        label="参与人类别（1：负责人，2参与成员）">
+        label="申请时间">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -77,8 +103,12 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.integralApplyId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.integralApplyId)">删除</el-button>
+          <el-button type="text" size="small" v-if="isAuth('points:innovatestudentpointsapply:stuApply') && (scope.row.applyStatus === 0 || scope.row.applyStatus === -1)" @click="editApplyStatus(scope.row, 1)">提交申请</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.integralApplyId)">查看</el-button>
+          <el-button type="text" size="small" v-if="isAuth('points:innovatestudentpointsapply:adminApply') && scope.row.applyStatus > 0" @click="editApplyStatus(scope.row, 3)">通过</el-button>
+          <el-button type="text" size="small" v-if="isAuth('points:innovatestudentpointsapply:adminApply') && scope.row.applyStatus > 0" @click="editApplyStatus(scope.row, -1)">不通过</el-button>
+          <el-button type="text" size="small" v-if="scope.row.applyStatus === 0 || scope.row.applyStatus === -1" @click="addOrUpdateHandle(scope.row.integralApplyId)">修改</el-button>
+          <el-button type="text" size="small" v-if="$store.state.user.id === scope.row.applyUserId" @click="deleteHandle(scope.row.integralApplyId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -129,7 +159,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'key': this.dataForm.key,
+            'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -140,6 +171,31 @@
             this.totalPage = 0
           }
           this.dataListLoading = false
+        })
+      },
+      // 提交申请
+      editApplyStatus (row, status) {
+        this.$http({
+          url: this.$http.adornUrl('/points/innovatestudentpointsapply/update'),
+          method: 'post',
+          data: this.$http.adornData({
+            'integralApplyId': row.integralApplyId || undefined,
+            'applyStatus': status
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 1500,
+              onClose: () => {
+                this.visible = false
+                this.getDataList()
+              }
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
         })
       },
       // 每页数

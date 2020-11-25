@@ -1,8 +1,11 @@
 package com.innovate.modules.points.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import com.innovate.modules.sys.entity.SysUserEntity;
+import com.innovate.modules.sys.service.SysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +33,8 @@ import com.innovate.common.utils.R;
 public class InnovateStudentPointsApplyController {
     @Autowired
     private InnovateStudentPointsApplyService innovateStudentPointsApplyService;
-
+    @Autowired
+    private SysUserService sysUserService;
     /**
      * 列表
      */
@@ -50,7 +54,8 @@ public class InnovateStudentPointsApplyController {
     @RequiresPermissions("points:innovatestudentpointsapply:info")
     public R info(@PathVariable("integralApplyId") Long integralApplyId){
 		InnovateStudentPointsApplyEntity innovateStudentPointsApply = innovateStudentPointsApplyService.selectById(integralApplyId);
-
+		// 获取申请用户信息
+        innovateStudentPointsApply.setUserEntity(sysUserService.selectById(innovateStudentPointsApply.getApplyUserId()));
         return R.ok().put("innovateStudentPointsApply", innovateStudentPointsApply);
     }
 
@@ -60,6 +65,7 @@ public class InnovateStudentPointsApplyController {
     @RequestMapping("/save")
     @RequiresPermissions("points:innovatestudentpointsapply:save")
     public R save(@RequestBody InnovateStudentPointsApplyEntity innovateStudentPointsApply){
+        innovateStudentPointsApply.setApplyTime(new Date());
 		innovateStudentPointsApplyService.insert(innovateStudentPointsApply);
 
         return R.ok();

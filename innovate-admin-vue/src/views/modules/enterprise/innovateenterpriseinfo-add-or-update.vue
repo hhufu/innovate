@@ -130,7 +130,7 @@
                 'settledTime': this.dataForm.settledTime,
                 'enterpriseType': this.dataForm.enterpriseType,
                 'businessScope': this.dataForm.businessScope,
-                'applyStatus': this.dataForm.applyStatus,
+                'applyStatus': this.dataForm.applyStatus
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
