@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innovate.modules.cooperation.dao.InnovateCooperationProjectsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.innovate.modules.cooperation.entity.InnovateCooperationProjectsEntity" id="innovateCooperationProjectsMap">
+        <result property="cooperationId" column="cooperation_id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="secondaryCollege" column="secondary_college"/>
+        <result property="enterpriseName" column="enterprise_name"/>
+        <result property="cooperationYear" column="cooperation_year"/>
+        <result property="userId" column="user_id"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+    </resultMap>
+
+
+</mapper>
