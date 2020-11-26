@@ -7,7 +7,7 @@
     <resultMap type="com.innovate.modules.cooperation.entity.InnovateCooperationProjectsEntity" id="innovateCooperationProjectsMap">
         <result property="cooperationId" column="cooperation_id"/>
         <result property="projectName" column="project_name"/>
-        <result property="secondaryCollege" column="secondary_college"/>
+        <result property="instituteId" column="institute_id"/>
         <result property="enterpriseName" column="enterprise_name"/>
         <result property="cooperationYear" column="cooperation_year"/>
         <result property="userId" column="user_id"/>

@@ -7,8 +7,8 @@
     <el-form-item label="项目名称" prop="projectName">
       <el-input v-model="dataForm.projectName" placeholder="项目名称"></el-input>
     </el-form-item>
-    <el-form-item label="二级学院" prop="secondaryCollege">
-      <el-input v-model="dataForm.secondaryCollege" placeholder="二级学院"></el-input>
+    <el-form-item label="二级学院  学院表主键" prop="instituteId">
+      <el-input v-model="dataForm.instituteId" placeholder="二级学院  学院表主键"></el-input>
     </el-form-item>
     <el-form-item label="企业名称" prop="enterpriseName">
       <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>
@@ -41,7 +41,7 @@
         dataForm: {
           cooperationId: 0,
           projectName: '',
-          secondaryCollege: '',
+          instituteId: '',
           enterpriseName: '',
           cooperationYear: '',
           userId: '',
@@ -52,8 +52,8 @@
           projectName: [
             { required: true, message: '项目名称不能为空', trigger: 'blur' }
           ],
-          secondaryCollege: [
-            { required: true, message: '二级学院不能为空', trigger: 'blur' }
+          instituteId: [
+            { required: true, message: '二级学院  学院表主键不能为空', trigger: 'blur' }
           ],
           enterpriseName: [
             { required: true, message: '企业名称不能为空', trigger: 'blur' }
@@ -87,7 +87,7 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.projectName = data.innovatecooperationprojects.projectName
-                this.dataForm.secondaryCollege = data.innovatecooperationprojects.secondaryCollege
+                this.dataForm.instituteId = data.innovatecooperationprojects.instituteId
                 this.dataForm.enterpriseName = data.innovatecooperationprojects.enterpriseName
                 this.dataForm.cooperationYear = data.innovatecooperationprojects.cooperationYear
                 this.dataForm.userId = data.innovatecooperationprojects.userId
@@ -108,7 +108,7 @@
               data: this.$http.adornData({
                 'cooperationId': this.dataForm.cooperationId || undefined,
                 'projectName': this.dataForm.projectName,
-                'secondaryCollege': this.dataForm.secondaryCollege,
+                'instituteId': this.dataForm.instituteId,
                 'enterpriseName': this.dataForm.enterpriseName,
                 'cooperationYear': this.dataForm.cooperationYear,
                 'userId': this.dataForm.userId,

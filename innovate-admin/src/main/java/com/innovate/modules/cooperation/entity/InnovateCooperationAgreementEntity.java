@@ -12,7 +12,7 @@ import lombok.Data;
  *
  * @author HHUFU
  * @email biaogejiushibiao@outlook.com
- * @date 2020-11-25 21:54:33
+ * @date 2020-11-26 11:24:20
  */
 @Data
 @TableName("innovate_cooperation_agreement")
@@ -29,15 +29,15 @@ public class InnovateCooperationAgreementEntity implements Serializable {
 	 */
 	private String enterpriseName;
 	/**
-	 * 二级学院
+	 * 二级学院 innovate_sys_institute主键
 	 */
-	private String secondaryCollege;
+	private Long instituteId;
 	/**
 	 * 年度
 	 */
 	private String agreementYear;
 	/**
-	 * 
+	 * 协议时间
 	 */
 	private Date agreementTime;
 	/**
@@ -48,5 +48,9 @@ public class InnovateCooperationAgreementEntity implements Serializable {
 	 * 企业记录
 	 */
 	private String enterpriseRecords;
+	/**
+	 * 创建者
+	 */
+	private Long userId;
 
 }

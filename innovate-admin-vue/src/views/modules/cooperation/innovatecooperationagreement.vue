@@ -35,10 +35,10 @@
         label="企业名称">
       </el-table-column>
       <el-table-column
-        prop="secondaryCollege"
+        prop="instituteId"
         header-align="center"
         align="center"
-        label="二级学院">
+        label="二级学院 innovate_sys_institute主键">
       </el-table-column>
       <el-table-column
         prop="agreementYear"
@@ -50,7 +50,7 @@
         prop="agreementTime"
         header-align="center"
         align="center"
-        label="">
+        label="协议时间">
       </el-table-column>
       <el-table-column
         prop="agreementMaterials"
@@ -63,6 +63,12 @@
         header-align="center"
         align="center"
         label="企业记录">
+      </el-table-column>
+      <el-table-column
+        prop="userId"
+        header-align="center"
+        align="center"
+        label="创建者">
       </el-table-column>
       <el-table-column
         fixed="right"

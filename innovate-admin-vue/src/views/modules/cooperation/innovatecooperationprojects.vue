@@ -35,10 +35,10 @@
         label="项目名称">
       </el-table-column>
       <el-table-column
-        prop="secondaryCollege"
+        prop="instituteId"
         header-align="center"
         align="center"
-        label="二级学院">
+        label="二级学院  学院表主键">
       </el-table-column>
       <el-table-column
         prop="enterpriseName"

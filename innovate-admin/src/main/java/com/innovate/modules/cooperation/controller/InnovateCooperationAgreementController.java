@@ -23,7 +23,7 @@ import com.innovate.common.utils.R;
  *
  * @author HHUFU
  * @email biaogejiushibiao@outlook.com
- * @date 2020-11-25 21:54:33
+ * @date 2020-11-26 11:24:20
  */
 @RestController
 @RequestMapping("cooperation/innovatecooperationagreement")

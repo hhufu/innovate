@@ -7,11 +7,12 @@
     <resultMap type="com.innovate.modules.cooperation.entity.InnovateCooperationAgreementEntity" id="innovateCooperationAgreementMap">
         <result property="enterpriseId" column="enterprise_id"/>
         <result property="enterpriseName" column="enterprise_name"/>
-        <result property="secondaryCollege" column="secondary_college"/>
+        <result property="instituteId" column="institute_id"/>
         <result property="agreementYear" column="agreement_year"/>
         <result property="agreementTime" column="agreement_time"/>
         <result property="agreementMaterials" column="agreement_materials"/>
         <result property="enterpriseRecords" column="enterprise_records"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
 
