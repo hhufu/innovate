@@ -4,14 +4,25 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="实习实训基地名称" prop="trainingBaseName">
+    <el-form-item label="实习实训基地名称" label-width="140px" prop="trainingBaseName">
       <el-input v-model="dataForm.trainingBaseName" placeholder="实习实训基地名称"></el-input>
     </el-form-item>
-    <el-form-item label="所属二级学院" prop="instituteId">
-      <el-input v-model="dataForm.instituteId" placeholder="所属二级学院"></el-input>
+    <el-form-item label="所属二级学院" label-width="110px" prop="instituteId">
+      <el-select v-model="dataForm.instituteId" placeholder="请选择二级学院">
+        <el-option
+          v-for="item in institus"
+          :key="item.instituteId"
+          :label="item.instituteName"
+          :value="item.instituteId">
+        </el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="建立时间" prop="baseCreateTime">
-      <el-input v-model="dataForm.baseCreateTime" placeholder="建立时间"></el-input>
+      <el-date-picker
+        v-model="dataForm.baseCreateTime"
+        type="date"
+        placeholder="建立时间">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="是否删除" prop="isDel">
       <el-input v-model="dataForm.isDel" placeholder="是否删除"></el-input>
@@ -49,7 +60,8 @@
           isDel: [
             { required: true, message: '是否删除不能为空', trigger: 'blur' }
           ]
-        }
+        },
+        institus:[]
       }
     },
     methods: {
@@ -70,6 +82,13 @@
                 this.dataForm.baseCreateTime = data.innovatetrainingbaseinfo.baseCreateTime
                 this.dataForm.isDel = data.innovatetrainingbaseinfo.isDel
               }
+            })
+          } else {
+            this.$http({
+              url: this.$http.adornUrl('/innovate/sys/institute/all'),
+              method: 'get' ,
+            }).then(({data}) => {
+              this.institus = data.institute
             })
           }
         })

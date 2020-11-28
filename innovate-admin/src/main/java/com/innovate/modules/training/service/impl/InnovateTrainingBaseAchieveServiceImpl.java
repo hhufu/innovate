@@ -1,6 +1,9 @@
 package com.innovate.modules.training.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -24,6 +27,13 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<InnovateTrainingBaseAchieveEntity> queryListByIds(Long[] trainAchiveIds) {
+        return trainAchiveIds.length > 0
+                ? this.selectBatchIds(Arrays.asList(trainAchiveIds))
+                : this.selectList(null);
     }
 
 }

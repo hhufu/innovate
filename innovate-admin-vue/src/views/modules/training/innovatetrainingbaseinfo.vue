@@ -8,6 +8,7 @@
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('training:innovatetrainingbaseinfo:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('training:innovatetrainingbaseinfo:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('training:innovatetrainingbaseinfo:save')" type="primary" @click="exportLists()">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -22,12 +23,12 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
-        prop="trainingBaseId"
-        header-align="center"
-        align="center"
-        label="自增主键">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="trainingBaseId"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="自增主键">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="trainingBaseName"
         header-align="center"
@@ -174,6 +175,35 @@
               this.$message.error(data.msg)
             }
           })
+        })
+      },
+      // 导出
+      exportLists () {
+        this.dataListLoading = true
+        var trainBaseIds = this.dataListSelections.map(item => {
+          return item.trainingBaseId
+        })
+        this.$http({
+          url: this.$http.adornUrl('/training/innovatetrainingbaseinfo/export'),
+          method: 'post',
+          data: this.$http.adornData(trainBaseIds, false),
+          responseType: 'blob'
+        }).then((res) => {
+          this.dataListLoading = false
+          const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+          let filename = 'download.xls'
+          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+          const elink = document.createElement('a')
+          elink.download = filename
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }).catch(() => {
+          this.dataListLoading = false
+          this.$message.error('导出失败!')
         })
       }
     }

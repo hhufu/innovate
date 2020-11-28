@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.service.IService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.modules.training.entity.InnovateTrainingBaseInfoEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface InnovateTrainingBaseInfoService extends IService<InnovateTrainingBaseInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<InnovateTrainingBaseInfoEntity> queryListByDeptAndIds(Long[] trainBaseIds);
 }
 

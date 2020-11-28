@@ -11,7 +11,14 @@
       <el-input v-model="dataForm.materialYear" placeholder="材料年度"></el-input>
     </el-form-item>
     <el-form-item label="材料类型" prop="materialType">
-      <el-input v-model="dataForm.materialType" placeholder="材料类型"></el-input>
+      <el-select v-model="dataForm.materialType" placeholder="材料类型">
+        <el-option
+          v-for="item in trainingTypes"
+          :key="item.materialTypeId"
+          :label="item.trainingAchieveType"
+          :value="item.trainingAchieveType">
+        </el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="材料类型id" prop="materialTypeId">
       <el-input v-model="dataForm.materialTypeId" placeholder="材料类型id"></el-input>
@@ -63,32 +70,43 @@
           isDel: [
             { required: true, message: '是否删除不能为空', trigger: 'blur' }
           ]
-        }
+        },
+        trainingTypes:[],
       }
     },
     methods: {
-      init (id) {
+      init (index,id) {
         this.dataForm.trainingAchieveId = id || 0
         this.visible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].resetFields()
-          if (this.dataForm.trainingAchieveId) {
-            this.$http({
-              url: this.$http.adornUrl(`/training/innovatetrainingbaseachieve/info/${this.dataForm.trainingAchieveId}`),
-              method: 'get',
-              params: this.$http.adornParams()
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.trainingBaseName = data.innovatetrainingbaseachieve.trainingBaseName
-                this.dataForm.materialYear = data.innovatetrainingbaseachieve.materialYear
-                this.dataForm.materialType = data.innovatetrainingbaseachieve.materialType
-                this.dataForm.materialTypeId = data.innovatetrainingbaseachieve.materialTypeId
-                this.dataForm.trainingBaseId = data.innovatetrainingbaseachieve.trainingBaseId
-                this.dataForm.isDel = data.innovatetrainingbaseachieve.isDel
-              }
-            })
-          }
-        })
+        // eslint-disable-next-line eqeqeq
+          this.$nextTick(() => {
+            this.$refs['dataForm'].resetFields()
+            if (this.dataForm.trainingAchieveId) {
+              this.$http({
+                url: this.$http.adornUrl(`/training/innovatetrainingbaseachieve/info/${this.dataForm.trainingAchieveId}`),
+                method: 'get',
+                params: this.$http.adornParams()
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.dataForm.trainingBaseName = data.innovatetrainingbaseachieve.trainingBaseName
+                  this.dataForm.materialYear = data.innovatetrainingbaseachieve.materialYear
+                  this.dataForm.materialType = data.innovatetrainingbaseachieve.materialType
+                  this.dataForm.materialTypeId = data.innovatetrainingbaseachieve.materialTypeId
+                  this.dataForm.trainingBaseId = data.innovatetrainingbaseachieve.trainingBaseId
+                  this.dataForm.isDel = data.innovatetrainingbaseachieve.isDel
+                }
+              })
+            }else {
+              this.$http({
+                url: this.$http.adornUrl(`/training/innovatetrainingachievetype/list`),
+                method: 'get',
+              }).then(({data}) => {
+                  this.trainingTypes = data.page.list
+              })
+            }
+          })
+
+
       },
       // 表单提交
       dataFormSubmit () {

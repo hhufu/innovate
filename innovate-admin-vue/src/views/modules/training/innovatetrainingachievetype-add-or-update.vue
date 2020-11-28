@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="实训成果类型" prop="trainingAchieveType">
+    <el-form-item label="实训成果类型" prop="trainingAchieveType" label-width="160px" >
       <el-input v-model="dataForm.trainingAchieveType" placeholder="实训成果类型"></el-input>
     </el-form-item>
     </el-form>

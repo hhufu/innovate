@@ -40,23 +40,17 @@
         align="center"
         label="附件名称">
       </el-table-column>
-      <el-table-column
-        prop="attachPath"
-        header-align="center"
-        align="center"
-        label="附件路径">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="attachPath"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="附件路径">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="attachTime"
         header-align="center"
         align="center"
         label="上传时间">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
       </el-table-column>
       <el-table-column
         fixed="right"

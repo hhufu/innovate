@@ -6,8 +6,9 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('training:innovatetrainingbaseachieve:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('training:innovatetrainingbaseachieve:save')" type="primary" @click="addOrUpdateHandle(1)">新增</el-button>
         <el-button v-if="isAuth('training:innovatetrainingbaseachieve:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('training:innovatetrainingbaseachieve:save')" type="primary" @click="exportAchieve()">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -21,12 +22,6 @@
         header-align="center"
         align="center"
         width="50">
-      </el-table-column>
-      <el-table-column
-        prop="trainingAchieveId"
-        header-align="center"
-        align="center"
-        label="自增主键">
       </el-table-column>
       <el-table-column
         prop="trainingBaseName"
@@ -59,19 +54,13 @@
         label="实训基地id">
       </el-table-column>
       <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
-      </el-table-column>
-      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.trainingAchieveId)">修改</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(2, scope.row.trainingAchieveId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.trainingAchieveId)">删除</el-button>
         </template>
       </el-table-column>
@@ -151,11 +140,11 @@
       selectionChangeHandle (val) {
         this.dataListSelections = val
       },
-      // 新增 / 修改
-      addOrUpdateHandle (id) {
+      // 新增(index==1) / 修改(index==2)
+      addOrUpdateHandle (index ,id) {
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
-          this.$refs.addOrUpdate.init(id)
+          this.$refs.addOrUpdate.init(index ,id)
         })
       },
       // 删除
@@ -187,7 +176,42 @@
             }
           })
         })
-      }
+      },
+      exportAchieve(){
+        this.dataListLoading = true
+        var trainBaseIds = this.dataListSelections.map(item => {
+          return item.trainingBaseId
+        })
+        this.$http({
+          url: this.$http.adornUrl('/training/innovatetrainingbaseachieve/export'),
+          method: 'post',
+          data: this.$http.adornData(trainBaseIds, false),
+          responseType: 'blob'
+        }).then((res) => {
+          this.dataListLoading = false
+          const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+          let filename = 'download.xls'
+          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+          const elink = document.createElement('a')
+          elink.download = filename
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }).catch(() => {
+          this.dataListLoading = false
+          this.$message.error('导出失败!')
+        })
+      },
+
+
+
+
+
+
+
     }
   }
 </script>
