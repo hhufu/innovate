@@ -1,18 +1,14 @@
 package com.innovate.modules.enterprise.controller;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
-import com.innovate.modules.innovate.config.ConfigApi;
-import com.innovate.modules.innovate.entity.ProjectAttachEntity;
-import com.innovate.modules.util.FileUtils;
-import com.innovate.modules.util.RandomUtils;
+import com.innovate.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +18,6 @@ import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseInfoService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -49,6 +42,11 @@ public class InnovateEnterpriseInfoController {
     @RequestMapping("/list")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
     public R list(@RequestParam Map<String, Object> params){
+        SysUserEntity loginUser = ShiroUtils.getUserEntity();
+        if (!"SuperAdmin".equals(loginUser.getUsername())){
+            Long userId = loginUser.getUserId();
+            params.put("project_user_id",userId);
+        }
         PageUtils page = innovateEnterpriseInfoService.queryPage(params);
         return R.ok().put("page", page);
     }
@@ -60,8 +58,15 @@ public class InnovateEnterpriseInfoController {
     @RequestMapping("/nameList")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
     public R nameList(){
-        List<InnovateEnterpriseInfoEntity> list = innovateEnterpriseInfoService.selectList(new EntityWrapper<InnovateEnterpriseInfoEntity>()
-        .eq("apply_status",1));
+        SysUserEntity loginUser = ShiroUtils.getUserEntity();
+        //apply_status 1：审核通过的企业
+        Wrapper<InnovateEnterpriseInfoEntity> wrapper = new EntityWrapper<InnovateEnterpriseInfoEntity>()
+                .eq("apply_status", 1);
+        if (!"SuperAdmin".equals(loginUser.getUsername())){
+            Long userId = loginUser.getUserId();
+            wrapper.eq("enterprise_user_id",userId);
+        }
+        List<InnovateEnterpriseInfoEntity> list = innovateEnterpriseInfoService.selectList(wrapper);
         return R.ok().put("list", list);
     }
 
@@ -77,21 +82,10 @@ public class InnovateEnterpriseInfoController {
                         .eq("function_id",settledEnterpId)
         );
         InnovateEnterpriseInfoModel infoModel= new InnovateEnterpriseInfoModel();
-        infoModel.setInnovateEnterpriseInfoEntity(innovateEnterpriseInfo);
-        infoModel.setInnovateEnterpriseAttachEntities(list);
+        infoModel.setInfoEntity(innovateEnterpriseInfo);
+        infoModel.setAttachEntities(list);
         return R.ok().put("infoModel", infoModel);
     }
-
-/*    *//**
-     * 保存
-     *//*
-    @RequestMapping("/save")
-    @RequiresPermissions("enterprise:innovateenterpriseinfo:save")
-    public R save(@RequestBody InnovateEnterpriseInfoEntity innovateEnterpriseInfo){
-		innovateEnterpriseInfoService.insert(innovateEnterpriseInfo);
-
-        return R.ok();
-    }*/
 
     /**
      * 保存
@@ -100,12 +94,13 @@ public class InnovateEnterpriseInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:save")
     public R save(@RequestBody(required = false) InnovateEnterpriseInfoModel  innovateEnterpriseInfoModel){
-        innovateEnterpriseInfoService.insert(innovateEnterpriseInfoModel.getInnovateEnterpriseInfoEntity());
-        Long infoId = innovateEnterpriseInfoModel.getInnovateEnterpriseInfoEntity().getSettledEnterpId();
-        for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getInnovateEnterpriseAttachEntities()){
+        innovateEnterpriseInfoModel.getInfoEntity().setEnterpriseUserId(ShiroUtils.getUserId());
+        innovateEnterpriseInfoService.insert(innovateEnterpriseInfoModel.getInfoEntity());
+        Long infoId = innovateEnterpriseInfoModel.getInfoEntity().getSettledEnterpId();
+        for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getAttachEntities()){
             attach.setFunctionId(infoId);
         }
-        innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getInnovateEnterpriseAttachEntities());
+        innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         return R.ok();
     }
 
@@ -116,12 +111,12 @@ public class InnovateEnterpriseInfoController {
     @RequestMapping("/update")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:update")
     public R update(@RequestBody InnovateEnterpriseInfoModel innovateEnterpriseInfoModel){
-		innovateEnterpriseInfoService.updateById(innovateEnterpriseInfoModel.getInnovateEnterpriseInfoEntity());
-        Long infoId = innovateEnterpriseInfoModel.getInnovateEnterpriseInfoEntity().getSettledEnterpId();
-        for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getInnovateEnterpriseAttachEntities()){
+		innovateEnterpriseInfoService.updateById(innovateEnterpriseInfoModel.getInfoEntity());
+        Long infoId = innovateEnterpriseInfoModel.getInfoEntity().getSettledEnterpId();
+        for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getAttachEntities()){
             attach.setFunctionId(infoId);
         }
-        innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getInnovateEnterpriseAttachEntities());
+        innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         return R.ok();
     }
 

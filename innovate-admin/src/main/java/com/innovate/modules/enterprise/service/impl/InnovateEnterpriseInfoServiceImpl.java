@@ -1,5 +1,6 @@
 package com.innovate.modules.enterprise.service.impl;
 
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseProjectEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,9 +22,15 @@ public class InnovateEnterpriseInfoServiceImpl extends ServiceImpl<InnovateEnter
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        Object userId = params.get("project_user_id");
+        EntityWrapper<InnovateEnterpriseInfoEntity> wrapper = new EntityWrapper<>();
+        wrapper.eq("is_del" ,0).orderBy("apply_status");
+        if (userId!=null){
+            wrapper.eq("enterprise_user_id",userId.toString());
+        }
         Page<InnovateEnterpriseInfoEntity> page = this.selectPage(
                 new Query<InnovateEnterpriseInfoEntity>(params).getPage(),
-                new EntityWrapper<InnovateEnterpriseInfoEntity>().eq("is_del" ,0).orderBy("apply_status")
+                wrapper
         );
         return new PageUtils(page);
     }

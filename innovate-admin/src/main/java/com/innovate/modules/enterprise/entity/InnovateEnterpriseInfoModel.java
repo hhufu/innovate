@@ -6,6 +6,10 @@ import java.util.List;
 
 @Data
 public class InnovateEnterpriseInfoModel {
-    InnovateEnterpriseInfoEntity innovateEnterpriseInfoEntity;
-    List<InnovateEnterpriseAttachEntity> innovateEnterpriseAttachEntities;
+    //入驻企业
+    InnovateEnterpriseInfoEntity infoEntity;
+    //企业项目
+    InnovateEnterpriseProjectEntity projectEntity;
+    //附件集合
+    List<InnovateEnterpriseAttachEntity> attachEntities;
 }

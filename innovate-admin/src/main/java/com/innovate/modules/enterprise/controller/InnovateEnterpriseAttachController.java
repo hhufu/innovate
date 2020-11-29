@@ -41,9 +41,9 @@ public class InnovateEnterpriseAttachController {
      */
     @PostMapping(value = "/upload")
     @RequiresPermissions("enterprise:innovateenterpriseattach:save")
-    public Object uploadFile(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
+    public Object uploadFile(@RequestParam("file") List<MultipartFile> files,HttpServletRequest request) {
         String enterpriseName = request.getParameter("enterpriseName");
-//        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + finishName + "/"+ RandomUtils.getRandomNums()+"/";
+        String attachType = request.getParameter("attachType");
         String UPLOAD_FILES_PATH = "enterprise"+ File.separator + Calendar.getInstance().get(Calendar.YEAR) + File.separator+enterpriseName + "/"+ RandomUtils.getRandomNums()+"/";
         if (Objects.isNull(files) || files.isEmpty()) {
             return R.error("文件为空，请重新上传");
@@ -52,14 +52,12 @@ public class InnovateEnterpriseAttachController {
         for(MultipartFile file : files){
 
             String fileName = file.getOriginalFilename();
-//                result = FileUtils.upLoad(UPLOAD_FILES_PATH, fileName, file);
             OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
             UPLOAD_FILES_PATH += fileName;
             innovateEnterpriseAttachEntity = new InnovateEnterpriseAttachEntity();
             innovateEnterpriseAttachEntity.setAttachName(fileName);
             innovateEnterpriseAttachEntity.setAttachPath(UPLOAD_FILES_PATH);
-            innovateEnterpriseAttachEntity.setAttachType(1);
-            //            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            innovateEnterpriseAttachEntity.setAttachType(Integer.parseInt(attachType));
             innovateEnterpriseAttachEntity.setAttachTime(new Date());// new Date()为获取当前系统时间
         }
         return R.ok("文件上传成功")
