@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -47,6 +49,7 @@ public class InnovateEnterpriseAchieveEntity implements Serializable {
 	/**
 	 * 获奖（得）时间
 	 */
+	@JsonFormat( pattern="yyyy-MM-dd")
 	private Date awardTime;
 	/**
 	 * 类型（应用成果转化/获奖/著作权/企业证书）

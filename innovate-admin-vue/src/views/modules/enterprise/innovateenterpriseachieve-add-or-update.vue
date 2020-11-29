@@ -1,32 +1,38 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.enterpAchieveId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="企业 id" prop="enterpriseId">
-      <el-input v-model="dataForm.enterpriseId" placeholder="企业 id"></el-input>
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="12rem" style="width: 94%; margin: 0 auto">
+    <el-form-item label="企业 id" prop="enterpriseId" v-show="false">
+      <el-input v-model="dataForm.enterpriseId" placeholder="企业 id" disabled ></el-input>
     </el-form-item>
-    <el-form-item label="企业名称" prop="enterpriseName">
-      <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>
+
+    <el-form-item label="企业名称" prop="enterpriseName" >
+      <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" style="width: 100%"  :disabled="disabled"  @change="changeName">
+        <el-option  v-for="n in projectName" :key="n.enterpriseName" :label="n.enterpriseName" :value="n.enterpriseName" ></el-option>
+      </el-select>
     </el-form-item>
+
     <el-form-item label="负责人" prop="enterpriseDirector">
       <el-input v-model="dataForm.enterpriseDirector" placeholder="负责人"></el-input>
     </el-form-item>
     <el-form-item label="用户id" prop="enterpriseUserId">
       <el-input v-model="dataForm.enterpriseUserId" placeholder="用户id"></el-input>
     </el-form-item>
-    <el-form-item label="获奖名称（项目名称）" prop="awardProjectName">
+    <el-form-item label="获奖名称" prop="awardProjectName">
       <el-input v-model="dataForm.awardProjectName" placeholder="获奖名称（项目名称）"></el-input>
     </el-form-item>
     <el-form-item label="获奖（得）时间" prop="awardTime">
-      <el-input v-model="dataForm.awardTime" placeholder="获奖（得）时间"></el-input>
+      <el-date-picker v-model="dataForm.awardTime" type="date" placeholder="选择日期"/>
     </el-form-item>
-    <el-form-item label="类型（应用成果转化/获奖/著作权/企业证书）" prop="awardProjectType">
+    <el-form-item label="类型" prop="awardProjectType">
       <el-input v-model="dataForm.awardProjectType" placeholder="类型（应用成果转化/获奖/著作权/企业证书）"></el-input>
     </el-form-item>
     <el-form-item label="所属二级学院" prop="instituteId">
-      <el-input v-model="dataForm.instituteId" placeholder="所属二级学院"></el-input>
+      <el-select v-model="dataForm.instituteId" placeholder="所属二级学院" style="width: 100%">
+        <el-option  v-for="n in instituteName" :key="n.instituteName" :label="n.instituteName" :value="n.instituteName" ></el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="是否删除" prop="isDel">
       <el-input v-model="dataForm.isDel" placeholder="是否删除"></el-input>
@@ -54,7 +60,8 @@
           awardTime: '',
           awardProjectType: '',
           instituteId: '',
-          isDel: ''
+          isDel: '',
+          disabled: ''
         },
         dataRule: {
           enterpriseId: [
@@ -84,33 +91,42 @@
           isDel: [
             { required: true, message: '是否删除不能为空', trigger: 'blur' }
           ]
-        }
+        },
+        projectName: [],
+        instituteName: []
       }
     },
     methods: {
       init (id) {
+        debugger
         this.dataForm.enterpAchieveId = id || 0
         this.visible = true
+        this.getProjectName()
+        this.getInstituteName()
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.enterpAchieveId) {
+            this.disabled = true
             this.$http({
               url: this.$http.adornUrl(`/enterprise/innovateenterpriseachieve/info/${this.dataForm.enterpAchieveId}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
+              debugger
               if (data && data.code === 0) {
-                this.dataForm.enterpriseId = data.innovateenterpriseachieve.enterpriseId
-                this.dataForm.enterpriseName = data.innovateenterpriseachieve.enterpriseName
-                this.dataForm.enterpriseDirector = data.innovateenterpriseachieve.enterpriseDirector
-                this.dataForm.enterpriseUserId = data.innovateenterpriseachieve.enterpriseUserId
-                this.dataForm.awardProjectName = data.innovateenterpriseachieve.awardProjectName
-                this.dataForm.awardTime = data.innovateenterpriseachieve.awardTime
-                this.dataForm.awardProjectType = data.innovateenterpriseachieve.awardProjectType
-                this.dataForm.instituteId = data.innovateenterpriseachieve.instituteId
-                this.dataForm.isDel = data.innovateenterpriseachieve.isDel
+                this.dataForm.enterpriseId = data.innovateEnterpriseAchieve.enterpriseId
+                this.dataForm.enterpriseName = data.innovateEnterpriseAchieve.enterpriseName
+                this.dataForm.enterpriseDirector = data.innovateEnterpriseAchieve.enterpriseDirector
+                this.dataForm.enterpriseUserId = data.innovateEnterpriseAchieve.enterpriseUserId
+                this.dataForm.awardProjectName = data.innovateEnterpriseAchieve.awardProjectName
+                this.dataForm.awardTime = data.innovateEnterpriseAchieve.awardTime
+                this.dataForm.awardProjectType = data.innovateEnterpriseAchieve.awardProjectType
+                this.dataForm.instituteId = data.innovateEnterpriseAchieve.instituteId
+                this.dataForm.isDel = data.innovateEnterpriseAchieve.isDel
               }
             })
+          } else {
+            this.disabled = false
           }
         })
       },
@@ -150,6 +166,40 @@
             })
           }
         })
+      },
+      getProjectName () {
+        this.$http({
+          url: this.$http.adornUrl(`/enterprise/innovateenterpriseinfo/nameList`),
+          method: 'get'
+        }).then(({data}) => {
+          console.log(data)
+          if (data && data.code === 0) {
+            this.projectName = data.list
+          }
+        })
+      },
+      getInstituteName () {
+        debugger
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+          method: 'get'
+        }).then(({data}) => {
+          console.log(data)
+          if (data && data.code === 0) {
+            console.log(data.institute)
+            this.instituteName = data.institute
+          }
+        })
+      },
+      // 根据改变选中值更改企业id
+      changeName (query) {
+        if (query !== '') {
+          let list = this.projectName.filter(item => {
+            return item.enterpriseName
+              .indexOf(query) > -1
+          })
+          this.dataForm.enterpriseId = list[0].settledEnterpId
+        }
       }
     }
   }

@@ -1,6 +1,8 @@
 package com.innovate.modules.enterprise.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -20,10 +22,16 @@ public class InnovateEnterpriseAchieveServiceImpl extends ServiceImpl<InnovateEn
     public PageUtils queryPage(Map<String, Object> params) {
         Page<InnovateEnterpriseAchieveEntity> page = this.selectPage(
                 new Query<InnovateEnterpriseAchieveEntity>(params).getPage(),
-                new EntityWrapper<>()
+                new EntityWrapper<InnovateEnterpriseAchieveEntity>().eq("is_del",0)
         );
 
         return new PageUtils(page);
     }
+
+    @Override
+    public void delList(List<Long> list) {
+        baseMapper.delList(list);
+    }
+
 
 }

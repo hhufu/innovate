@@ -4,6 +4,8 @@ import com.innovate.modules.enterprise.entity.InnovateEnterpriseAchieveEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 企业成果
  *
@@ -13,5 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface InnovateEnterpriseAchieveDao extends BaseMapper<InnovateEnterpriseAchieveEntity> {
-
+    void  delList(List<Long> list);
 }

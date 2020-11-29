@@ -50,7 +50,6 @@ public class InnovateEnterpriseAchieveController {
     @RequiresPermissions("enterprise:innovateenterpriseachieve:info")
     public R info(@PathVariable("enterpAchieveId") Long enterpAchieveId){
 		InnovateEnterpriseAchieveEntity innovateEnterpriseAchieve = innovateEnterpriseAchieveService.selectById(enterpAchieveId);
-
         return R.ok().put("innovateEnterpriseAchieve", innovateEnterpriseAchieve);
     }
 
@@ -82,8 +81,9 @@ public class InnovateEnterpriseAchieveController {
     @RequestMapping("/delete")
     @RequiresPermissions("enterprise:innovateenterpriseachieve:delete")
     public R delete(@RequestBody Long[] enterpAchieveIds){
-		innovateEnterpriseAchieveService.deleteBatchIds(Arrays.asList(enterpAchieveIds));
+//		innovateEnterpriseAchieveService.deleteBatchIds(Arrays.asList(enterpAchieveIds));
 
+        innovateEnterpriseAchieveService.delList(Arrays.asList(enterpAchieveIds));
         return R.ok();
     }
 

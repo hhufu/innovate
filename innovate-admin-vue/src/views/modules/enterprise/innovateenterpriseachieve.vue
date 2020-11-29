@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:save')" type="primary" @click="addOrUpdateHandle()" >新增</el-button>
         <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
@@ -21,18 +21,6 @@
         header-align="center"
         align="center"
         width="50">
-      </el-table-column>
-      <el-table-column
-        prop="enterpAchieveId"
-        header-align="center"
-        align="center"
-        label="自增主键">
-      </el-table-column>
-      <el-table-column
-        prop="enterpriseId"
-        header-align="center"
-        align="center"
-        label="企业 id">
       </el-table-column>
       <el-table-column
         prop="enterpriseName"
@@ -181,7 +169,7 @@
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.enterpAchieveId
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        this.$confirm(`确定对数据进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
