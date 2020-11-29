@@ -2,6 +2,7 @@ package com.innovate.modules.enterprise.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.innovate.common.utils.PageUtils;
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseProjectEntity;
 
 import java.util.List;
@@ -20,5 +21,8 @@ public interface InnovateEnterpriseProjectService extends IService<InnovateEnter
 
     //伪删除
     void  delList(List<Long> list);
+
+    //导出
+    List<InnovateEnterpriseProjectEntity> queryListByIds(List<Long> enterpProjIds);
 }
 

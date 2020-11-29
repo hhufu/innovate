@@ -1,7 +1,11 @@
 package com.innovate.modules.enterprise.controller;
 
+import java.net.URLEncoder;
 import java.util.*;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.innovate.common.utils.ShiroUtils;
@@ -9,6 +13,7 @@ import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
 import com.innovate.modules.sys.entity.SysUserEntity;
+import com.innovate.modules.training.entity.InnovateTrainingBaseInfoEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +23,8 @@ import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseInfoService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -35,6 +42,41 @@ public class InnovateEnterpriseInfoController {
 
     @Autowired
     private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
+
+    /**
+     * 导出
+     */
+    @PostMapping("/export")
+    @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
+    public void export(@RequestBody List<Long> settledEnterpIds, HttpServletResponse response){
+        List<InnovateEnterpriseInfoEntity> trainBaseInfoList;
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        /* 获取当前登录用户 */
+        SysUserEntity userEntity = ShiroUtils.getUserEntity();
+        String adminName = userEntity.getUsername();
+        ExcelWriter excelWriter = null;
+
+        try {
+            String fileName = URLEncoder.encode("企业入驻信息", "UTF-8");
+            response.setHeader("Content-disposition","attachment;filename"+fileName+".xlsx");
+            /* 权限判断：当前用户为管理员(暂时不做权限限制) */
+            if ("wzxyGLY".equals(adminName) || true){
+                excelWriter = EasyExcel.write(response.getOutputStream(), InnovateEnterpriseInfoEntity.class).build();
+                WriteSheet writeSheet = EasyExcel.writerSheet(0, "企业入驻信息").build();
+                trainBaseInfoList = innovateEnterpriseInfoService.queryListByIds(settledEnterpIds);
+                excelWriter.write(trainBaseInfoList,writeSheet);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            // 千万别忘记finish 会帮忙关闭流
+            if (excelWriter != null) {
+                excelWriter.finish();
+            }
+        }
+    }
+
 
     /**
      * 列表

@@ -20,5 +20,8 @@ public interface InnovateEnterpriseInfoService extends IService<InnovateEnterpri
 
     void  delList(List<Long> list);
 
+    //导出
+    List<InnovateEnterpriseInfoEntity> queryListByIds(List<Long> trainBaseIds);
+
 }
 

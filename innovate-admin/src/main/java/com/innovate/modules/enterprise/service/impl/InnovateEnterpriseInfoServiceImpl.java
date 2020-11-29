@@ -3,9 +3,11 @@ package com.innovate.modules.enterprise.service.impl;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseProjectEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -24,9 +26,9 @@ public class InnovateEnterpriseInfoServiceImpl extends ServiceImpl<InnovateEnter
     public PageUtils queryPage(Map<String, Object> params) {
         Object userId = params.get("project_user_id");
         EntityWrapper<InnovateEnterpriseInfoEntity> wrapper = new EntityWrapper<>();
-        wrapper.eq("is_del" ,0).orderBy("apply_status");
-        if (userId!=null){
-            wrapper.eq("enterprise_user_id",userId.toString());
+        wrapper.eq("is_del", 0).orderBy("apply_status");
+        if (userId != null) {
+            wrapper.eq("enterprise_user_id", userId.toString());
         }
         Page<InnovateEnterpriseInfoEntity> page = this.selectPage(
                 new Query<InnovateEnterpriseInfoEntity>(params).getPage(),
@@ -38,6 +40,12 @@ public class InnovateEnterpriseInfoServiceImpl extends ServiceImpl<InnovateEnter
     @Override
     public void delList(List<Long> list) {
         baseMapper.delList(list);
+    }
+
+    @Override
+    public List<InnovateEnterpriseInfoEntity> queryListByIds(List<Long> trainBaseIds) {
+        return trainBaseIds.size() > 0 ? this.selectBatchIds(trainBaseIds)
+                : this.selectList(new EntityWrapper<InnovateEnterpriseInfoEntity>().eq("is_del", 0));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.innovate.modules.enterprise.entity;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -23,10 +24,12 @@ public class InnovateAwardProjectTypeEntity implements Serializable {
 	 * 自增主键
 	 */
 	@TableId
+	@ExcelProperty(value = "ID")
 	private Long awardProjectjTypeId;
 	/**
 	 * 获奖项目类型
 	 */
+	@ExcelProperty(value = "获奖项目类型")
 	private String awardProjectjType;
 
 }

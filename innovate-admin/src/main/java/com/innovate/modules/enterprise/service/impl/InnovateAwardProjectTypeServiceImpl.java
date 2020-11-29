@@ -1,6 +1,9 @@
 package com.innovate.modules.enterprise.service.impl;
 
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseProjectEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -24,6 +27,11 @@ public class InnovateAwardProjectTypeServiceImpl extends ServiceImpl<InnovateAwa
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<InnovateAwardProjectTypeEntity> queryListByIds(List<Long> awardProjectjTypeIds) {
+        return awardProjectjTypeIds.size()>0 ? this.selectBatchIds(awardProjectjTypeIds): this.selectList(null);
     }
 
 }

@@ -15,7 +15,10 @@
         <el-input v-model="dataForm.enterpriseDirector" placeholder="企业负责人姓名"></el-input>
       </el-form-item>
       <el-form-item label="负责人所在学院" prop="departmentDirector">
-        <el-input v-model="dataForm.departmentDirector" placeholder="负责人所在学院"></el-input>
+          <el-select v-model="dataForm.departmentDirector" placeholder="负责人所在学院">
+          <el-option v-for="item in instituteList" :key="item.instituteName" :label="item.instituteName" :value="item.instituteName">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="入驻时间" prop="settledTime">
         <el-date-picker
@@ -138,7 +141,8 @@ export default {
       ],
       fileIsNull: false,
       fileList: [],
-      url: ""
+      url: "",
+      instituteList: []
     };
   },
   methods: {
@@ -150,6 +154,7 @@ export default {
       );
       this.dataForm.settledEnterpId = id || 0;
       this.visible = true;
+      this.getInstituteList();
       this.$nextTick(() => {
         this.$refs["dataForm"].resetFields();
         if (this.dataForm.settledEnterpId) {
@@ -255,6 +260,16 @@ export default {
         }
       }
       this.dataForm.attachLists = tempFileList;
+    },
+    getInstituteList() {
+      this.$http({
+        url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+        method: "get"
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.instituteList = data.institute;
+        }
+      });
     }
   }
 };

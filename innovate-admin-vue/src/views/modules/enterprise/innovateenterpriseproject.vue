@@ -8,6 +8,7 @@
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('enterprise:innovateenterpriseproject:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('enterprise:innovateenterpriseproject:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('enterprise:innovateenterpriseproject:save')" type="primary" @click="exportLists()">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -109,103 +110,146 @@
 </template>
 
 <script>
-  import AddOrUpdate from './innovateenterpriseproject-add-or-update'
-  export default {
-    data () {
-      return {
-        dataForm: {
-          key: ''
-        },
-        dataList: [],
-        pageIndex: 1,
-        pageSize: 10,
-        totalPage: 0,
-        dataListLoading: false,
-        dataListSelections: [],
-        addOrUpdateVisible: false
-      }
+import AddOrUpdate from "./innovateenterpriseproject-add-or-update";
+export default {
+  data() {
+    return {
+      dataForm: {
+        key: ""
+      },
+      dataList: [],
+      pageIndex: 1,
+      pageSize: 10,
+      totalPage: 0,
+      dataListLoading: false,
+      dataListSelections: [],
+      addOrUpdateVisible: false
+    };
+  },
+  components: {
+    AddOrUpdate
+  },
+  activated() {
+    this.getDataList();
+  },
+  methods: {
+    // 获取数据列表
+    getDataList() {
+      this.dataListLoading = true;
+      this.$http({
+        url: this.$http.adornUrl("/enterprise/innovateenterpriseproject/list"),
+        method: "get",
+        params: this.$http.adornParams({
+          page: this.pageIndex,
+          limit: this.pageSize,
+          key: this.dataForm.key
+        })
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.dataList = data.page.list;
+          this.totalPage = data.page.totalCount;
+        } else {
+          this.dataList = [];
+          this.totalPage = 0;
+        }
+        this.dataListLoading = false;
+      });
     },
-    components: {
-      AddOrUpdate
+    // 每页数
+    sizeChangeHandle(val) {
+      this.pageSize = val;
+      this.pageIndex = 1;
+      this.getDataList();
     },
-    activated () {
-      this.getDataList()
+    // 当前页
+    currentChangeHandle(val) {
+      this.pageIndex = val;
+      this.getDataList();
     },
-    methods: {
-      // 获取数据列表
-      getDataList () {
-        this.dataListLoading = true
+    // 多选
+    selectionChangeHandle(val) {
+      this.dataListSelections = val;
+    },
+    // 新增 / 修改
+    addOrUpdateHandle(id) {
+      this.addOrUpdateVisible = true;
+      this.$nextTick(() => {
+        this.$refs.addOrUpdate.init(id);
+      });
+    },
+    // 删除
+    deleteHandle(id) {
+      var ids = id
+        ? [id]
+        : this.dataListSelections.map(item => {
+            return item.enterpProjId;
+          });
+      this.$confirm(
+        `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).then(() => {
         this.$http({
-          url: this.$http.adornUrl('/enterprise/innovateenterpriseproject/list'),
-          method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'key': this.dataForm.key
-          })
-        }).then(({data}) => {
+          url: this.$http.adornUrl(
+            "/enterprise/innovateenterpriseproject/delete"
+          ),
+          method: "post",
+          data: this.$http.adornData(ids, false)
+        }).then(({ data }) => {
           if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+            this.$message({
+              message: "操作成功",
+              type: "success",
+              duration: 1500,
+              onClose: () => {
+                this.getDataList();
+              }
+            });
           } else {
-            this.dataList = []
-            this.totalPage = 0
+            this.$message.error(data.msg);
           }
-          this.dataListLoading = false
+        });
+      });
+    },
+    // 导出
+    exportLists() {
+      this.dataListLoading = true;
+      var trainBaseIds = this.dataListSelections.map(item => {
+        return item.enterpProjId;
+      });
+      this.$http({
+        url: this.$http.adornUrl(
+          "/enterprise/innovateenterpriseproject/export"
+        ),
+        method: "post",
+        data: this.$http.adornData(trainBaseIds, false),
+        responseType: "blob"
+      })
+        .then(res => {
+          this.dataListLoading = false;
+          const blob = new Blob([res.data], {
+            type: "application/vnd.ms-excel"
+          });
+          let filename = "企业项目.xls";
+          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+          const elink = document.createElement("a");
+          elink.download = filename;
+          elink.style.display = "none";
+          elink.href = URL.createObjectURL(blob);
+          document.body.appendChild(elink);
+          elink.click();
+          URL.revokeObjectURL(elink.href); // 释放URL 对象
+          document.body.removeChild(elink);
         })
-      },
-      // 每页数
-      sizeChangeHandle (val) {
-        this.pageSize = val
-        this.pageIndex = 1
-        this.getDataList()
-      },
-      // 当前页
-      currentChangeHandle (val) {
-        this.pageIndex = val
-        this.getDataList()
-      },
-      // 多选
-      selectionChangeHandle (val) {
-        this.dataListSelections = val
-      },
-      // 新增 / 修改
-      addOrUpdateHandle (id) {
-        this.addOrUpdateVisible = true
-        this.$nextTick(() => {
-          this.$refs.addOrUpdate.init(id)
-        })
-      },
-      // 删除
-      deleteHandle (id) {
-        var ids = id ? [id] : this.dataListSelections.map(item => {
-          return item.enterpProjId
-        })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http({
-            url: this.$http.adornUrl('/enterprise/innovateenterpriseproject/delete'),
-            method: 'post',
-            data: this.$http.adornData(ids, false)
-          }).then(({data}) => {
-            if (data && data.code === 0) {
-              this.$message({
-                message: '操作成功',
-                type: 'success',
-                duration: 1500,
-                onClose: () => {
-                  this.getDataList()
-                }
-              })
-            } else {
-              this.$message.error(data.msg)
-            }
-          })
-        })
-      }
+        .catch(() => {
+          this.dataListLoading = false;
+          this.$message.error("导出失败!");
+        });
     }
   }
+};
 </script>

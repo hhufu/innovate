@@ -1,6 +1,10 @@
 package com.innovate.modules.enterprise.service.impl;
 
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -25,5 +29,7 @@ public class InnovateEnterpriseAttachServiceImpl extends ServiceImpl<InnovateEnt
 
         return new PageUtils(page);
     }
+
+
 
 }
