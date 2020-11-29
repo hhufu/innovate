@@ -9,5 +9,4 @@
         <result property="awardProjectjType" column="award_projectj_type"/>
     </resultMap>
 
-
 </mapper>

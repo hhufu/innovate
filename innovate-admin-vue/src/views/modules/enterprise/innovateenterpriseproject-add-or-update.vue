@@ -1,23 +1,35 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.enterpProjId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="企业 id" prop="enterpriseId">
+    <el-form-item label="企业 id" prop="enterpriseId" v-show="false">
       <el-input v-model="dataForm.enterpriseId" placeholder="企业 id"></el-input>
     </el-form-item>
-    <el-form-item label="企业名称" prop="enterpriseName">
-      <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>
-    </el-form-item>
+  <el-form-item label="企业名称" prop="enterpriseName">
+    <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" @change="changeName"> 
+      <el-option  v-for="n in projectName" :key="n.enterpriseName" :label="n.enterpriseName" :value="n.enterpriseName" ></el-option>
+    </el-select>
+  </el-form-item>
     <el-form-item label="项目名称" prop="projectName">
       <el-input v-model="dataForm.projectName" placeholder="项目名称"></el-input>
     </el-form-item>
     <el-form-item label="项目开始时间" prop="projStartTime">
-      <el-input v-model="dataForm.projStartTime" placeholder="项目开始时间"></el-input>
+ <el-date-picker
+          v-model="dataForm.projStartTime"
+          type="date"
+          placeholder="项目开始时间"
+          format="yyyy-MM-dd">
+        </el-date-picker>
     </el-form-item>
     <el-form-item label="截止时间" prop="projStopTime">
-      <el-input v-model="dataForm.projStopTime" placeholder="截止时间"></el-input>
+       <el-date-picker
+          v-model="dataForm.projStopTime"
+          type="date"
+          placeholder="截止时间"
+          format="yyyy-MM-dd">
+        </el-date-picker>
     </el-form-item>
     <el-form-item label="项目年度" prop="projectYear">
       <el-input v-model="dataForm.projectYear" placeholder="项目年度"></el-input>
@@ -28,8 +40,11 @@
     <el-form-item label="用户id" prop="projectUserId">
       <el-input v-model="dataForm.projectUserId" placeholder="用户id"></el-input>
     </el-form-item>
-    <el-form-item label="是否删除" prop="isDel">
-      <el-input v-model="dataForm.isDel" placeholder="是否删除"></el-input>
+    <el-form-item label="是否删除" prop="isDel" v-if="dataForm.enterpProjId">
+        <el-radio-group v-model="dataForm.isDel">
+          <el-radio :label="0">否</el-radio>
+          <el-radio :label="1">是</el-radio>
+        </el-radio-group>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -84,13 +99,16 @@
           isDel: [
             { required: true, message: '是否删除不能为空', trigger: 'blur' }
           ]
-        }
+        },
+        projectName:[],
+         loading: false
       }
     },
     methods: {
       init (id) {
         this.dataForm.enterpProjId = id || 0
         this.visible = true
+        this.getProjectName();
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.enterpProjId) {
@@ -150,6 +168,28 @@
             })
           }
         })
+      },
+      getProjectName(){
+         this.$http({
+              url: this.$http.adornUrl(`/enterprise/innovateenterpriseinfo/nameList`),
+              method: 'get'
+          }).then(({data}) => {
+              debugger
+              if (data && data.code === 0) {
+                this.projectName=data.list
+                console.log(this.projectName)
+              }
+          })
+      },
+      //根据改变选中值更改企业id
+      changeName(query) {
+        if (query !== '') {
+            let list =this.projectName.filter(item => {
+              return item.enterpriseName
+                .indexOf(query) > -1;
+            })
+            this.dataForm.enterpriseId=list[0].settledEnterpId 
+        }
       }
     }
   }

@@ -62,6 +62,7 @@ public class ShiroConfig {
         filterMap.put("/points/innovatestudentsignin/save", "anon");//活动进厂签到
         filterMap.put("/points/innovatestudentpoints/save", "anon");//活动离开签到
         filterMap.put("/points/innovatestudentactivity/image/**", "anon");//活动离开签到
+        filterMap.put("/enterprise/innovateenterpriseinfo/all", "anon");//企业入驻
         filterMap.put("/innovate/sys/grade/all", "anon");
         filterMap.put("/innovate/sys/school/all", "anon");
         filterMap.put("/innovate/sys/subject/all", "anon");
@@ -79,7 +80,7 @@ public class ShiroConfig {
         filterMap.put("/swagger-ui.html", "anon");
         filterMap.put("/swagger-resources/**", "anon");
         filterMap.put("/captcha.jpg", "anon");
-        filterMap.put("/enterprise/**", "anon");
+//        filterMap.put("/enterprise/**", "anon");
         // 前端游客方式请求数据放行
         filterMap.put("/webpage/**", "anon");
         filterMap.put("/**", "oauth2");

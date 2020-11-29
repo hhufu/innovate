@@ -6,8 +6,12 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:save')" type="primary" @click="addOrUpdateHandle()">
+          新增
+        </el-button>
+        <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:delete')" type="danger" @click="deleteHandle()"
+                   :disabled="dataListSelections.length <= 0">批量删除
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -65,23 +69,37 @@
         label="企业类型">
       </el-table-column>
       <el-table-column
-        prop="business Scope"
+        prop="businessScope"
         header-align="center"
         align="center"
         label="主要经营范围">
       </el-table-column>
+
       <el-table-column
         prop="applyStatus"
         header-align="center"
         align="center"
         label="审核状态">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.applyStatus === '0'"
+            disable-transitions>未审核
+          </el-tag>
+          <el-tag type="success" v-if="scope.row.applyStatus === '1'"
+                  disable-transitions>已通过
+          </el-tag>
+          <el-tag type="danger" v-if="scope.row.applyStatus === '2'"
+                  disable-transitions>未通过
+          </el-tag>
+        </template>
       </el-table-column>
-      <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
-      </el-table-column>
+
+<!--      <el-table-column-->
+<!--        prop="isDel"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="是否删除">-->
+<!--      </el-table-column>-->
+
       <el-table-column
         fixed="right"
         header-align="center"
@@ -110,8 +128,9 @@
 
 <script>
   import AddOrUpdate from './innovateenterpriseinfo-add-or-update'
+
   export default {
-    data () {
+    data() {
       return {
         dataForm: {
           key: ''
@@ -128,12 +147,13 @@
     components: {
       AddOrUpdate
     },
-    activated () {
+    activated() {
       this.getDataList()
     },
     methods: {
       // 获取数据列表
-      getDataList () {
+      getDataList() {
+        // debugger
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl('/enterprise/innovateenterpriseinfo/list'),
@@ -141,9 +161,11 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'key': this.dataForm.key,
+            'order': 'apply_status'
           })
         }).then(({data}) => {
+          console.log(data)
           if (data && data.code === 0) {
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
@@ -155,29 +177,29 @@
         })
       },
       // 每页数
-      sizeChangeHandle (val) {
+      sizeChangeHandle(val) {
         this.pageSize = val
         this.pageIndex = 1
         this.getDataList()
       },
       // 当前页
-      currentChangeHandle (val) {
+      currentChangeHandle(val) {
         this.pageIndex = val
         this.getDataList()
       },
       // 多选
-      selectionChangeHandle (val) {
+      selectionChangeHandle(val) {
         this.dataListSelections = val
       },
       // 新增 / 修改
-      addOrUpdateHandle (id) {
+      addOrUpdateHandle(id) {
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
         })
       },
       // 删除
-      deleteHandle (id) {
+      deleteHandle(id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.settledEnterpId
         })

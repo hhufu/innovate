@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,8 @@ import java.util.Map;
 public interface InnovateEnterpriseInfoService extends IService<InnovateEnterpriseInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void  delList(List<Long> list);
+
 }
 

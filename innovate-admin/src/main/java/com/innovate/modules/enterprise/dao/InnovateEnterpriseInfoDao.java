@@ -4,6 +4,8 @@ import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 入驻企业表
  *
@@ -13,5 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface InnovateEnterpriseInfoDao extends BaseMapper<InnovateEnterpriseInfoEntity> {
+    //伪删除
+    void  delList(List<Long> list);
 
 }

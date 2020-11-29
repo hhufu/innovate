@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -39,10 +41,12 @@ public class InnovateEnterpriseProjectEntity implements Serializable {
 	/**
 	 * 项目开始时间
 	 */
+	@JsonFormat( pattern="yyyy-MM-dd")
 	private Date projStartTime;
 	/**
 	 * 截止时间
 	 */
+	@JsonFormat( pattern="yyyy-MM-dd")
 	private Date projStopTime;
 	/**
 	 * 项目年度

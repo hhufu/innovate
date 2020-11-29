@@ -12,10 +12,19 @@
         <result property="departmentDirector" column="department_director"/>
         <result property="settledTime" column="settled_time"/>
         <result property="enterpriseType" column="enterprise_type"/>
-        <result property="business Scope" column="business _scope"/>
+        <result property="businessScope" column="business_scope"/>
         <result property="applyStatus" column="apply_status"/>
         <result property="isDel" column="is_del"/>
     </resultMap>
 
+
+    <update id="delList"  parameterType="java.util.List">
+        update innovate_enterprise_info set is_del=1
+        where settled_enterp_id in (
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+            #{item}
+        </foreach>
+        )
+    </update>
 
 </mapper>

@@ -1,21 +1,22 @@
 package com.innovate.modules.enterprise.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
+import com.innovate.common.utils.OSSUtils;
+import com.innovate.modules.finish.entity.FinishAttachEntity;
+import com.innovate.modules.util.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -30,6 +31,41 @@ import com.innovate.common.utils.R;
 public class InnovateEnterpriseAttachController {
     @Autowired
     private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
+
+
+    /**
+     * 文件上传
+     * @param files
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/upload")
+    @RequiresPermissions("enterprise:innovateenterpriseattach:save")
+    public Object uploadFile(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
+        String enterpriseName = request.getParameter("enterpriseName");
+//        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + finishName + "/"+ RandomUtils.getRandomNums()+"/";
+        String UPLOAD_FILES_PATH = "enterprise"+ File.separator + Calendar.getInstance().get(Calendar.YEAR) + File.separator+enterpriseName + "/"+ RandomUtils.getRandomNums()+"/";
+        if (Objects.isNull(files) || files.isEmpty()) {
+            return R.error("文件为空，请重新上传");
+        }
+        InnovateEnterpriseAttachEntity innovateEnterpriseAttachEntity=null;
+        for(MultipartFile file : files){
+
+            String fileName = file.getOriginalFilename();
+//                result = FileUtils.upLoad(UPLOAD_FILES_PATH, fileName, file);
+            OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
+            UPLOAD_FILES_PATH += fileName;
+            innovateEnterpriseAttachEntity = new InnovateEnterpriseAttachEntity();
+            innovateEnterpriseAttachEntity.setAttachName(fileName);
+            innovateEnterpriseAttachEntity.setAttachPath(UPLOAD_FILES_PATH);
+            innovateEnterpriseAttachEntity.setAttachType(1);
+            //            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            innovateEnterpriseAttachEntity.setAttachTime(new Date());// new Date()为获取当前系统时间
+        }
+        return R.ok("文件上传成功")
+                .put("innovateEnterpriseAttachEntity", innovateEnterpriseAttachEntity);
+    }
+
 
     /**
      * 列表

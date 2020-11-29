@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -39,6 +41,7 @@ public class InnovateEnterpriseAttachEntity implements Serializable {
 	/**
 	 * 上传时间
 	 */
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date attachTime;
 	/**
 	 * 附件类型（1、入驻材料 2、项目材料 3、企业成果材料）
