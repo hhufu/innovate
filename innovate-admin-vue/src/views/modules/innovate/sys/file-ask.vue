@@ -121,7 +121,16 @@
           {value: 1, label: '大创'},
           {value: 2, label: '中期检查'},
           {value: 3, label: '赛事'},
-          {value: 4, label: '结题'}
+          {value: 4, label: '结题'},
+          {value: 5, label: '企业入驻'},
+          {value: 6, label: '企业成果'},
+          {value: 7, label: '企业项目'},
+          {value: 8, label: '积分申请'},
+          {value: 9, label: '专创成果'},
+          {value: 10, label: '实训基地成果'},
+          {value: 11, label: '实训基地'},
+          {value: 12, label: '校企合作协议'},
+          {value: 13, label: '校企合作项目'}
         ],
         dataList: [],
         pageIndex: 1,
