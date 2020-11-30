@@ -13,6 +13,7 @@
         <result property="persionType" column="persion_type"/>
         <result property="integral" column="integral"/>
         <result property="integralTo" column="integral_to"/>
+        <result property="fileAskContent" column="file_ask_content"/>
         <result property="isDel" column="is_del"/>
     </resultMap>
 

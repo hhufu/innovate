@@ -27,7 +27,7 @@ public class InnovateEnterpriseAttachEntity implements Serializable {
 	@TableId
 	private Long attachId;
 	/**
-	 * 模糊id
+	 * 模糊id  企业成果材料：A-企业成果表id  企业入驻材料：E-入驻企业表id
 	 */
 	private Long functionId;
 	/**

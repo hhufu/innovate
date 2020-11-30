@@ -7,16 +7,42 @@
     <resultMap type="com.innovate.modules.points.entity.InnovateStudentPointsApplyEntity" id="innovateStudentPointsApplyMap">
         <result property="integralApplyId" column="integral_apply_id"/>
         <result property="applyTime" column="apply_time"/>
+        <result property="sysPointsId" column="sys_points_id"/>
         <result property="applyUserId" column="apply_user_id"/>
         <result property="isDel" column="is_del"/>
         <result property="applyIntegral" column="apply_integral"/>
         <result property="applyStatus" column="apply_status"/>
-        <result property="fileAskContent" column="file_ask_content"/>
         <result property="persionType" column="persion_type"/>
         <result property="prizeGrade" column="prize_grade"/>
         <result property="raceGrade" column="race_grade"/>
         <result property="participateType" column="participate_type"/>
     </resultMap>
 
-
+    <insert id="insertE" parameterType="InnovateStudentPointsApplyEntity" useGeneratedKeys="true" keyProperty="paTypeId">
+        insert into innovate_student_points_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyTime != null">apply_time,</if>
+            <if test="sysPointsId != null">sys_points_id,</if>
+            <if test="applyUserId != null">apply_user_id,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="applyIntegral != null">apply_integral,</if>
+            <if test="applyStatus != null">apply_status,</if>
+            <if test="persionType != null">persion_type,</if>
+            <if test="prizeGrade != null">prize_grade,</if>
+            <if test="raceGrade != null">race_grade,</if>
+            <if test="participateType != null">participate_type</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyTime != null">#{apply_time},</if>
+            <if test="sysPointsId != null">#{sys_points_id},</if>
+            <if test="applyUserId != null">#{apply_user_id},</if>
+            <if test="isDel != null">#{is_del},</if>
+            <if test="applyIntegral != null">#{apply_integral},</if>
+            <if test="applyStatus != null">#{apply_status},</if>
+            <if test="persionType != null">#{persion_type},</if>
+            <if test="prizeGrade != null">#{prize_grade},</if>
+            <if test="raceGrade != null">#{race_grade},</if>
+            <if test="participateType != null">#{participate_type}</if>
+        </trim>
+    </insert>
 </mapper>

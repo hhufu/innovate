@@ -68,7 +68,7 @@
         <el-upload
           class="upload-demo"
           :action="url"
-          :data="{textType: dataForm.textType}"
+          :data="{textType: textType}"
           :on-success="successHandle1"
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
@@ -98,11 +98,13 @@
     data () {
       return {
         visible: false,
+        attachLists: [], // 附件列表
         parentId: 0, // 父id
         participateList: [],
         integral: 0, // 该项目申请积分
         integralTo: 0, // 积分差值
-        fileAskContent: '',
+        fileAskContent: '无',
+        delAttachLists: [], // 要删除的附件
         url: '',
         noEditPoint: true,
         fileList: [],
@@ -119,8 +121,10 @@
           prizeGrade: '',
           raceGrade: '',
           participateType: '',
+          sysPointsId: 0,
           applyUserId: 0
         },
+        textType: '',
         dataRule: {
           applyTime: [
             { required: true, message: '申请时间不能为空', trigger: 'blur' }
@@ -142,6 +146,7 @@
     },
     methods: {
       init (id) {
+        this.url = this.$http.adornUrl(`/points/attach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.integralApplyId = id || 0
         this.getTypeList()
         this.visible = true
@@ -155,6 +160,7 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.applyTime = data.innovateStudentPointsApply.applyTime
+                this.dataForm.sysPointsId = data.innovateStudentPointsApply.sysPointsId
                 this.dataForm.isDel = data.innovateStudentPointsApply.isDel
                 this.dataForm.applyIntegral = data.innovateStudentPointsApply.applyIntegral
                 this.dataForm.persionType = data.innovateStudentPointsApply.persionType
@@ -162,6 +168,13 @@
                 this.dataForm.raceGrade = data.innovateStudentPointsApply.raceGrade
                 this.dataForm.participateType = data.innovateStudentPointsApply.participateType
                 this.dataForm.applyUserId = data.innovateStudentPointsApply.applyUserId
+                this.attachLists = data.attachEntityList
+                // 附件回显
+                let tempFinishAtta = []
+                for (var i = 0; i < this.attachLists.length; i++) {
+                  tempFinishAtta.push(new FinishAttachment(this.attachLists[i]))
+                }
+                this.fileList = tempFinishAtta
               }
             })
           }
@@ -196,14 +209,9 @@
               url: this.$http.adornUrl(`/points/innovatestudentpointsapply/${!this.dataForm.integralApplyId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'integralApplyId': this.dataForm.integralApplyId || undefined,
-                'applyIntegral': this.dataForm.applyIntegral,
-                'persionType': this.dataForm.persionType,
-                'prizeGrade': this.dataForm.prizeGrade,
-                'raceGrade': this.dataForm.raceGrade,
-                'isDel': 0,
-                'participateType': this.dataForm.participateType,
-                'applyUserId': this.$store.state.user.id
+                pointsApplyEntity: this.dataForm,
+                pointsAttachEntityList: this.attachLists,
+                delAttachLists: this.delAttachLists
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -235,6 +243,7 @@
         // 重置
         this.dataForm.raceGrade = ''
         this.dataForm.prizeGrade = ''
+        this.sysPointsId = 0
         this.raceGradeList = []
         this.prizeGradeList = []
         // 积分规则项目名称
@@ -260,6 +269,7 @@
       changeRaceGrade (e) {
         // 重置
         this.dataForm.prizeGrade = ''
+        this.sysPointsId = 0
         this.prizeGradeList = []
         // 积分规则--奖项等级
         this.$http({
@@ -287,6 +297,7 @@
                   this.dataForm.applyIntegral = item.integral
                   this.integral = item.integral
                   this.integralTo = item.integralTo
+                  this.sysPointsId = item.integralId
                 }
               })
             }
@@ -303,6 +314,7 @@
             this.dataForm.applyIntegral = item.integral
             this.integral = item.integral
             this.integralTo = item.integralTo
+            this.sysPointsId = item.integralId
           }
         })
       },
@@ -321,7 +333,7 @@
       // 上传成功
       successHandle1 (response, file, fileList) {
         if (response && response.code === 0) {
-          this.attachLists.push(response.finishAttachEntity)
+          this.attachLists.push(response.pointsAttachEntity)
           this.fileIsNull = false
         } else {
           this.$message.error(response.msg)
@@ -333,6 +345,8 @@
         for (var index = 0; index < this.attachLists.length; index++) {
           if (this.attachLists[index].attachName !== file.name) {
             tempFileList.push(this.attachLists[index])
+          } else {
+            this.delAttachLists.push(this.attachLists[index])
           }
         }
         this.attachLists = tempFileList

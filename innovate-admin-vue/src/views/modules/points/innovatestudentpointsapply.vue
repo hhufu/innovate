@@ -6,8 +6,12 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('points:innovatestudentpointsapply:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('points:innovatestudentpointsapply:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('points:innovatestudentpointsapply:save')" type="primary" @click="addOrUpdateHandle()">
+          我要申请
+        </el-button>
+        <el-button v-if="isAuth('points:innovatestudentpointsapply:delete')" type="danger" @click="deleteHandle()"
+                   :disabled="dataListSelections.length <= 0">批量删除
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -60,7 +64,7 @@
         prop="participateType"
         header-align="center"
         align="center"
-        label="参与人类别">
+        label="申请类型">
       </el-table-column>
       <el-table-column
         prop="raceGrade"
@@ -103,12 +107,18 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" v-if="isAuth('points:innovatestudentpointsapply:stuApply') && (scope.row.applyStatus === 0 || scope.row.applyStatus === -1)" @click="editApplyStatus(scope.row, 1)">提交申请</el-button>
+          <el-button type="text" size="small"
+                     v-if="isAuth('points:innovatestudentpointsapply:stuApply') && (scope.row.applyStatus === 0 || scope.row.applyStatus === -1)"
+                     @click="editApplyStatus(scope.row, 1)">提交申请
+          </el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.integralApplyId)">查看</el-button>
-          <el-button type="text" size="small" v-if="isAuth('points:innovatestudentpointsapply:adminApply') && scope.row.applyStatus > 0" @click="editApplyStatus(scope.row, 3)">通过</el-button>
-          <el-button type="text" size="small" v-if="isAuth('points:innovatestudentpointsapply:adminApply') && scope.row.applyStatus > 0" @click="editApplyStatus(scope.row, -1)">不通过</el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === 0 || scope.row.applyStatus === -1" @click="addOrUpdateHandle(scope.row.integralApplyId)">修改</el-button>
-          <el-button type="text" size="small" v-if="$store.state.user.id === scope.row.applyUserId" @click="deleteHandle(scope.row.integralApplyId)">删除</el-button>
+          <el-button type="text" size="small" v-if="scope.row.applyStatus === 0 || scope.row.applyStatus === -1"
+                     @click="addOrUpdateHandle(scope.row.integralApplyId)">修改
+          </el-button>
+          <el-button type="text" size="small"
+                     v-if="$store.state.user.id === scope.row.applyUserId && scope.row.applyStatus === 0"
+                     @click="deleteHandle(scope.row.integralApplyId)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -128,8 +138,9 @@
 
 <script>
   import AddOrUpdate from './innovatestudentpointsapply-add-or-update'
+
   export default {
-    data () {
+    data() {
       return {
         dataForm: {
           key: ''
@@ -146,12 +157,12 @@
     components: {
       AddOrUpdate
     },
-    activated () {
+    activated() {
       this.getDataList()
     },
     methods: {
       // 获取数据列表
-      getDataList () {
+      getDataList() {
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl('/points/innovatestudentpointsapply/list'),
@@ -173,51 +184,57 @@
           this.dataListLoading = false
         })
       },
-      // 提交申请
-      editApplyStatus (row, status) {
-        this.$http({
-          url: this.$http.adornUrl('/points/innovatestudentpointsapply/update'),
-          method: 'post',
-          data: this.$http.adornData({
-            'integralApplyId': row.integralApplyId || undefined,
-            'applyStatus': status
-          })
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.$message({
-              message: '操作成功',
-              type: 'success',
-              duration: 1500,
-              onClose: () => {
-                this.visible = false
-                this.getDataList()
-              }
-            })
-          } else {
-            this.$message.error(data.msg)
-          }
-        })
-      },
       // 每页数
-      sizeChangeHandle (val) {
+      sizeChangeHandle(val) {
         this.pageSize = val
         this.pageIndex = 1
         this.getDataList()
       },
       // 当前页
-      currentChangeHandle (val) {
+      currentChangeHandle(val) {
         this.pageIndex = val
         this.getDataList()
       },
       // 多选
-      selectionChangeHandle (val) {
+      selectionChangeHandle(val) {
         this.dataListSelections = val
       },
       // 新增 / 修改
-      addOrUpdateHandle (id) {
+      addOrUpdateHandle(id) {
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
+        })
+      },
+      // 提交申请
+      editApplyStatus (row, status) {
+        this.$confirm(`你确定提交申请类型为["${row.participateType}"]的记录吗？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/points/innovatestudentpointsapply/update'),
+            method: 'post',
+            data: this.$http.adornData({
+              'integralApplyId': row.integralApplyId || undefined,
+              'applyStatus': status
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.visible = false
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
         })
       },
       // 删除

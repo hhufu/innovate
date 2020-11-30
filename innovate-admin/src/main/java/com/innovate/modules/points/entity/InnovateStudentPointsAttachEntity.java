@@ -27,7 +27,7 @@ public class InnovateStudentPointsAttachEntity implements Serializable {
 	/**
 	 * 积分申请id
 	 */
-	private String pointsApplyId;
+	private Long pointsApplyId;
 	/**
 	 * 附件名称
 	 */
@@ -35,7 +35,7 @@ public class InnovateStudentPointsAttachEntity implements Serializable {
 	/**
 	 * 附件路径
 	 */
-	private String attachPathattachPath;
+	private String attachPath;
 	/**
 	 * 上传时间
 	 */

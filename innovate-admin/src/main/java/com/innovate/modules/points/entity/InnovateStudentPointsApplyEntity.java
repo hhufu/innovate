@@ -28,6 +28,10 @@ public class InnovateStudentPointsApplyEntity implements Serializable {
 	@TableId
 	private Long integralApplyId;
 	/**
+	 * 积分标准id
+	 */
+	private Long sysPointsId;
+	/**
 	 * 申请人
 	 */
 	private Long applyUserId;

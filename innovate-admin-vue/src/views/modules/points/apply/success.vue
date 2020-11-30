@@ -6,7 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('points:innovatestudentpointsapply:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('points:innovatestudentpointsapply:save')" type="primary" @click="addOrUpdateHandle()">我要申请</el-button>
+        <el-button v-if="isAuth('points:innovatestudentpointsapply:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -103,10 +104,6 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.integralApplyId)">查看</el-button>
-          <el-button type="text" size="small" v-if="$store.state.user.id === scope.row.applyUserId" @click="deleteHandle(scope.row.integralApplyId)">删除</el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === 1" @click="editApplyStatus(scope.row, 3)">通过</el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === 1" @click="editApplyStatus(scope.row, -1)">不通过</el-button>
-
         </template>
       </el-table-column>
     </el-table>
@@ -158,8 +155,7 @@
             'page': this.pageIndex,
             'limit': this.pageSize,
             'key': this.dataForm.key,
-            'applyStatus': 1,
-            'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id
+            'applyStatus': 3
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

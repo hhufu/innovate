@@ -2,9 +2,11 @@ package com.innovate.modules.points.controller;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-import com.innovate.modules.sys.entity.SysUserEntity;
+import com.innovate.modules.points.entity.InnovateStudentPointsAttachEntity;
+import com.innovate.modules.points.entity.PointsApplyModel;
 import com.innovate.modules.sys.service.SysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +55,8 @@ public class InnovateStudentPointsApplyController {
     @RequestMapping("/info/{integralApplyId}")
     @RequiresPermissions("points:innovatestudentpointsapply:info")
     public R info(@PathVariable("integralApplyId") Long integralApplyId){
-		InnovateStudentPointsApplyEntity innovateStudentPointsApply = innovateStudentPointsApplyService.selectById(integralApplyId);
-		// 获取申请用户信息
-        innovateStudentPointsApply.setUserEntity(sysUserService.selectById(innovateStudentPointsApply.getApplyUserId()));
-        return R.ok().put("innovateStudentPointsApply", innovateStudentPointsApply);
+        R r = innovateStudentPointsApplyService.info(integralApplyId);
+        return r;
     }
 
     /**
@@ -64,10 +64,9 @@ public class InnovateStudentPointsApplyController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("points:innovatestudentpointsapply:save")
-    public R save(@RequestBody InnovateStudentPointsApplyEntity innovateStudentPointsApply){
-        innovateStudentPointsApply.setApplyTime(new Date());
-		innovateStudentPointsApplyService.insert(innovateStudentPointsApply);
-
+    public R save(@RequestBody PointsApplyModel applyModel){
+		boolean flag = innovateStudentPointsApplyService.insertModel(applyModel);
+        if (!flag) return R.error();
         return R.ok();
     }
 
@@ -76,8 +75,8 @@ public class InnovateStudentPointsApplyController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("points:innovatestudentpointsapply:update")
-    public R update(@RequestBody InnovateStudentPointsApplyEntity innovateStudentPointsApply){
-		innovateStudentPointsApplyService.updateById(innovateStudentPointsApply);
+    public R update(@RequestBody PointsApplyModel applyModel){
+		innovateStudentPointsApplyService.update(applyModel);
 
         return R.ok();
     }
