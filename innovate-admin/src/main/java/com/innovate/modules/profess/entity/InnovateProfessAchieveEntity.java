@@ -31,7 +31,7 @@ public class InnovateProfessAchieveEntity implements Serializable {
 	/**
 	 * 所属二级学院
 	 */
-	private String instituteId;
+	private Long instituteId;
 	/**
 	 * 获奖(项目）名称
 	 */

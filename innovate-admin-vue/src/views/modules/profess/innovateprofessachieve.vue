@@ -22,29 +22,23 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
-        prop="professAchieveId"
-        header-align="center"
-        align="center"
-        label="自增主键">
-      </el-table-column>
-      <el-table-column
-        prop="professUserId"
-        header-align="center"
-        align="center"
-        label="负责人id">
-      </el-table-column>
-      <el-table-column
-        prop="instituteId"
-        header-align="center"
-        align="center"
-        label="所属二级学院">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="professAchieveId"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="自增主键">-->
+<!--      </el-table-column>-->
+<!--      <el-table-column-->
+<!--        prop="professUserId"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="负责人id">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="awardAchieName"
         header-align="center"
         align="center"
-        label="获奖(项目）名称">
+        label="获奖名称">
       </el-table-column>
       <el-table-column
         prop="professAchieDirector"
@@ -59,29 +53,36 @@
         label="团队成员">
       </el-table-column>
       <el-table-column
+        prop="professAchieveType"
+        header-align="center"
+        align="center"
+        label="专创成果类型">
+      </el-table-column>
+      <el-table-column
+        prop="instituteId"
+        header-align="center"
+        align="center"
+        :formatter="fomatterInstitute"
+        label="所属二级学院">
+      </el-table-column>
+      <el-table-column
         prop="awardTime"
         header-align="center"
         align="center"
         label="获得时间">
       </el-table-column>
-      <el-table-column
-        prop="professAchieveType"
-        header-align="center"
-        align="center"
-        label="专创成果类型（奖励、立项、教改项目、教改论文、教学成果奖、教学过程材料、教学效果）">
-      </el-table-column>
-      <el-table-column
-        prop="professAchieveTypeId"
-        header-align="center"
-        align="center"
-        label="专创成果类型id">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="professAchieveTypeId"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="专创成果类型id">-->
+<!--      </el-table-column>-->
+<!--      <el-table-column-->
+<!--        prop="isDel"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="是否删除">-->
+<!--      </el-table-column>-->
       <el-table-column
         fixed="right"
         header-align="center"
@@ -122,7 +123,8 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        instituteList: [] // 学院列表
       }
     },
     components: {
@@ -130,6 +132,7 @@
     },
     activated () {
       this.getDataList()
+      this.getInstituteName()
     },
     methods: {
       // 获取数据列表
@@ -154,6 +157,17 @@
           this.dataListLoading = false
         })
       },
+      getInstituteName () {
+        debugger
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.instituteList = data.institute
+          }
+        })
+      },
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val
@@ -175,6 +189,17 @@
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
         })
+      },
+      // 格式化学院名称
+      fomatterInstitute(e) {
+        var actions = [];
+        Object.keys(this.instituteList).some((key) => {
+          if ( this.instituteList[key].instituteId == parseInt(e.instituteId)) {
+            actions.push( this.instituteList[key].instituteName);
+            return true;
+          }
+        })
+        return actions.join('');
       },
       // 删除
       deleteHandle (id) {

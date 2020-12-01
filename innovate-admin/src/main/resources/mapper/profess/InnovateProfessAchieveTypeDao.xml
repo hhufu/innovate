@@ -8,6 +8,8 @@
         <result property="professAchieveTypeId" column="profess_achieve_type_id"/>
         <result property="professAchieveType" column="profess_achieve_type"/>
     </resultMap>
-
+    <select id="queryAllProfessAchieveType" resultMap="innovateProfessAchieveTypeMap">
+        select * from innovate_profess_achieve_type where 1 = 1;
+    </select>
 
 </mapper>

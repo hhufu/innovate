@@ -17,8 +17,6 @@ import lombok.Data;
 @Data
 @TableName("innovate_profess_achieve_type")
 public class InnovateProfessAchieveTypeEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * 自增主键
 	 */
