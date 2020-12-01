@@ -1,10 +1,7 @@
 package com.innovate.modules.points.controller;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import com.alibaba.excel.EasyExcel;
 import com.innovate.modules.innovate.config.ConfigApi;
@@ -25,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /**
- * 
+ *
  *
  * @author Mikey
  * @email biaogejiushibiao@outlook.com
@@ -113,5 +110,17 @@ public class InnovateStudentPointsController {
         }
 
         return R.ok("导入成功");
+    }
+
+    /**
+     * 保存申请的积分
+     */
+    @RequestMapping("/saveApplyPoints")
+    @RequiresPermissions("points:innovatestudentpoints:save")
+    public R saveApplyPoints(@RequestBody InnovateStudentPointsEntity innovateStudentPoints){
+        innovateStudentPoints.setOperationTime(new Date());
+        Boolean f = innovateStudentPointsService.insert(innovateStudentPoints);
+
+        return R.ok("保存成功");
     }
 }

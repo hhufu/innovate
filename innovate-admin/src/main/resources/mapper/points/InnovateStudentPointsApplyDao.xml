@@ -9,8 +9,10 @@
         <result property="applyTime" column="apply_time"/>
         <result property="sysPointsId" column="sys_points_id"/>
         <result property="applyUserId" column="apply_user_id"/>
+        <result property="stuNum" column="stu_num"/>
         <result property="isDel" column="is_del"/>
         <result property="applyIntegral" column="apply_integral"/>
+        <result property="instituteId" column="institute_id"/>
         <result property="applyStatus" column="apply_status"/>
         <result property="persionType" column="persion_type"/>
         <result property="prizeGrade" column="prize_grade"/>
@@ -24,6 +26,8 @@
             <if test="applyTime != null">apply_time,</if>
             <if test="sysPointsId != null">sys_points_id,</if>
             <if test="applyUserId != null">apply_user_id,</if>
+            <if test="stuNum != null">stu_num,</if>
+            <if test="instituteId != null">institute_id,</if>
             <if test="isDel != null">is_del,</if>
             <if test="applyIntegral != null">apply_integral,</if>
             <if test="applyStatus != null">apply_status,</if>
@@ -36,6 +40,8 @@
             <if test="applyTime != null">#{applyTime},</if>
             <if test="sysPointsId != null">#{sysPointsId},</if>
             <if test="applyUserId != null">#{applyUserId},</if>
+            <if test="stuNum != null">#{stuNum},</if>
+            <if test="instituteId != null">#{instituteId},</if>
             <if test="isDel != null">#{isDel},</if>
             <if test="applyIntegral != null">#{applyIntegral},</if>
             <if test="applyStatus != null">#{applyStatus},</if>
