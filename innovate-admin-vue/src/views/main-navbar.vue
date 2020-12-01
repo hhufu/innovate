@@ -253,22 +253,26 @@
       },
       // 进入科创系统
       comeToScienceInnovate () {
-        // 先退出当前系统
-        this.$http({
-          url: this.$http.adornUrl('/sys/logout'),
-          method: 'post',
-          data: this.$http.adornData()
-        }).then(({data}) => {
+        // 调取科创接口，将当前教师用户token存入其redis中
+        axios.post('http://47.112.103.217:8003/innovate/setUserTokenToRedis', {'username': this.$store.state.user.username}).then(({data}) => {
           if (data && data.code === 0) {
-            // 在进入科创
-            axios.post('http://47.112.103.217:8003/sys/innovateLogin', {'username': this.$store.state.user.username}).then(({data}) => {
+            // 先退出当前系统
+            this.$http({
+              url: this.$http.adornUrl('/sys/logout'),
+              method: 'post',
+              data: this.$http.adornData()
+            }).then(({data}) => {
               if (data && data.code === 0) {
-                this.loginLoading = false
-                this.$cookie.set('token', data.token)
-                window.location.href = 'http://47.112.103.217:8004/#/home'
-              } else {
-                this.$message.error(data.msg)
+                // 然后跳转到登录页
+                window.location.href = 'http://47.112.103.217:8004/'
               }
+            })
+          } else {
+            this.$alert(data.msg, '提示', {
+              confirmButtonText: '确定',
+              type: 'error'
+            }).then(() => {
+              console.log(data.msg)
             })
           }
         })
