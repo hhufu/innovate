@@ -59,6 +59,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item v-if="isStudent()" @click.native="studentAddOrUpdateHandle()">负责人信息</el-dropdown-item>
               <el-dropdown-item v-if="isTeacher()" @click.native="teacherAddOrUpdateHandle()">教师信息</el-dropdown-item>
+              <el-dropdown-item v-if="isTeacher()" @click.native="comeToScienceInnovate()">进入科创系统</el-dropdown-item>
               <el-dropdown-item @click.native="updatePasswordHandle()">修改密码</el-dropdown-item>
               <el-dropdown-item @click.native="logoutHandle()">退出</el-dropdown-item>
             </el-dropdown-menu>
@@ -78,6 +79,7 @@
   import UpdatePassword from './main-navbar-update-password'
   import StudentAddOrUpdate from './student-addOrUpdate-info'
   import TeacherAddOrUpdate from './teacher-addOrUpdate-info'
+  import axios from 'axios'
   export default {
     data () {
       return {
@@ -247,6 +249,28 @@
         this.teacherAddOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.teacherAddOrUpdate.init()
+        })
+      },
+      // 进入科创系统
+      comeToScienceInnovate () {
+        // 先退出当前系统
+        this.$http({
+          url: this.$http.adornUrl('/sys/logout'),
+          method: 'post',
+          data: this.$http.adornData()
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            // 在进入科创
+            axios.post('http://47.112.103.217:8003/sys/innovateLogin', {'username': this.$store.state.user.username}).then(({data}) => {
+              if (data && data.code === 0) {
+                this.loginLoading = false
+                this.$cookie.set('token', data.token)
+                window.location.href = 'http://47.112.103.217:8004/#/home'
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
+          }
         })
       },
       switchChinese () {
