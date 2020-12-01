@@ -18,7 +18,7 @@
         <result property="participateType" column="participate_type"/>
     </resultMap>
 
-    <insert id="insertE" parameterType="InnovateStudentPointsApplyEntity" useGeneratedKeys="true" keyProperty="paTypeId">
+    <insert id="insertE" parameterType="InnovateStudentPointsApplyEntity" useGeneratedKeys="true" keyProperty="integralApplyId">
         insert into innovate_student_points_apply
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="applyTime != null">apply_time,</if>
@@ -33,16 +33,16 @@
             <if test="participateType != null">participate_type</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="applyTime != null">#{apply_time},</if>
-            <if test="sysPointsId != null">#{sys_points_id},</if>
-            <if test="applyUserId != null">#{apply_user_id},</if>
-            <if test="isDel != null">#{is_del},</if>
-            <if test="applyIntegral != null">#{apply_integral},</if>
-            <if test="applyStatus != null">#{apply_status},</if>
-            <if test="persionType != null">#{persion_type},</if>
-            <if test="prizeGrade != null">#{prize_grade},</if>
-            <if test="raceGrade != null">#{race_grade},</if>
-            <if test="participateType != null">#{participate_type}</if>
+            <if test="applyTime != null">#{applyTime},</if>
+            <if test="sysPointsId != null">#{sysPointsId},</if>
+            <if test="applyUserId != null">#{applyUserId},</if>
+            <if test="isDel != null">#{isDel},</if>
+            <if test="applyIntegral != null">#{applyIntegral},</if>
+            <if test="applyStatus != null">#{applyStatus},</if>
+            <if test="persionType != null">#{persionType},</if>
+            <if test="prizeGrade != null">#{prizeGrade},</if>
+            <if test="raceGrade != null">#{raceGrade},</if>
+            <if test="participateType != null">#{participateType}</if>
         </trim>
     </insert>
 </mapper>

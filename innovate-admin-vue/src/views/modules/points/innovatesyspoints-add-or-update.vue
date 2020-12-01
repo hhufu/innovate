@@ -55,8 +55,8 @@
           <template slot="append">积分</template>
         </el-input>
       </el-form-item>
-      <el-form-item v-if="textType == '1'" label="申请附件要求" prop="fileAskContent">
-        <el-input v-model="dataForm.fileAskContent" style="width: 60%" placeholder="申请附件要求" type="textarea" autosize></el-input>
+      <el-form-item v-if="textType == '1'" label="附件要求" prop="fileAskContent">
+        <el-input v-model="dataForm.fileAskContent" style="width: 60%" placeholder="附件要求" type="textarea" autosize></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">

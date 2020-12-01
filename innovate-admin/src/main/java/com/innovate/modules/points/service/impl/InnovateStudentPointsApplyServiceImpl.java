@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -36,15 +37,17 @@ public class InnovateStudentPointsApplyServiceImpl extends ServiceImpl<InnovateS
     private InnovateStudentPointsApplyDao innovateStudentPointsApplyDao;
     @Autowired
     private InnovateStudentPointsAttachService innovateStudentPointsAttachService;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateStudentPointsApplyEntity> entityWrapper = new EntityWrapper<>();
-        if (params.get("applyStatus")!=null) entityWrapper.eq("apply_status", params.get("applyStatus"));
+        if (params.get("applyStatus") != null) entityWrapper.eq("apply_status", params.get("applyStatus"));
         //根据学号查询&&非管理员
-        if (params.get("apply_user_id")!=null){
+        if (params.get("apply_user_id") != null) {
             SysUserEntity user = sysUserService.selectById(Long.parseLong(params.get("apply_user_id").toString()));
-            entityWrapper.eq("apply_user_id",user.getUserId());
+            entityWrapper.eq("apply_user_id", user.getUserId());
         }
+        entityWrapper.orderBy("apply_time", false);
         Page<InnovateStudentPointsApplyEntity> page = this.selectPage(
                 new Query<InnovateStudentPointsApplyEntity>(params).getPage(),
                 entityWrapper
@@ -54,32 +57,35 @@ public class InnovateStudentPointsApplyServiceImpl extends ServiceImpl<InnovateS
 
     @Override
     public boolean insertModel(PointsApplyModel applyModel) {
-        applyModel.getPointsApplyEntity().setApplyTime(new Date());
-        InnovateStudentPointsApplyEntity studentPointsApplyEntity = innovateStudentPointsApplyDao.insertE(applyModel.getPointsApplyEntity());
-        for(InnovateStudentPointsAttachEntity a: applyModel.getPointsAttachEntityList()) {
+        InnovateStudentPointsApplyEntity pointsApplyEntity = applyModel.getPointsApplyEntity();
+        pointsApplyEntity.setApplyTime(new Date());
+        int i = innovateStudentPointsApplyDao.insertE(pointsApplyEntity);
+        for (InnovateStudentPointsAttachEntity a : applyModel.getPointsAttachEntityList()) {
             a.setAttachTime(new Date());
-            a.setPointsApplyId(studentPointsApplyEntity.getIntegralApplyId());
+            a.setPointsApplyId(pointsApplyEntity.getIntegralApplyId());
             innovateStudentPointsAttachService.insert(a);
         }
-        if (studentPointsApplyEntity.getIntegralApplyId() != null)
+        if (i == 1)
             return true;
-            return false;
+        return false;
     }
 
     @Override
     public boolean update(PointsApplyModel applyModel) {
         innovateStudentPointsApplyDao.updateById(applyModel.getPointsApplyEntity());
-        for (InnovateStudentPointsAttachEntity att: applyModel.getDelAttachLists()) {
-            if (att.getAttachId() != null) {// 删除附件
-                att.setIsDel(1);
-                innovateStudentPointsAttachService.updateById(att);
+        if (applyModel.getDelAttachLists() != null)
+            for (InnovateStudentPointsAttachEntity att : applyModel.getDelAttachLists()) {
+                if (att.getAttachId() != null) {// 删除附件
+                    att.setIsDel(1);
+                    innovateStudentPointsAttachService.updateById(att);
+                }
             }
-        }
-        for(InnovateStudentPointsAttachEntity a: applyModel.getPointsAttachEntityList()) {
-            a.setAttachTime(new Date());
-            a.setPointsApplyId(applyModel.getPointsApplyEntity().getIntegralApplyId());
-            innovateStudentPointsAttachService.insertOrUpdate(a);
-        }
+        if (applyModel.getPointsAttachEntityList() != null) // 修改或添加附件
+            for (InnovateStudentPointsAttachEntity a : applyModel.getPointsAttachEntityList()) {
+                a.setAttachTime(new Date());
+                a.setPointsApplyId(applyModel.getPointsApplyEntity().getIntegralApplyId());
+                innovateStudentPointsAttachService.insertOrUpdate(a);
+            }
         return false;
     }
 
