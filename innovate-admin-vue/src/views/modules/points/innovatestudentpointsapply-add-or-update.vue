@@ -3,31 +3,35 @@
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="100px">
-    <el-form-item label="申请类型" prop="persionType">
-      <el-select v-model="dataForm.participateType" @change="changeParticipate" style="width: 60%" placeholder="请选择申报类型" default-first-option filterable clearable>
-        <el-option v-for="item in participateList"
-                   :label="item.participateType"
-                   :value="item.participateType"
-                   :key="item.applyIntegral"
-        >
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
+             label-width="100px">
+      <el-form-item label="申请类型" prop="persionType">
+        <el-select v-model="dataForm.participateType" @change="changeParticipate" style="width: 60%"
+                   placeholder="请选择申报类型" default-first-option filterable clearable>
+          <el-option v-for="item in participateList"
+                     :label="item.participateType"
+                     :value="item.participateType"
+                     :key="item.applyIntegral"
+          >
 
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="项目名称" prop="raceGrade" v-if="raceGradeList.length > 0 || dataForm.raceGrade">
-      <el-select v-model="dataForm.raceGrade" @change="changeRaceGrade" style="width: 60%" placeholder="请选择奖项等级" default-first-option filterable clearable>
-        <el-option v-for="item in raceGradeList"
-                   :label="item.raceGrade"
-                   :value="item.raceGrade"
-                   :key="item.applyIntegral"
-        >
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="项目名称" prop="raceGrade" v-if="raceGradeList.length > 0 || dataForm.raceGrade">
+        <el-select v-model="dataForm.raceGrade" @change="changeRaceGrade" style="width: 60%" placeholder="请选择奖项等级"
+                   default-first-option filterable clearable>
+          <el-option v-for="item in raceGradeList"
+                     :label="item.raceGrade"
+                     :value="item.raceGrade"
+                     :key="item.applyIntegral"
+          >
 
-        </el-option>
-      </el-select>
-    </el-form-item>
-      <el-form-item label="奖项等级" prop="" v-if="prizeGradeList.length > 0 || dataForm.prizeGrade">
-        <el-select v-model="dataForm.prizeGrade" @change="changePrizeGrade" style="width: 60%" placeholder="请选择奖项等级" default-first-option filterable clearable>
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="奖项等级" prop="prizeGrade" v-if="prizeGradeList.length > 0 || dataForm.prizeGrade">
+        <el-select v-model="dataForm.prizeGrade" @change="changePrizeGrade" style="width: 60%" placeholder="请选择奖项等级"
+                   default-first-option filterable clearable>
           <el-option v-for="item in prizeGradeList"
                      :label="item.prizeGrade"
                      :value="item.prizeGrade"
@@ -38,7 +42,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="参与人类别" prop="">
-        <el-select v-model="dataForm.persionType" @change="changePersionType"  placeholder="请选择参与人类别" clearable filterable>
+        <el-select v-model="dataForm.persionType" @change="changePersionType" placeholder="请选择参与人类别" clearable
+                   filterable>
           <el-option v-for="item in persionTypeOptions"
                      :label="item.lable"
                      :value="item.value"
@@ -49,7 +54,8 @@
         <div class="sub-title" style="color: red">注：/** 如果是参加活动培训或个人活动时可不填 **/</div>
       </el-form-item>
       <el-form-item label="申请积分" prop="participateType">
-        <el-input v-model="dataForm.applyIntegral" style="width: 200px" type="number" :disabled="noEditPoint" placeholder="积分">
+        <el-input v-model="dataForm.applyIntegral" style="width: 200px" type="number" :disabled="noEditPoint"
+                  placeholder="积分">
           <template slot="append">积分</template>
         </el-input>
       </el-form-item>
@@ -87,7 +93,7 @@
 <script>
   // eslint-disable-next-line no-unused-vars
   class FinishAttachment {
-    constructor (file) {
+    constructor(file) {
       this.name = file.attachName
       this.url = file.attachPath
       this.file = file
@@ -95,7 +101,7 @@
   }
 
   export default {
-    data () {
+    data() {
       return {
         visible: false,
         attachLists: [], // 附件列表
@@ -127,25 +133,28 @@
         textType: '',
         dataRule: {
           applyTime: [
-            { required: true, message: '申请时间不能为空', trigger: 'blur' }
+            {required: true, message: '申请时间不能为空', trigger: 'blur'}
           ],
           isDel: [
-            { required: true, message: '是否删除不能为空', trigger: 'blur' }
+            {required: true, message: '是否删除不能为空', trigger: 'blur'}
           ],
           applyIntegral: [
-            { required: true, message: '积分标准表id不能为空', trigger: 'blur' }
+            {required: true, message: '积分不能为空', trigger: 'blur'}
           ],
           raceGrade: [
-            { required: true, message: '比赛级别（等级、项目）不能为空', trigger: 'blur' }
+            {required: true, message: '项目名称不能为空', trigger: 'blur'}
+          ],
+          prizeGrade: [
+            {required: true, message: '奖项等级不能为空', trigger: 'blur'}
           ],
           participateType: [
-            { required: true, message: '参与人类别（1：负责人，2参与成员）不能为空', trigger: 'blur' }
+            {required: true, message: '参与人类别不能为空', trigger: 'blur'}
           ]
         }
       }
     },
     methods: {
-      init (id) {
+      init(id) {
         this.url = this.$http.adornUrl(`/points/attach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.integralApplyId = id || 0
         this.getTypeList()
@@ -175,10 +184,32 @@
                   tempFinishAtta.push(new FinishAttachment(this.attachLists[i]))
                 }
                 this.fileList = tempFinishAtta
+                // 数据修改回显
+                this.changeParticipate(this.dataForm.participateType)
+                this.changeRaceGrade(data.innovateStudentPointsApply.raceGrade)
+                this.dataForm.raceGrade = data.innovateStudentPointsApply.raceGrade
+                this.dataForm.prizeGrade = data.innovateStudentPointsApply.prizeGrade
               }
             })
+          } else {
+            this.reset();
           }
         })
+      },
+      // 重置
+      reset() {
+        this.dataForm = {
+          integralApplyId: 0,
+          applyTime: '',
+          isDel: '',
+          applyIntegral: '',
+          persionType: '',
+          prizeGrade: '',
+          raceGrade: '',
+          participateType: '',
+          sysPointsId: 0,
+          applyUserId: 0
+        }
       },
       getTypeList () {
         this.participateList = []
@@ -233,20 +264,19 @@
       },
       // 选择申报类型
       changeParticipate (e) {
-        this.participateList.forEach(item => {
-          // eslint-disable-next-line eqeqeq
-          if (item.participateType == e) {
-            this.parentId = item.integralId
-            this.fileAskContent = item.fileAskContent
-          }
+        // eslint-disable-next-line no-unused-vars
+        let list = this.participateList.filter(item => {
+          return item.participateType.indexOf(e) > -1
         })
+        this.parentId = list[0].integralId
+        this.fileAskContent = list[0].fileAskContent
         // 重置
         this.dataForm.raceGrade = ''
         this.dataForm.prizeGrade = ''
-        this.sysPointsId = 0
+        this.dataForm.sysPointsId = 0
         this.raceGradeList = []
         this.prizeGradeList = []
-        // 积分规则项目名称
+        // 积分规则--项目名称
         this.$http({
           url: this.$http.adornUrl('/points/innovatesyspoints/list'),
           method: 'get',
@@ -266,10 +296,10 @@
         })
       },
       // 选择项目名称
-      changeRaceGrade (e) {
+      changeRaceGrade(e) {
         // 重置
         this.dataForm.prizeGrade = ''
-        this.sysPointsId = 0
+        this.dataForm.sysPointsId = 0
         this.prizeGradeList = []
         // 积分规则--奖项等级
         this.$http({
@@ -291,15 +321,15 @@
             // eslint-disable-next-line eqeqeq
             if (data.page.list.length == 0) {
               this.prizeGradeList = []
-              this.raceGradeList.forEach(item => {
+              let list = this.raceGradeList.filter(item => {
                 // eslint-disable-next-line eqeqeq
-                if (item.raceGrade == e) { // 获取对应积分
-                  this.dataForm.applyIntegral = item.integral
-                  this.integral = item.integral
-                  this.integralTo = item.integralTo
-                  this.sysPointsId = item.integralId
-                }
+                return item.raceGrade.indexOf(e) > -1
               })
+              alert(list[0].integral)
+              this.dataForm.applyIntegral = list[0].integral // 获取对应积分
+              this.integral = list[0].integral
+              this.integralTo = list[0].integralTo
+              this.dataForm.sysPointsId = list[0].integralId
             }
           } else {
             this.prizeGradeList = []
@@ -308,18 +338,18 @@
       },
       // 选择--奖项等级
       changePrizeGrade (e) {
-        this.prizeGradeList.forEach(item => {
+        let list = this.prizeGradeList.filter(item => {
           // eslint-disable-next-line eqeqeq
-          if (item.prizeGrade == e) { // 获取对应积分
-            this.dataForm.applyIntegral = item.integral
-            this.integral = item.integral
-            this.integralTo = item.integralTo
-            this.sysPointsId = item.integralId
-          }
+          return item.prizeGrade.indexOf(e) > -1
         })
+        // 获取对应积分
+        this.dataForm.applyIntegral = list[0].integral
+        this.integral = list[0].integral
+        this.integralTo = list[0].integralTo
+        this.dataForm.sysPointsId = list[0].integralId
       },
       // 选择人员类别
-      changePersionType (e) {
+      changePersionType(e) {
         // eslint-disable-next-line eqeqeq
         if (e == 1) {
           // 负责人积分
@@ -331,7 +361,7 @@
         }
       },
       // 上传成功
-      successHandle1 (response, file, fileList) {
+      successHandle1(response, file, fileList) {
         if (response && response.code === 0) {
           this.attachLists.push(response.pointsAttachEntity)
           this.fileIsNull = false
@@ -339,7 +369,7 @@
           this.$message.error(response.msg)
         }
       },
-      fileRemoveHandler (file, fileList) {
+      fileRemoveHandler(file, fileList) {
         // 移除attachList中的附件
         let tempFileList = []
         for (var index = 0; index < this.attachLists.length; index++) {

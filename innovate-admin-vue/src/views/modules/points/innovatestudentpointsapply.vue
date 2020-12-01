@@ -111,7 +111,7 @@
                      v-if="isAuth('points:innovatestudentpointsapply:stuApply') && (scope.row.applyStatus === 0 || scope.row.applyStatus === -1)"
                      @click="editApplyStatus(scope.row, 1)">提交申请
           </el-button>
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.integralApplyId)">查看</el-button>
+          <el-button type="text" size="small" @click="detailInfo(scope.row.integralApplyId)">查看</el-button>
           <el-button type="text" size="small" v-if="scope.row.applyStatus === 0 || scope.row.applyStatus === -1"
                      @click="addOrUpdateHandle(scope.row.integralApplyId)">修改
           </el-button>
@@ -133,12 +133,13 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <detail-info v-if="detailInfoVisible" ref="detailInfo"></detail-info>
   </div>
 </template>
 
 <script>
   import AddOrUpdate from './innovatestudentpointsapply-add-or-update'
-
+  import DetailInfo from  './apply/detail-info'
   export default {
     data() {
       return {
@@ -151,11 +152,13 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        detailInfoVisible: false
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate,
+      DetailInfo
     },
     activated() {
       this.getDataList()
@@ -206,6 +209,13 @@
           this.$refs.addOrUpdate.init(id)
         })
       },
+      // 查看
+      detailInfo(id) {
+        this.detailInfoVisible = true
+        this.$nextTick(() => {
+          this.$refs.detailInfo.init(id)
+        })
+      },
       // 提交申请
       editApplyStatus (row, status) {
         this.$confirm(`你确定提交申请类型为["${row.participateType}"]的记录吗？`, '提示', {
@@ -217,8 +227,10 @@
             url: this.$http.adornUrl('/points/innovatestudentpointsapply/update'),
             method: 'post',
             data: this.$http.adornData({
-              'integralApplyId': row.integralApplyId || undefined,
-              'applyStatus': status
+              pointsApplyEntity: {
+                'integralApplyId': row.integralApplyId || undefined,
+                'applyStatus': status
+              }
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
