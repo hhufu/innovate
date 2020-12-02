@@ -11,6 +11,7 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.sys.entity.SysUserEntity;
+import com.innovate.modules.training.entity.InnovateTrainingBaseAttachModel;
 import com.innovate.modules.training.entity.InnovateTrainingBaseInfoEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,8 @@ public class InnovateTrainingBaseAchieveController {
     @RequestMapping("/info/{trainingAchieveId}")
     @RequiresPermissions("training:innovatetrainingbaseachieve:info")
     public R info(@PathVariable("trainingAchieveId") Long trainingAchieveId){
-		InnovateTrainingBaseAchieveEntity innovateTrainingBaseAchieve = innovateTrainingBaseAchieveService.selectById(trainingAchieveId);
-
-        return R.ok().put("innovateTrainingBaseAchieve", innovateTrainingBaseAchieve);
+        R r = innovateTrainingBaseAchieveService.info(trainingAchieveId);
+        return r;
     }
 
     /**
@@ -65,10 +65,9 @@ public class InnovateTrainingBaseAchieveController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("training:innovatetrainingbaseachieve:save")
-    public R save(@RequestBody InnovateTrainingBaseAchieveEntity innovateTrainingBaseAchieve){
-		innovateTrainingBaseAchieveService.insert(innovateTrainingBaseAchieve);
-
-        return R.ok();
+    public R save(@RequestBody InnovateTrainingBaseAttachModel attachModel){
+        R r = innovateTrainingBaseAchieveService.insertModel(attachModel);
+        return r;
     }
 
     /**
@@ -76,8 +75,8 @@ public class InnovateTrainingBaseAchieveController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("training:innovatetrainingbaseachieve:update")
-    public R update(@RequestBody InnovateTrainingBaseAchieveEntity innovateTrainingBaseAchieve){
-		innovateTrainingBaseAchieveService.updateById(innovateTrainingBaseAchieve);
+    public R update(@RequestBody InnovateTrainingBaseAttachModel attachModel){
+        innovateTrainingBaseAchieveService.update(attachModel);
 
         return R.ok();
     }

@@ -4,6 +4,8 @@ import com.innovate.modules.cooperation.entity.InnovateCooperationAgreementEntit
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 企业协议管理
  *
@@ -14,4 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface InnovateCooperationAgreementDao extends BaseMapper<InnovateCooperationAgreementEntity> {
 
+    void deleteList(List<Long> list);
+
+    int insertE(InnovateCooperationAgreementEntity cooperationAgreementEntity);
 }

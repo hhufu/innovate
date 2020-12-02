@@ -12,5 +12,13 @@
         <result property="enterpriseType" column="enterprise_type"/>
     </resultMap>
 
-
+    <update id="deleteList"  parameterType="java.util.List">
+        update innovate_register_authentication
+        set is_del = 1
+        where authentication_id in (
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+            #{item}
+        </foreach>
+        )
+    </update>
 </mapper>

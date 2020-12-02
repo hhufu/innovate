@@ -1,21 +1,21 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.authenticationId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="企业名称" prop="enterpriseName">
-      <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>
-    </el-form-item>
-    <el-form-item label="法人代表" prop="corporateRepresentative">
-      <el-input v-model="dataForm.corporateRepresentative" placeholder="法人代表"></el-input>
-    </el-form-item>
-    <el-form-item label="统一信用代码" prop="creditCode">
-      <el-input v-model="dataForm.creditCode" placeholder="统一信用代码"></el-input>
-    </el-form-item>
-    <el-form-item label="企业类型" prop="enterpriseType">
-      <el-input v-model="dataForm.enterpriseType" placeholder="企业类型"></el-input>
-    </el-form-item>
+      <el-form-item label="企业名称" prop="enterpriseName">
+        <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>
+      </el-form-item>
+      <el-form-item label="法人代表" prop="corporateRepresentative">
+        <el-input v-model="dataForm.corporateRepresentative" placeholder="法人代表"></el-input>
+      </el-form-item>
+      <el-form-item label="统一信用代码" prop="creditCode">
+        <el-input v-model="dataForm.creditCode" placeholder="统一信用代码"></el-input>
+      </el-form-item>
+      <el-form-item label="企业类型" prop="enterpriseType">
+        <el-input v-model="dataForm.enterpriseType" placeholder="企业类型"></el-input>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -65,10 +65,11 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.enterpriseName = data.innovateregisterauthentication.enterpriseName
-                this.dataForm.corporateRepresentative = data.innovateregisterauthentication.corporateRepresentative
-                this.dataForm.creditCode = data.innovateregisterauthentication.creditCode
-                this.dataForm.enterpriseType = data.innovateregisterauthentication.enterpriseType
+                 // this.dataForm = data.innovateRegisterAuthentication
+                this.dataForm.enterpriseName = data.innovateRegisterAuthentication.enterpriseName
+                this.dataForm.corporateRepresentative = data.innovateRegisterAuthentication.corporateRepresentative
+                this.dataForm.creditCode = data.innovateRegisterAuthentication.creditCode
+                this.dataForm.enterpriseType = data.innovateRegisterAuthentication.enterpriseType
               }
             })
           }

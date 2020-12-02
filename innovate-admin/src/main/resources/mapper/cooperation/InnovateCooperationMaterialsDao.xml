@@ -13,5 +13,14 @@
         <result property="isDel" column="is_del"/>
     </resultMap>
 
+    <update id="deleteList"  parameterType="java.util.List">
+        update innovate_cooperation_materials
+        set is_del = 1
+        where materials_id in (
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+            #{item}
+        </foreach>
+        )
+    </update>
 
 </mapper>

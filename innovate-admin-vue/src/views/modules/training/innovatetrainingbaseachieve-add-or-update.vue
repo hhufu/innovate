@@ -11,7 +11,7 @@
       <el-input v-model="dataForm.materialYear" placeholder="材料年度"></el-input>
     </el-form-item>
     <el-form-item label="材料类型" prop="materialType">
-      <el-select v-model="dataForm.materialType" placeholder="材料类型">
+      <el-select v-model="dataForm.materialType" placeholder="材料类型" @change="changeelevel($event,dataForm.trainingAchieveType)">
         <el-option
           v-for="item in trainingTypes"
           :key="item.materialTypeId"
@@ -20,15 +20,38 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="材料类型id" prop="materialTypeId">
-      <el-input v-model="dataForm.materialTypeId" placeholder="材料类型id"></el-input>
-    </el-form-item>
-    <el-form-item label="实训基地id" prop="trainingBaseId">
-      <el-input v-model="dataForm.trainingBaseId" placeholder="实训基地id"></el-input>
-    </el-form-item>
-    <el-form-item label="是否删除" prop="isDel">
-      <el-input v-model="dataForm.isDel" placeholder="是否删除"></el-input>
-    </el-form-item>
+<!--    <el-form-item label="材料类型id" prop="materialTypeId">-->
+<!--      <el-input v-model="dataForm.materialTypeId" placeholder="材料类型id"></el-input>-->
+<!--    </el-form-item>-->
+<!--    <el-form-item label="实训基地id" prop="trainingBaseId">-->
+<!--      <el-input v-model="dataForm.trainingBaseId" placeholder="实训基地id"></el-input>-->
+<!--    </el-form-item>-->
+<!--    <el-form-item label="是否删除" prop="isDel">-->
+<!--      <el-input v-model="dataForm.isDel" placeholder="是否删除"></el-input>-->
+<!--    </el-form-item>-->
+      <el-form-item label="附件要求">
+        <template>
+          <el-alert
+            title=""
+            type="success"
+            :closable="false"
+            :description="fileAskContent">
+          </el-alert>
+        </template>
+      </el-form-item>
+      <!--独立附件start-->
+      <el-form-item label="相关附件" prop="reportSalesName">
+        <el-upload
+          class="upload-demo"
+          :action="url"
+          :data="{textType: textType}"
+          :on-success="successHandle1"
+          :on-remove="fileRemoveHandler"
+          :file-list="fileList">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <span v-if="fileIsNull" style="color: crimson">*请上传相关附件</span>
+        </el-upload>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -38,10 +61,24 @@
 </template>
 
 <script>
+  // eslint-disable-next-line no-unused-vars
+  class Trainingachment {
+    constructor (file) {
+      this.name = file.attachName
+      this.url = file.attachPath
+      this.file = file
+    }
+  }
   export default {
     data () {
       return {
         visible: false,
+        url: '',
+        fileAskContent: '无',
+        fileIsNull: false,
+        fileList: [],
+        attachLists: [], // 附件列表
+        delAttachLists: [], // 要删除的附件
         dataForm: {
           trainingAchieveId: 0,
           trainingBaseName: '',
@@ -51,6 +88,7 @@
           trainingBaseId: '',
           isDel: ''
         },
+        textType: '',
         dataRule: {
           trainingBaseName: [
             { required: true, message: '基地名称不能为空', trigger: 'blur' }
@@ -71,42 +109,62 @@
             { required: true, message: '是否删除不能为空', trigger: 'blur' }
           ]
         },
-        trainingTypes:[],
+        trainingTypes: []
       }
     },
     methods: {
-      init (index,id) {
+      init (index, id) {
+        this.url = this.$http.adornUrl(`/training/innovatetrainingbaseattach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.trainingAchieveId = id || 0
         this.visible = true
+        this.$http({
+          url: this.$http.adornUrl(`/training/innovatetrainingachievetype/list`),
+          method: 'get'
+        }).then(({data}) => {
+          this.trainingTypes = data.page.list
+        })
         // eslint-disable-next-line eqeqeq
-          this.$nextTick(() => {
-            this.$refs['dataForm'].resetFields()
-            if (this.dataForm.trainingAchieveId) {
-              this.$http({
-                url: this.$http.adornUrl(`/training/innovatetrainingbaseachieve/info/${this.dataForm.trainingAchieveId}`),
-                method: 'get',
-                params: this.$http.adornParams()
-              }).then(({data}) => {
-                if (data && data.code === 0) {
-                  this.dataForm.trainingBaseName = data.innovatetrainingbaseachieve.trainingBaseName
-                  this.dataForm.materialYear = data.innovatetrainingbaseachieve.materialYear
-                  this.dataForm.materialType = data.innovatetrainingbaseachieve.materialType
-                  this.dataForm.materialTypeId = data.innovatetrainingbaseachieve.materialTypeId
-                  this.dataForm.trainingBaseId = data.innovatetrainingbaseachieve.trainingBaseId
-                  this.dataForm.isDel = data.innovatetrainingbaseachieve.isDel
+        this.$nextTick(() => {
+          this.$refs['dataForm'].resetFields()
+          if (this.dataForm.trainingAchieveId) {
+            this.$http({
+              url: this.$http.adornUrl(`/training/innovatetrainingbaseachieve/info/${this.dataForm.trainingAchieveId}`),
+              method: 'get',
+              params: this.$http.adornParams()
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.dataForm.trainingBaseName = data.innovateTrainingBaseAchieveEntity.trainingBaseName
+                this.dataForm.materialYear = data.innovateTrainingBaseAchieveEntity.materialYear
+                this.dataForm.materialType = data.innovateTrainingBaseAchieveEntity.materialType
+                this.dataForm.materialTypeId = data.innovateTrainingBaseAchieveEntity.materialTypeId
+                this.dataForm.trainingBaseId = data.innovateTrainingBaseAchieveEntity.trainingBaseId
+                this.dataForm.isDel = data.innovateTrainingBaseAchieveEntity.isDel
+                this.attachLists = data.attachEntityList
+                  // 附件回显
+                let tempFinishAtta = []
+                for (var i = 0; i < this.attachLists.length; i++) {
+                  tempFinishAtta.push(new Trainingachment(this.attachLists[i]))
                 }
-              })
-            }else {
-              this.$http({
-                url: this.$http.adornUrl(`/training/innovatetrainingachievetype/list`),
-                method: 'get',
-              }).then(({data}) => {
-                  this.trainingTypes = data.page.list
-              })
+                this.fileList = tempFinishAtta
+              }
+            })
+          }
+              // 获取文件要求：类型=>1 大创,2 中期检查,3 赛事,4 结题
+          this.dataListLoading = true
+          this.$http({
+            url: this.$http.adornUrl(`/innovate/sys/file/ask/query`),
+            method: 'get',
+            params: this.$http.adornParams({
+              'fileAskType': 10,
+              'fileAskTime': new Date().getFullYear()
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.fileAskContent = data.fileAsk == null ? '无' : data.fileAsk.fileAskContent
+              this.dataListLoading = false
             }
           })
-
-
+        })
       },
       // 表单提交
       dataFormSubmit () {
@@ -116,13 +174,16 @@
               url: this.$http.adornUrl(`/training/innovatetrainingbaseachieve/${!this.dataForm.trainingAchieveId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'trainingAchieveId': this.dataForm.trainingAchieveId || undefined,
-                'trainingBaseName': this.dataForm.trainingBaseName,
-                'materialYear': this.dataForm.materialYear,
-                'materialType': this.dataForm.materialType,
-                'materialTypeId': this.dataForm.materialTypeId,
-                'trainingBaseId': this.dataForm.trainingBaseId,
-                'isDel': this.dataForm.isDel
+                // 'trainingAchieveId': this.dataForm.trainingAchieveId || undefined,
+                // 'trainingBaseName': this.dataForm.trainingBaseName,
+                // 'materialYear': this.dataForm.materialYear,
+                // 'materialType': this.dataForm.materialType,
+                // 'materialTypeId': this.dataForm.materialTypeId,
+                // 'trainingBaseId': this.dataForm.trainingBaseId,
+                // 'isDel': this.dataForm.isDel
+                trainingBaseAchieveEntity: this.dataForm,
+                trainingBaseAttachList: this.attachLists,
+                delBaseAttachList: this.delBaseAttachList
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -141,6 +202,31 @@
             })
           }
         })
+      },
+      // 上传成功
+      successHandle1 (response, file, fileList) {
+        if (response && response.code === 0) {
+          this.attachLists.push(response.trainingBaseAttachEntity)
+          this.fileIsNull = false
+        } else {
+          this.$message.error(response.msg)
+        }
+      },
+      fileRemoveHandler (file, fileList) {
+        // 移除attachList中的附件
+        let tempFileList = []
+        for (var index = 0; index < this.attachLists.length; index++) {
+          if (this.attachLists[index].attachName !== file.name) {
+            tempFileList.push(this.attachLists[index])
+          } else {
+            this.delAttachLists.push(this.attachLists[index])
+          }
+        }
+        this.attachLists = tempFileList
+      },
+      changeelevel (val) {
+        console.log(val)
+        // this.dataForm.materialTypeId = val
       }
     }
   }

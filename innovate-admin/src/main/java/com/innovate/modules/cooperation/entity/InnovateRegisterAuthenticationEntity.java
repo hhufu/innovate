@@ -40,5 +40,9 @@ public class InnovateRegisterAuthenticationEntity implements Serializable {
 	 * 企业类型
 	 */
 	private String enterpriseType;
+	/**
+	 * 是否删除
+	 */
+	private Integer isDel;
 
 }

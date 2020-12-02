@@ -1,10 +1,13 @@
 package com.innovate.modules.training.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.innovate.modules.sys.entity.SysUserEntity;
 import lombok.Data;
 
 /**
@@ -48,5 +51,9 @@ public class InnovateTrainingBaseAchieveEntity implements Serializable {
 	 * 是否删除
 	 */
 	private Integer isDel;
-
+	/**
+	 * 用户信息
+	 */
+	@TableField(exist = false)
+	private SysUserEntity userEntity;
 }

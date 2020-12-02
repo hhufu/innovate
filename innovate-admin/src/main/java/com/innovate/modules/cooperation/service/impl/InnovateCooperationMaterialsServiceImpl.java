@@ -1,6 +1,8 @@
 package com.innovate.modules.cooperation.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -24,6 +26,10 @@ public class InnovateCooperationMaterialsServiceImpl extends ServiceImpl<Innovat
         );
 
         return new PageUtils(page);
+    }
+    @Override
+    public void deleteList(List<Long> list) {
+        baseMapper.deleteList(list);
     }
 
 }

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -27,7 +29,7 @@ public class InnovateCooperationMaterialsEntity implements Serializable {
 	/**
 	 * 模糊id P-企业项目表id  A-企业合作表id
 	 */
-	private Long functionId;
+	private String functionId;
 	/**
 	 * 附件名称
 	 */
@@ -39,6 +41,7 @@ public class InnovateCooperationMaterialsEntity implements Serializable {
 	/**
 	 * 上传时间
 	 */
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date attachTime;
 	/**
 	 * 是否删除

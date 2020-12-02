@@ -2,18 +2,20 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.enterpriseName" placeholder="企业名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('cooperation:innovatecooperationagreement:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('cooperation:innovatecooperationagreement:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('cooperation:innovatecooperationagreement:save')" type="primary" @click="exportAchieve()">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
       :data="dataList"
       border
       v-loading="dataListLoading"
+      :default-sort="{prop: 'innovateCooperationAgreementEntity.enterpriseId', order: 'ascending'}"
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
@@ -22,12 +24,12 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
-        prop="enterpriseId"
-        header-align="center"
-        align="center"
-        label="自增主键">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="enterpriseId"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="自增主键">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="enterpriseName"
         header-align="center"
@@ -38,12 +40,13 @@
         prop="instituteId"
         header-align="center"
         align="center"
-        label="二级学院 innovate_sys_institute主键">
+        label="二级学院ID">
       </el-table-column>
       <el-table-column
         prop="agreementYear"
         header-align="center"
         align="center"
+        :formatter="dateFormat"
         label="年度">
       </el-table-column>
       <el-table-column
@@ -93,6 +96,7 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+
   </div>
 </template>
 
@@ -129,7 +133,7 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'enterpriseName': this.dataForm.enterpriseName
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -193,6 +197,41 @@
             }
           })
         })
+      },
+      // 导出
+      exportAchieve () {
+        this.dataListLoading = true
+        var enterpriseIds = this.dataListSelections.map(item => {
+          return item.enterpriseId
+        })
+        this.$http({
+          url: this.$http.adornUrl('/cooperation/innovatecooperationagreement/export'),
+          method: 'post',
+          data: this.$http.adornData(enterpriseIds, false),
+          responseType: 'blob'
+        }).then((res) => {
+          this.dataListLoading = false
+          const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+          let filename = '企业协议管理信息.xls'
+          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+          const elink = document.createElement('a')
+          elink.download = filename
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }).catch(() => {
+          this.dataListLoading = false
+          this.$message.error('导出失败!')
+        })
+      },
+      // 时间格式化
+      // 多选
+      dateFormat (row, column) {
+        var t = new Date(row.agreementYear)
+        return t.getFullYear() + '年'
       }
     }
   }

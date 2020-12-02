@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.functionId" placeholder="ID" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -22,17 +22,17 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
-        prop="materialsId"
-        header-align="center"
-        align="center"
-        label="自增主键">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="materialsId"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="自增主键">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="functionId"
         header-align="center"
         align="center"
-        label="模糊id P-企业项目表id  A-企业合作表id">
+        label="模糊id">
       </el-table-column>
       <el-table-column
         prop="attachName"
@@ -52,12 +52,12 @@
         align="center"
         label="上传时间">
       </el-table-column>
-      <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="isDel"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="是否删除">-->
+<!--      </el-table-column>-->
       <el-table-column
         fixed="right"
         header-align="center"
@@ -90,7 +90,7 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          functionId: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -117,7 +117,7 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'functionId': this.dataForm.functionId
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

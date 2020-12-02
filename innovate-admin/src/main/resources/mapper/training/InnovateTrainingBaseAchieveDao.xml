@@ -14,5 +14,23 @@
         <result property="isDel" column="is_del"/>
     </resultMap>
 
-
+    <insert id="insertE" parameterType="InnovateTrainingBaseAchieveEntity" useGeneratedKeys="true" keyProperty="trainingAchieveId">
+        insert into innovate_training_base_achieve
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="trainingBaseName != null">training_achieve_id,</if>
+            <if test="materialYear != null">material_year,</if>
+            <if test="materialType != null">material_type,</if>
+            <if test="materialTypeId != null">material_type_id,</if>
+            <if test="trainingBaseId != null">training_base_id,</if>
+            <if test="isDel != null">is_del,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="trainingBaseName != null">#{trainingBaseName},</if>
+            <if test="materialYear != null">#{materialYear},</if>
+            <if test="materialType != null">#{materialType},</if>
+            <if test="materialTypeId != null">#{materialTypeId},</if>
+            <if test="trainingBaseId != null">#{trainingBaseId},</if>
+            <if test="isDel != null">#{isDel},</if>
+        </trim>
+    </insert>
 </mapper>

@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.enterpriseName" placeholder="企业名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -14,6 +14,7 @@
       :data="dataList"
       border
       v-loading="dataListLoading"
+      :default-sort="{prop: 'InnovateRegisterAuthenticationEntity.authenticationId', order: 'ascending'}"
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
@@ -22,12 +23,12 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
-        prop="authenticationId"
-        header-align="center"
-        align="center"
-        label="自增主键">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="InnovateRegisterAuthenticationEntity.authenticationId"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="自增主键">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="enterpriseName"
         header-align="center"
@@ -111,7 +112,7 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'enterpriseName': this.dataForm.enterpriseName
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

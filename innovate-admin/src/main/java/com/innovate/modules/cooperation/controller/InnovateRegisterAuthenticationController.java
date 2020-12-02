@@ -1,8 +1,8 @@
 package com.innovate.modules.cooperation.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.innovate.modules.cooperation.entity.InnovateRegisterAuthenticationEntity;
-import com.innovate.modules.cooperation.service.InnovateRegisterAuthenticationService;
+import com.innovate.modules.cooperation.entity.*;
+import com.innovate.modules.cooperation.service.*;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
 
@@ -71,9 +71,9 @@ public class InnovateRegisterAuthenticationController {
     @RequestMapping("/update")
     @RequiresPermissions("cooperation:innovateregisterauthentication:update")
     public R update(@RequestBody InnovateRegisterAuthenticationEntity innovateRegisterAuthentication){
-		innovateRegisterAuthenticationService.updateById(innovateRegisterAuthentication);
+        innovateRegisterAuthenticationService.updateById(innovateRegisterAuthentication);
 
-        return R.ok();
+		return R.ok();
     }
 
     /**
@@ -82,7 +82,8 @@ public class InnovateRegisterAuthenticationController {
     @RequestMapping("/delete")
     @RequiresPermissions("cooperation:innovateregisterauthentication:delete")
     public R delete(@RequestBody Long[] authenticationIds){
-		innovateRegisterAuthenticationService.deleteBatchIds(Arrays.asList(authenticationIds));
+//		innovateRegisterAuthenticationService.deleteBatchIds(Arrays.asList(authenticationIds));
+        innovateRegisterAuthenticationService.deleteList(Arrays.asList(authenticationIds));
 
         return R.ok();
     }

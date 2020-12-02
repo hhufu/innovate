@@ -15,5 +15,35 @@
         <result property="userId" column="user_id"/>
     </resultMap>
 
+    <update id="deleteList"  parameterType="java.util.List">
+        update innovate_cooperation_agreement
+        set is_del = 1
+        where enterprise_id in (
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+            #{item}
+        </foreach>
+        )
+    </update>
 
+    <insert id="insertE" parameterType="InnovateCooperationAgreementEntity" useGeneratedKeys="true" keyProperty="enterpriseId">
+        insert into innovate_cooperation_agreement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enterpriseName != null">enterprise_name,</if>
+            <if test="instituteId != null">institute_id,</if>
+            <if test="agreementYear != null">agreement_year,</if>
+            <if test="agreementTime != null">agreement_time,</if>
+            <if test="agreementMaterials != null">agreement_materials,</if>
+            <if test="enterpriseRecords != null">enterprise_records,</if>
+            <if test="userId != null">user_id</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="enterpriseName != null">#{enterpriseName},</if>
+            <if test="instituteId != null">#{instituteId},</if>
+            <if test="agreementYear != null">#{agreementYear},</if>
+            <if test="agreementTime != null">#{agreementTime},</if>
+            <if test="agreementMaterials != null">#{agreementMaterials},</if>
+            <if test="enterpriseRecords != null">#{enterpriseRecords},</if>
+            <if test="userId != null">#{userId}</if>
+        </trim>
+    </insert>
 </mapper>

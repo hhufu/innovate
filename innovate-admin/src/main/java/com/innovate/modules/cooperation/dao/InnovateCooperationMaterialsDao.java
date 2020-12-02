@@ -4,6 +4,8 @@ import com.innovate.modules.cooperation.entity.InnovateCooperationMaterialsEntit
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 校政企合作附件
  *
@@ -14,4 +16,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface InnovateCooperationMaterialsDao extends BaseMapper<InnovateCooperationMaterialsEntity> {
 
+    void deleteList(List<Long> list);
 }
