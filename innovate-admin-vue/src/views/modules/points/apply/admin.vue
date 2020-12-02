@@ -58,10 +58,16 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="stuNum"
+        header-align="center"
+        align="center"
+        label="学号">
+      </el-table-column>
+      <el-table-column
         prop="participateType"
         header-align="center"
         align="center"
-        label="参与人类别">
+        label="申请类型">
       </el-table-column>
       <el-table-column
         prop="raceGrade"
@@ -104,7 +110,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.integralApplyId)">查看</el-button>
+          <el-button type="text" size="small" @click="detailInfo(scope.row.integralApplyId)">查看</el-button>
           <el-button type="text" size="small" v-if="$store.state.user.id === scope.row.applyUserId"
                      @click="deleteHandle(scope.row.integralApplyId)">删除
           </el-button>
@@ -129,11 +135,15 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <detail-info v-if="detailInfoVisible" ref="detailInfo"></detail-info>
+    <pass-handle v-if="passHandleVisible" ref="passHandle" @refreshDataList="getDataList"></pass-handle>
   </div>
 </template>
 
 <script>
   import AddOrUpdate from '../innovatestudentpointsapply-add-or-update'
+  import DetailInfo from './detail-info'
+  import PassHandle from "./pass-handle";
 
   export default {
     data() {
@@ -147,11 +157,15 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        detailInfoVisible: false,
+        passHandleVisible: false
       }
     },
     components: {
-      AddOrUpdate
+      PassHandle,
+      AddOrUpdate,
+      DetailInfo
     },
     activated() {
       this.getDataList()
@@ -183,36 +197,47 @@
       },
       // 审核
       editApplyStatus(row, status) {
-        this.$confirm(`你确定提交申请类型为["${row.participateType}"]的记录吗？`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http({
-            url: this.$http.adornUrl('/points/innovatestudentpointsapply/update'),
-            method: 'post',
-            data: this.$http.adornData({
-              pointsApplyEntity: {
-                'integralApplyId': row.integralApplyId || undefined,
-                'applyStatus': status
-              }
-            })
-          }).then(({data}) => {
-            if (data && data.code === 0) {
-              this.$message({
-                message: '操作成功',
-                type: 'success',
-                duration: 1500,
-                onClose: () => {
-                  this.visible = false
-                  this.getDataList()
+        if (status == 3) {
+          this.passHandleVisible = true
+          this.$nextTick(() => {
+            this.$refs.passHandle.getDataList(row)
+          })
+        } else {
+          var title = '通过'
+          if (status == -1) {
+            title = '不通过'
+          }
+          this.$confirm(`你确定给予申请类型为["${row.participateType}"]的申请${title}吗？`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$http({
+              url: this.$http.adornUrl('/points/innovatestudentpointsapply/update'),
+              method: 'post',
+              data: this.$http.adornData({
+                pointsApplyEntity: {
+                  'integralApplyId': row.integralApplyId || undefined,
+                  'applyStatus': status
                 }
               })
-            } else {
-              this.$message.error(data.msg)
-            }
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.visible = false
+                    this.getDataList()
+                  }
+                })
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
           })
-        })
+        }
       },
       // 每页数
       sizeChangeHandle(val) {
@@ -234,6 +259,13 @@
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
+        })
+      },
+      // 查看
+      detailInfo(id) {
+        this.detailInfoVisible = true
+        this.$nextTick(() => {
+          this.$refs.detailInfo.init(id)
         })
       },
       // 删除

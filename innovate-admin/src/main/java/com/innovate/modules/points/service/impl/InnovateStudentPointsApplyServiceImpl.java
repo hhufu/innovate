@@ -41,12 +41,22 @@ public class InnovateStudentPointsApplyServiceImpl extends ServiceImpl<InnovateS
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateStudentPointsApplyEntity> entityWrapper = new EntityWrapper<>();
+        // 根据申请状态查询
         if (params.get("applyStatus") != null) entityWrapper.eq("apply_status", params.get("applyStatus"));
-        //根据学号查询&&非管理员
+        // 过滤不通过的记录
+        if (params.get("noPass") != null) entityWrapper.gt("apply_status", -1);
+        //根据用户id查询&&非管理员
         if (params.get("apply_user_id") != null) {
             SysUserEntity user = sysUserService.selectById(Long.parseLong(params.get("apply_user_id").toString()));
             entityWrapper.eq("apply_user_id", user.getUserId());
+        } else { // 管理员
+            entityWrapper.lt("apply_status", 1);
         }
+        // 根据学号查询
+        if (params.get("stuNum") != null) entityWrapper.like("stu_num", params.get("stuNum").toString());
+        // 根据申请类型查询
+        if (params.get("sysPointsId") != null) entityWrapper.eq("sys_points_id", Long.parseLong(params.get("sysPointsId").toString()));
+        // 按时间倒序
         entityWrapper.orderBy("apply_time", false);
         Page<InnovateStudentPointsApplyEntity> page = this.selectPage(
                 new Query<InnovateStudentPointsApplyEntity>(params).getPage(),

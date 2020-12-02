@@ -127,8 +127,10 @@
           prizeGrade: '',
           raceGrade: '',
           participateType: '',
+          instituteId: 0,
           sysPointsId: 0,
-          applyUserId: 0
+          applyUserId: 0,
+          stuNum: ''
         },
         textType: '',
         dataRule: {
@@ -173,8 +175,10 @@
                 this.dataForm.isDel = data.innovateStudentPointsApply.isDel
                 this.dataForm.applyIntegral = data.innovateStudentPointsApply.applyIntegral
                 this.dataForm.persionType = data.innovateStudentPointsApply.persionType
+                this.dataForm.instituteId = data.innovateStudentPointsApply.instituteId
                 this.dataForm.prizeGrade = data.innovateStudentPointsApply.prizeGrade
                 this.dataForm.raceGrade = data.innovateStudentPointsApply.raceGrade
+                this.dataForm.stuNum = data.innovateStudentPointsApply.stuNum
                 this.dataForm.participateType = data.innovateStudentPointsApply.participateType
                 this.dataForm.applyUserId = data.innovateStudentPointsApply.applyUserId
                 this.attachLists = data.attachEntityList
@@ -208,8 +212,12 @@
           raceGrade: '',
           participateType: '',
           sysPointsId: 0,
-          applyUserId: 0
+          applyUserId: 0,
+          instituteId: 0
         }
+        this.attachLists = []
+        this.fileList = []
+        this.fileAskContent = '无'
       },
       getTypeList () {
         this.participateList = []
@@ -236,6 +244,9 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.dataForm.applyUserId = this.$store.state.user.id
+            this.dataForm.instituteId = this.$store.state.user.instituteId
+            this.dataForm.stuNum = this.$store.state.user.username
             this.$http({
               url: this.$http.adornUrl(`/points/innovatestudentpointsapply/${!this.dataForm.integralApplyId ? 'save' : 'update'}`),
               method: 'post',
@@ -269,7 +280,7 @@
           return item.participateType.indexOf(e) > -1
         })
         this.parentId = list[0].integralId
-        this.fileAskContent = list[0].fileAskContent
+        this.fileAskContent = list[0].fileAskContent || '无'
         // 重置
         this.dataForm.raceGrade = ''
         this.dataForm.prizeGrade = ''
@@ -325,7 +336,6 @@
                 // eslint-disable-next-line eqeqeq
                 return item.raceGrade.indexOf(e) > -1
               })
-              alert(list[0].integral)
               this.dataForm.applyIntegral = list[0].integral // 获取对应积分
               this.integral = list[0].integral
               this.integralTo = list[0].integralTo

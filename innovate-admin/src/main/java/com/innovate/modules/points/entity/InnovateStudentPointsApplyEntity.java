@@ -36,6 +36,10 @@ public class InnovateStudentPointsApplyEntity implements Serializable {
 	 */
 	private Long applyUserId;
 	/**
+	 * 申请人学号
+	 */
+	private String stuNum;
+	/**
 	 * 申请时间
 	 */
 	private Date applyTime;
@@ -51,6 +55,10 @@ public class InnovateStudentPointsApplyEntity implements Serializable {
 	 * 申请积分
 	 */
 	private Long applyIntegral;
+	/**
+	 * 申请积分
+	 */
+	private Long instituteId;
 	/**
 	 * 参与人类别（1：负责人，2参与成员）
 	 */

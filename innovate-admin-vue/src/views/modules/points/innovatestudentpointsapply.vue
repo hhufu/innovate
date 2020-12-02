@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.stuNum" placeholder="学号" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -61,6 +61,12 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="stuNum"
+        header-align="center"
+        align="center"
+        label="学号">
+      </el-table-column>
+      <el-table-column
         prop="participateType"
         header-align="center"
         align="center"
@@ -112,7 +118,8 @@
                      @click="editApplyStatus(scope.row, 1)">提交申请
           </el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.integralApplyId)">查看</el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === 0 || scope.row.applyStatus === -1"
+          <el-button type="text" size="small"
+                     v-if="(scope.row.applyStatus === 0 || scope.row.applyStatus === -1) && $store.state.user.id === scope.row.applyUserId"
                      @click="addOrUpdateHandle(scope.row.integralApplyId)">修改
           </el-button>
           <el-button type="text" size="small"
@@ -139,12 +146,13 @@
 
 <script>
   import AddOrUpdate from './innovatestudentpointsapply-add-or-update'
-  import DetailInfo from  './apply/detail-info'
+  import DetailInfo from './apply/detail-info'
+
   export default {
     data() {
       return {
         dataForm: {
-          key: ''
+          stuNum: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -173,7 +181,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key,
+            'stuNum': this.dataForm.stuNum,
+            'noPass': 'noPass',
             'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id
           })
         }).then(({data}) => {
@@ -217,7 +226,7 @@
         })
       },
       // 提交申请
-      editApplyStatus (row, status) {
+      editApplyStatus(row, status) {
         this.$confirm(`你确定提交申请类型为["${row.participateType}"]的记录吗？`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -250,7 +259,7 @@
         })
       },
       // 删除
-      deleteHandle (id) {
+      deleteHandle(id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.integralApplyId
         })
@@ -265,6 +274,23 @@
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
             if (data && data.code === 0) {
+              if (status == 3) {
+                let pointsReason = this.dataForm.participateType + '-' + this.dataForm.raceGrade
+                if (this.dataForm.prizeGrade != '' && this.dataForm.prizeGrade != null)
+                  pointsReason = pointsReason + '-' + this.dataForm.prizeGrade
+                if (this.dataForm.persionType != '' && this.dataForm.persionType != null) {
+                  pointsReason = pointsReason + '-' + this.dataForm.persionType
+                  this.$http({
+                    url: this.$http.adornUrl('/points/innovatestudentpoints/saveApplyPoints'),
+                    method: 'post',
+                    data: this.$http.adornData({
+                      stuNum: this.dataForm.userEntity.username, // 学号
+                      points: this.dataForm.applyIntegral, // 积分
+                      pointsReason: pointsReason
+                    })
+                  })
+                }
+              }
               this.$message({
                 message: '操作成功',
                 type: 'success',
@@ -282,3 +308,13 @@
     }
   }
 </script>
+<style>
+  .el-step__title {
+    font-size: 12px;
+    line-height: 28px;
+  }
+
+  .el-table__expanded-cell[class*=cell] {
+    padding: 5px 5px;
+  }
+</style>

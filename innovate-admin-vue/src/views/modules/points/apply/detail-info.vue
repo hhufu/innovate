@@ -1,57 +1,64 @@
 <template>
   <el-dialog
     title="详情"
-    :close-on-click-modal="false"
+    :close-on-click-modal="true"
     :visible.sync="visible"
+    :append-to-body="true"
   >
     <table border="1" cellspacing="0" width="100%" class="table">
       <tr align='center'>
         <td colspan="10" style="height: 1.2rem"></td>
       </tr>
       <tr class="contents" align="center">
-        <th colspan="10" style="height: 2.2rem">
+        <th colspan="10" style="height: 3.2rem">
           积分申请信息
         </th>
       </tr>
       <tr align='center'>
+        <th colspan="2">申请人</th>
+        <td colspan="3">{{userEntity.name}}</td>
+        <th colspan="2">学号</th>
+        <td colspan="3">{{dataForm.stuNum}}</td>
+      </tr>
+      <tr align='center'>
         <th colspan="2">申请类型</th>
-        <td colspan="3">{{dataForm.participateType}}</td>
+        <td colspan="8">{{dataForm.participateType}}</td>
       </tr>
       <tr align="center">
         <th colspan="2">项目名称</th>
-        <td colspan="3">{{dataForm.raceGrade}}</td>
+        <td colspan="8">{{dataForm.raceGrade}}</td>
       </tr>
       <tr align='center' v-if="dataForm.persionType != '' && dataForm.persionType != null">
         <th colspan="2">参与人类别</th>
-        <td colspan="3">{{dataForm.persionType? (dataForm.persionType == 1 ?'负责人':'参与成员'): '-'}}</td>
+        <td colspan="8">{{dataForm.persionType? (dataForm.persionType == 1 ?'负责人':'参与成员'): '-'}}</td>
       </tr>
       <tr align='center' v-if="dataForm.prizeGrade != ''">
         <th colspan="2">奖项等级</th>
-        <td colspan="3">{{dataForm.prizeGrade}}</td>
+        <td colspan="8">{{dataForm.prizeGrade}}</td>
       </tr>
       <tr align='center'>
         <th colspan="2">申请积分</th>
-        <td colspan="3">{{dataForm.applyIntegral}}积分</td>
+        <td colspan="8">{{dataForm.applyIntegral}}积分</td>
       </tr>
       <!--附件开始-->
       <tr align='center'>
         <td colspan="10" style="height: 1.2rem"></td>
       </tr>
       <tr align="center" class="contents">
-        <th colspan="10">附件</th>
+        <th colspan="10" style="height: 3.2rem">附件</th>
       </tr>
       <tr align='center'>
         <td colspan="10" style="height: 1.2rem"></td>
       </tr>
       <tr align='center'>
-        <th colspan="4">附件名</th>
-        <td colspan="2">操作</td>
+        <th colspan="7">附件名</th>
+        <td colspan="3">操作</td>
       </tr>
       <template>
         <tr v-for="item in attachLists"
             align="center">
-          <td colspan="4">{{item.attachName}}</td>
-          <td colspan="2"><el-button @click="attachDown(item)" :loading="downloadLoading"><span v-text="downloadText"></span></el-button></td>
+          <td colspan="7">{{item.attachName}}</td>
+          <td colspan="3"><el-button @click="attachDown(item)" :loading="downloadLoading"><span v-text="downloadText"></span></el-button></td>
         </tr>
       </template>
       <tr align='center'>
@@ -77,6 +84,7 @@
         integralTo: 0, // 积分差值
         fileAskContent: '无',
         delAttachLists: [], // 要删除的附件
+        userEntity: {}, // 用戶信息
         url: '',
         noEditPoint: true,
         fileIsNull: true,
@@ -85,6 +93,7 @@
         persionTypeOptions: [{lable: '负责人', value: 1}, {lable: '参与人员', value: 2}],
         dataForm: {
           integralApplyId: 0,
+          stuNum: '',
           applyTime: '',
           isDel: '',
           applyIntegral: '',
@@ -141,7 +150,9 @@
                 this.dataForm.raceGrade = data.innovateStudentPointsApply.raceGrade
                 this.dataForm.participateType = data.innovateStudentPointsApply.participateType
                 this.dataForm.applyUserId = data.innovateStudentPointsApply.applyUserId
+                this.dataForm.stuNum = data.innovateStudentPointsApply.stuNum
                 this.attachLists = data.attachEntityList
+                this.userEntity = data.innovateStudentPointsApply.userEntity
               }
             })
           } else {
@@ -153,6 +164,7 @@
       reset() {
         this.dataForm = {
           integralApplyId: 0,
+          stuNum: '',
           applyTime: '',
           isDel: '',
           applyIntegral: '',
