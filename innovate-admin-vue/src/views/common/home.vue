@@ -156,6 +156,22 @@
               </div>
             </el-card>
           </el-col>
+          <!--积分申请不通过-->
+          <el-col :span="8">
+            <el-card v-if="noPassPoints.length > 0">
+              <div slot="header">
+                <span>积分申请->不通过申请列表(学生积分申请)</span>
+              </div>
+              <div>
+                <li v-for="item in noPassPoints">
+                  申请类型：{{item.participateType}}
+                  <span v-if="item.applyStatus === -1">、</span>
+                  不通过，请修改
+                  <router-link to="/points-apply/no-pass">跳转</router-link>
+                </li>
+              </div>
+            </el-card>
+          </el-col>
         </template>
         <!--指导老师-->
         <template v-if="role === 3">
@@ -262,6 +278,18 @@
               <div>
                 <span>{{totalPageFinishEr}}条、待审批</span>
                 <router-link to="/innovate-apply/finish/er">跳转</router-link>
+              </div>
+            </el-card>
+          </el-col>
+          <!--审核积分申请-->
+          <el-col :span="8">
+            <el-card v-if="noJudgePointsTotal > 0">
+              <div slot="header">
+                <span>积分申请->二级学院审核列表(二级学院)</span>
+              </div>
+              <div>
+                <span>{{noJudgePointsTotal}}条、待审核</span>
+                <router-link to="/points-apply/admin">跳转</router-link>
               </div>
             </el-card>
           </el-col>
@@ -458,6 +486,20 @@
             </el-card>
           </el-col>
           <!--结题e-->
+
+          <!--审核积分申请-->
+          <el-col :span="8">
+            <el-card v-if="noJudgePointsTotal > 0">
+              <div slot="header">
+                <span>积分申请->二级学院审核列表(管理员)</span>
+              </div>
+              <div>
+                <span>{{noJudgePointsTotal}}条、待审核</span>
+                <router-link to="/points-apply/admin">跳转</router-link>
+              </div>
+            </el-card>
+          </el-col>
+
         </template>
       </template>
     </el-row>
@@ -507,7 +549,11 @@
         noPassMatchs: '',
         noPassChecks: '',
         noPassFinishs: '',
-        noPassAudits: ''
+        noPassAudits: '',
+        // 不通过积分申请
+        noPassPoints: '',
+        // 没审核积分条数
+        noJudgePointsTotal: ''
       }
     },
     mounted () {
@@ -753,6 +799,25 @@
             this.totalPage = 0
           }
         })
+        // 积分申请不通过列表
+        this.$http({
+          url: this.$http.adornUrl('/points/innovatestudentpointsapply/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'page': 1,
+            'limit': 20,
+            'applyStatus': -1,
+            'apply_user_id': this.$store.state.user.id
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.noPassPoints = data.page.list
+            // this.totalPage = data.page.totalCount
+          } else {
+            this.noPassPoints = []
+            // this.totalPage = 0
+          }
+        })
       },
       getTeacher () {
         this.$http({
@@ -937,6 +1002,26 @@
             this.totalPageFinishEr = data.page.totalCount
           } else {
             this.dataList = []
+          }
+        })
+
+        // 积分申请待审核列表
+        this.$http({
+          url: this.$http.adornUrl('/points/innovatestudentpointsapply/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'page': 1,
+            'limit': 20,
+            'applyStatus': 1,
+            'instituteId': this.$store.state.user.instituteId
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            // this.noPassPoints = data.page.list
+            this.noJudgePointsTotal = data.page.totalCount
+          } else {
+            // this.noPassPoints = []
+            this.noJudgePointsTotal = 0
           }
         })
       },
@@ -1167,6 +1252,25 @@
             this.totalPageFinishAdmin2 = data.page.totalCount
           } else {
             this.dataList = []
+          }
+        })
+
+        // 积分申请待审核列表
+        this.$http({
+          url: this.$http.adornUrl('/points/innovatestudentpointsapply/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'page': 1,
+            'limit': 20,
+            'applyStatus': 1
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            // this.noPassPoints = data.page.list
+            this.noJudgePointsTotal = data.page.totalCount
+          } else {
+            // this.noPassPoints = []
+            this.noJudgePointsTotal = 0
           }
         })
       },

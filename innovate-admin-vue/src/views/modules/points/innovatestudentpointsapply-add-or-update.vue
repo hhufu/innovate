@@ -114,7 +114,7 @@
         url: '',
         noEditPoint: true,
         fileList: [],
-        fileIsNull: true,
+        fileIsNull: false,
         raceGradeList: [],
         prizeGradeList: [],
         persionTypeOptions: [{lable: '负责人', value: 1}, {lable: '参与人员', value: 2}],
@@ -151,7 +151,7 @@
           ],
           participateType: [
             {required: true, message: '参与人类别不能为空', trigger: 'blur'}
-          ]
+          ],
         }
       }
     },
@@ -171,7 +171,6 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.applyTime = data.innovateStudentPointsApply.applyTime
-                this.dataForm.sysPointsId = data.innovateStudentPointsApply.sysPointsId
                 this.dataForm.isDel = data.innovateStudentPointsApply.isDel
                 this.dataForm.applyIntegral = data.innovateStudentPointsApply.applyIntegral
                 this.dataForm.persionType = data.innovateStudentPointsApply.persionType
@@ -193,6 +192,7 @@
                 this.changeRaceGrade(data.innovateStudentPointsApply.raceGrade)
                 this.dataForm.raceGrade = data.innovateStudentPointsApply.raceGrade
                 this.dataForm.prizeGrade = data.innovateStudentPointsApply.prizeGrade
+                this.dataForm.sysPointsId = data.innovateStudentPointsApply.sysPointsId
               }
             })
           } else {
@@ -243,7 +243,7 @@
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
+          if (valid && this.attachLists.length > 0) {
             this.dataForm.applyUserId = this.$store.state.user.id
             this.dataForm.instituteId = this.$store.state.user.instituteId
             this.dataForm.stuNum = this.$store.state.user.username
@@ -270,6 +270,8 @@
                 this.$message.error(data.msg)
               }
             })
+          } else {
+            this.fileIsNull = true
           }
         })
       },
