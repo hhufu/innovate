@@ -50,14 +50,12 @@ public class InnovateStudentPointsApplyServiceImpl extends ServiceImpl<InnovateS
             SysUserEntity user = sysUserService.selectById(Long.parseLong(params.get("apply_user_id").toString()));
             entityWrapper.eq("apply_user_id", user.getUserId());
         } else { // 管理员
-            if (params.get("noPass") != null) entityWrapper.lt("apply_status", 1);
+            entityWrapper.lt("apply_status", 1);
         }
         // 根据学号查询
         if (params.get("stuNum") != null) entityWrapper.like("stu_num", params.get("stuNum").toString());
         // 根据申请类型查询
         if (params.get("sysPointsId") != null) entityWrapper.eq("sys_points_id", Long.parseLong(params.get("sysPointsId").toString()));
-        // 按学院查询
-        if (params.get("instituteId") != null) entityWrapper.eq("institute_id", Long.parseLong(params.get("instituteId").toString()));
         // 按时间倒序
         entityWrapper.orderBy("apply_time", false);
         Page<InnovateStudentPointsApplyEntity> page = this.selectPage(

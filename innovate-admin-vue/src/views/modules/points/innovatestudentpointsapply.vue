@@ -114,7 +114,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small"
-                     v-if="$store.state.user.id === scope.row.applyUserId && (scope.row.applyStatus === 0 || scope.row.applyStatus === -1)"
+                     v-if="isAuth('points:innovatestudentpointsapply:stuApply') && (scope.row.applyStatus === 0 || scope.row.applyStatus === -1)"
                      @click="editApplyStatus(scope.row, 1)">提交申请
           </el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.integralApplyId)">查看</el-button>
@@ -183,8 +183,7 @@
             'limit': this.pageSize,
             'stuNum': this.dataForm.stuNum,
             'noPass': 'noPass',
-            'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id,
-            'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
+            'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

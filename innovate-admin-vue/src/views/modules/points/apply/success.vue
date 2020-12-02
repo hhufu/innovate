@@ -137,8 +137,7 @@
             'page': this.pageIndex,
             'limit': this.pageSize,
             'key': this.dataForm.key,
-            'applyStatus': 3,
-            'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
+            'applyStatus': 3
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

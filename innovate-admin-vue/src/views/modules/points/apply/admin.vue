@@ -182,7 +182,7 @@
             'limit': this.pageSize,
             'key': this.dataForm.key,
             'applyStatus': 1,
-            'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
+            'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
