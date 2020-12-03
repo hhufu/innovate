@@ -4,11 +4,11 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
-             label-width="80px">
+             label-width="140px">
       <el-form-item label="实习实训基地名称" label-width="140px" prop="trainingBaseName">
         <el-input v-model="dataForm.trainingBaseName" placeholder="实习实训基地名称"></el-input>
       </el-form-item>
-      <el-form-item label="所属二级学院" label-width="110px" prop="instituteId">
+      <el-form-item label="所属二级学院" label-width="" prop="instituteId">
         <el-select v-model="dataForm.instituteId" placeholder="请选择二级学院">
           <el-option
             v-for="item in institus"
@@ -79,14 +79,13 @@
                 this.dataForm.baseCreateTime = data.innovateTrainingBaseInfo.baseCreateTime
               }
             })
-          } else {
-            this.$http({
-              url: this.$http.adornUrl('/innovate/sys/institute/all'),
-              method: 'get',
-            }).then(({data}) => {
-              this.institus = data.institute
-            })
           }
+          this.$http({
+            url: this.$http.adornUrl('/innovate/sys/institute/all'),
+            method: 'get',
+          }).then(({data}) => {
+            this.institus = data.institute
+          })
         })
       },
       // 表单提交

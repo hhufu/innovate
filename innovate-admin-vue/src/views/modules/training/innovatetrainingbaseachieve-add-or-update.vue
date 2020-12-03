@@ -3,8 +3,8 @@
     :title="!dataForm.trainingAchieveId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="实训基地名称" prop="trainingBaseName">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="100px">
+    <el-form-item label="基地名称" prop="trainingBaseName">
 <!--      <el-input v-model="dataForm.trainingBaseName" placeholder="基地名称"></el-input>-->
       <el-select v-model="dataForm.trainingBaseName" placeholder="实训基地名称" >
         <el-option
@@ -114,7 +114,7 @@
         this.url = this.$http.adornUrl(`/training/innovatetrainingbaseattach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.trainingAchieveId = id || 0
         this.visible = true
-        this.getBaseInfos() // 获取实训基地列表
+        this.getInstituteName()
         this.$http({
           url: this.$http.adornUrl(`/training/innovatetrainingbaseinfo/list`),
           method: 'get'
@@ -170,26 +170,6 @@
           })
         })
       },
-      getBaseInfos() {
-        this.$http({
-          url: this.$http.adornUrl('/training/innovatetrainingbaseinfo/list'),
-          method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'key': this.dataForm.key
-          })
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
-          } else {
-            this.dataList = []
-            this.totalPage = 0
-          }
-          this.dataListLoading = false
-        })
-      },
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
@@ -198,13 +178,6 @@
               url: this.$http.adornUrl(`/training/innovatetrainingbaseachieve/${!this.dataForm.trainingAchieveId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                // 'trainingAchieveId': this.dataForm.trainingAchieveId || undefined,
-                // 'trainingBaseName': this.dataForm.trainingBaseName,
-                // 'materialYear': this.dataForm.materialYear,
-                // 'materialType': this.dataForm.materialType,
-                // 'materialTypeId': this.dataForm.materialTypeId,
-                // 'trainingBaseId': this.dataForm.trainingBaseId,
-                // 'isDel': this.dataForm.isDel
                 trainingBaseAchieveEntity: this.dataForm,
                 trainingBaseAttachList: this.attachLists,
                 delBaseAttachList: this.delBaseAttachList
@@ -224,6 +197,16 @@
                 this.$message.error(data.msg)
               }
             })
+          }
+        })
+      },
+      getInstituteName() {
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.instituteName = data.institute
           }
         })
       },

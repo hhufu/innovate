@@ -31,17 +31,17 @@
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="trainingBaseName"
-        header-align="center"
-        align="center"
-        label="实习实训基地名称">
-      </el-table-column>
-      <el-table-column
         prop="instituteId"
         header-align="center"
         align="center"
         :formatter="fomatterInstitute"
         label="所属二级学院">
+      </el-table-column>
+      <el-table-column
+        prop="trainingBaseName"
+        header-align="center"
+        align="center"
+        label="实习实训基地名称">
       </el-table-column>
       <el-table-column
         prop="baseCreateTime"
