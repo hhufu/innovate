@@ -14,7 +14,14 @@
       </el-select>
     </el-form-item>
     <el-form-item label="企业名称" prop="enterpriseName">
-      <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>
+      <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" >
+        <el-option
+          v-for="item in nameList"
+          :key="item.authenticationId"
+          :label="item.enterpriseName"
+          :value="item.enterpriseName">
+        </el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="年度" prop="cooperationYear">
       <el-date-picker
@@ -66,7 +73,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileIsNull" style="color: crimson">*请上传相关附件</span>
+          <span v-if="fileList.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -92,7 +99,7 @@
         visible: false,
         url: '',
         fileAskContent: '无',
-        fileIsNull: true,
+        fileIsNull: false,
         fileList: [],
         attachLists: [], // 附件列表
         delAttachLists: [], // 要删除的附件
@@ -130,7 +137,8 @@
             { required: true, message: '截止时间不能为空', trigger: 'blur' }
           ]
         },
-        instituteName: [] // 学院列表
+        instituteName: [], // 学院列表
+        nameList: [] // 企业名称列表
       }
     },
     methods: {
@@ -139,6 +147,12 @@
         this.dataForm.cooperationId = id || 0
         this.visible = true
         this.getInstituteList()
+        this.$http({
+          url: this.$http.adornUrl(`/cooperation/innovateregisterauthentication/list`),
+          method: 'get'
+        }).then(({data}) => {
+          this.nameList = data.page.list
+        })
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.cooperationId) {

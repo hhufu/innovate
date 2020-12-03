@@ -5,7 +5,15 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
     <el-form-item label="企业名称" prop="enterpriseName">
-      <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>
+      <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" >
+        <el-option
+          v-for="item in nameList"
+          :key="item.authenticationId"
+          :label="item.enterpriseName"
+          :value="item.enterpriseName">
+        </el-option>
+      </el-select>
+<!--      <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>-->
     </el-form-item>
     <el-form-item label="二级学院" prop="instituteId">
       <el-select v-model="dataForm.instituteId" placeholder="二级学院">
@@ -59,7 +67,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileIsNull" style="color: crimson">*请上传相关附件</span>
+          <span v-if="fileList.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -123,7 +131,8 @@
           userId: [
             { required: true, message: '创建者不能为空', trigger: 'blur' }
           ]
-        }
+        },
+        nameList: [] // 企业名称列表
       }
     },
     methods: {
@@ -132,6 +141,12 @@
         this.dataForm.enterpriseId = id || 0
         this.visible = true
         this.getInstituteList()
+        this.$http({
+          url: this.$http.adornUrl(`/cooperation/innovateregisterauthentication/list`),
+          method: 'get'
+        }).then(({data}) => {
+          this.nameList = data.page.list
+        })
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.enterpriseId) {

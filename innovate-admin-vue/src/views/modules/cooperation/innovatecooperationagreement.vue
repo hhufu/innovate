@@ -40,7 +40,8 @@
         prop="instituteId"
         header-align="center"
         align="center"
-        label="二级学院ID">
+        :formatter="fomatterInstitute"
+        label="二级学院">
       </el-table-column>
       <el-table-column
         prop="agreementYear"
@@ -55,12 +56,12 @@
         align="center"
         label="协议时间">
       </el-table-column>
-      <el-table-column
-        prop="agreementMaterials"
-        header-align="center"
-        align="center"
-        label="协议材料">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="agreementMaterials"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="协议材料">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="enterpriseRecords"
         header-align="center"
@@ -126,6 +127,7 @@
     },
     activated () {
       this.getDataList()
+      this.getInstituteName()
     },
     methods: {
       // 获取数据列表
@@ -148,6 +150,17 @@
             this.totalPage = 0
           }
           this.dataListLoading = false
+        })
+      },
+      getInstituteName () {
+        debugger
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.instituteList = data.institute
+          }
         })
       },
       // 每页数
@@ -178,6 +191,18 @@
         this.$nextTick(() => {
           this.$refs.detailInfo.init(id)
         })
+      },
+      // 格式化学院名称
+      fomatterInstitute(e) {
+        var actions = []
+        Object.keys(this.instituteList).some((key) => {
+          // eslint-disable-next-line eqeqeq
+          if (this.instituteList[key].instituteId == parseInt(e.instituteId)) {
+            actions.push( this.instituteList[key].instituteName)
+            return true
+          }
+        })
+        return actions.join('')
       },
       // 删除
       deleteHandle (id) {

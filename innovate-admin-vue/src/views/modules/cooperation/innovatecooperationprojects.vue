@@ -39,7 +39,8 @@
         prop="instituteId"
         header-align="center"
         align="center"
-        label="二级学院ID">
+        :formatter="fomatterInstitute"
+        label="二级学院">
       </el-table-column>
       <el-table-column
         prop="enterpriseName"
@@ -125,6 +126,7 @@
     },
     activated () {
       this.getDataList()
+      this.getInstituteName()
     },
     methods: {
       // 获取数据列表
@@ -149,6 +151,18 @@
           this.dataListLoading = false
         })
       },
+      // 查询学院列表
+      getInstituteName () {
+        debugger
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.instituteList = data.institute
+          }
+        })
+      },
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val
@@ -163,6 +177,18 @@
       // 多选
       selectionChangeHandle (val) {
         this.dataListSelections = val
+      },
+      // 格式化学院名称
+      fomatterInstitute (e) {
+        var actions = []
+        Object.keys(this.instituteList).some((key) => {
+          // eslint-disable-next-line eqeqeq
+          if (this.instituteList[key].instituteId == parseInt(e.instituteId)) {
+            actions.push(this.instituteList[key].instituteName)
+            return true
+          }
+        })
+        return actions.join('')
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {
