@@ -4,6 +4,9 @@ import com.innovate.modules.profess.entity.InnovateProfessAchieveEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 专创成果
  *
@@ -15,4 +18,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface InnovateProfessAchieveDao extends BaseMapper<InnovateProfessAchieveEntity> {
 
     int insertE(InnovateProfessAchieveEntity professAchieveEntity);
+
+    List<InnovateProfessAchieveEntity> selectProfessAchieveIds(Map<String, Object> map);
 }

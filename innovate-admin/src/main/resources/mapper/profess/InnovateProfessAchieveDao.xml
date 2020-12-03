@@ -42,4 +42,15 @@
         </trim>
     </insert>
 
+    <select id="selectProfessAchieveIds" parameterType="map" resultType="InnovateProfessAchieveEntity" >
+     select a.*,b.institute_name from innovate_profess_achieve a LEFT JOIN innovate_sys_institute b on a.institute_id = b.institute_id
+     where 1 = 1
+     <if test="professAchieveIds != null">
+     and profess_achieve_id in
+        <foreach item="id" index="index" collection="professAchieveIds"  separator=",">
+            #{id}
+        </foreach>
+     </if>
+    </select>
+
 </mapper>

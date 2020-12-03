@@ -16,13 +16,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="获奖名称" prop="awardAchieName">
-        <el-input v-model="dataForm.awardAchieName" placeholder="获奖(项目）名称"></el-input>
+        <el-input v-model="dataForm.awardAchieName" placeholder="获奖名称" style="width: 400px"></el-input>
       </el-form-item>
       <el-form-item label="负责人" prop="professAchieDirector">
-        <el-input v-model="dataForm.professAchieDirector" placeholder="负责人"></el-input>
+        <el-input v-model="dataForm.professAchieDirector" placeholder="负责人" style="width: 400px"></el-input>
       </el-form-item>
       <el-form-item label="团队成员" prop="teamMenber">
-        <el-input v-model="dataForm.teamMenber" placeholder="团队成员"></el-input>
+        <el-input v-model="dataForm.teamMenber" placeholder="团队成员" style="width: 400px"></el-input>
       </el-form-item>
       <el-form-item label="成果类型" prop="professAchieveType">
         <el-select v-model="dataForm.professAchieveType" placeholder="请选择成果类型" @change="changeProfessAchieveType">
@@ -104,9 +104,6 @@
           isDel: ''
         },
         dataRule: {
-          professUserId: [
-            {required: true, message: '负责人id不能为空', trigger: 'blur'}
-          ],
           instituteId: [
             {required: true, message: '所属二级学院不能为空', trigger: 'blur'}
           ],
@@ -123,7 +120,7 @@
             {required: true, message: '获得时间不能为空', trigger: 'blur'}
           ],
           professAchieveType: [
-            {required: true, message: '专创成果类型（奖励、立项、教改项目、教改论文、教学成果奖、教学过程材料、教学效果）不能为空', trigger: 'blur'}
+            {required: true, message: '专创成果类型不能为空', trigger: 'blur'}
           ]
 
         },
@@ -134,7 +131,7 @@
     },
     methods: {
       init(id) {
-        this.url = this.$http.adornUrl(`/profess/profess/upload?token=${this.$cookie.get('token')}`)
+        this.url = this.$http.adornUrl(`/profess/attach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.professAchieveId = id || 0
         this.visible = true
         this.getInstituteName()

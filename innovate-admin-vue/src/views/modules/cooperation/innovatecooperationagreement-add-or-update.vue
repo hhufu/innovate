@@ -32,7 +32,8 @@
     <el-form-item label="协议时间" prop="agreementTime">
       <el-date-picker
         v-model="dataForm.agreementTime"
-        type="date"
+        type="datetime"
+        value-format="yyyy-MM-dd HH:mm:ss"
         format="yyyy-MM-dd"
         placeholder="选择日期">
       </el-date-picker>

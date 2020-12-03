@@ -10,6 +10,7 @@
         <result property="materialYear" column="material_year"/>
         <result property="materialType" column="material_type"/>
         <result property="materialTypeId" column="material_type_id"/>
+        <result property="instituteId" column="institute_id"/>
         <result property="trainingBaseId" column="training_base_id"/>
         <result property="isDel" column="is_del"/>
     </resultMap>
@@ -22,6 +23,7 @@
             <if test="materialType != null">material_type,</if>
             <if test="materialTypeId != null">material_type_id,</if>
             <if test="trainingBaseId != null">training_base_id,</if>
+            <if test="instituteId != null">institute_id,</if>
             <if test="isDel != null">is_del,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -30,6 +32,7 @@
             <if test="materialType != null">#{materialType},</if>
             <if test="materialTypeId != null">#{materialTypeId},</if>
             <if test="trainingBaseId != null">#{trainingBaseId},</if>
+            <if test="instituteId != null">#{instituteId},</if>
             <if test="isDel != null">#{isDel},</if>
         </trim>
     </insert>

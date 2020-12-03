@@ -75,6 +75,23 @@ public class InnovateProfessAchieveServiceImpl extends ServiceImpl<InnovateProfe
         return false;
     }
 
+    /**
+     *
+     * @param professAchieveIds
+     * @return 导出
+     */
+    @Override
+    public List<InnovateProfessAchieveEntity> queryListByIds(Long[] professAchieveIds) {
+        Map<String, Object> map = new HashMap<>();
+        if (professAchieveIds.length > 0) {
+            map.put("professAchieveIds", professAchieveIds);
+        } else {
+            map.put("professAchieveIds", null);
+        }
+
+        return professAchieveDao.selectProfessAchieveIds(map);
+    }
+
     @Override
     public R info(Long professAchieveId) {
         InnovateProfessAchieveEntity professAchieveEntity = professAchieveDao.selectById(professAchieveId);

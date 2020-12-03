@@ -198,7 +198,7 @@
         }).then((res) => {
           this.dataListLoading = false
           const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
-          let filename = 'download.xls'
+          let filename = '实训基地成果.xls'
           // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
           const elink = document.createElement('a')
           elink.download = filename

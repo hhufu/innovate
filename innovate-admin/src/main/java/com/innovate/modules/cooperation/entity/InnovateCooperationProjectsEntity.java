@@ -2,6 +2,7 @@ package com.innovate.modules.cooperation.entity;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -29,7 +30,7 @@ public class InnovateCooperationProjectsEntity implements Serializable {
 	 * 自增主键
 	 */
 	@TableId
-	@ExcelProperty(value = {"ID"})
+	@ExcelIgnore
 	private Long cooperationId;
 	/**
 	 * 项目名称
@@ -54,18 +55,20 @@ public class InnovateCooperationProjectsEntity implements Serializable {
 	/**
 	 * 主持人
 	 */
-	@ExcelProperty(value = {"主持人"})
+	@ExcelIgnore
 	private Long userId;
 	/**
 	 * 起始时间
 	 */
-	@JsonFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat("yyyy-MM-dd")
+	@JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@ExcelProperty(value = {"起始时间"})
 	private Date startTime;
 	/**
 	 * 截止时间
 	 */
-	@JsonFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat("yyyy-MM-dd")
+	@JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@ExcelProperty(value = {"截止时间"})
 	private Date endTime;
 	/**
@@ -77,6 +80,7 @@ public class InnovateCooperationProjectsEntity implements Serializable {
 	 * 用户信息
 	 */
 	@TableField(exist = false)
+	@ExcelIgnore
 	private SysUserEntity userEntity;
 
 }

@@ -16,7 +16,13 @@
       </el-select>
     </el-form-item>
     <el-form-item label="材料年度" prop="materialYear">
-      <el-input v-model="dataForm.materialYear" placeholder="材料年度"></el-input>
+      <el-date-picker
+        v-model="dataForm.materialYear"
+        type="year"
+        format="yyyy"
+        value-format="yyyy"
+        placeholder="材料年度">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="材料类型" prop="materialType">
       <el-select v-model="dataForm.materialType" placeholder="材料类型" @change="changeelevel">
@@ -28,15 +34,6 @@
         </el-option>
       </el-select>
     </el-form-item>
-<!--    <el-form-item label="材料类型id" prop="materialTypeId">-->
-<!--      <el-input v-model="dataForm.materialTypeId" placeholder="材料类型id"></el-input>-->
-<!--    </el-form-item>-->
-<!--    <el-form-item label="实训基地id" prop="trainingBaseId">-->
-<!--      <el-input v-model="dataForm.trainingBaseId" placeholder="实训基地id"></el-input>-->
-<!--    </el-form-item>-->
-<!--    <el-form-item label="是否删除" prop="isDel">-->
-<!--      <el-input v-model="dataForm.isDel" placeholder="是否删除"></el-input>-->
-<!--    </el-form-item>-->
       <el-form-item label="附件要求">
         <template>
           <el-alert
@@ -57,7 +54,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileList.length == 0" style="color: crimson">*请上传相关附件</span>
+          <span v-if="this.attachLists.length == 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -117,6 +114,7 @@
         this.url = this.$http.adornUrl(`/training/innovatetrainingbaseattach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.trainingAchieveId = id || 0
         this.visible = true
+        this.getBaseInfos() // 获取实训基地列表
         this.$http({
           url: this.$http.adornUrl(`/training/innovatetrainingbaseinfo/list`),
           method: 'get'
@@ -172,10 +170,30 @@
           })
         })
       },
+      getBaseInfos() {
+        this.$http({
+          url: this.$http.adornUrl('/training/innovatetrainingbaseinfo/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'page': this.pageIndex,
+            'limit': this.pageSize,
+            'key': this.dataForm.key
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
+          if (valid && this.attachLists.length > 0) {
             this.$http({
               url: this.$http.adornUrl(`/training/innovatetrainingbaseachieve/${!this.dataForm.trainingAchieveId ? 'save' : 'update'}`),
               method: 'post',

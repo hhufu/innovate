@@ -1,5 +1,6 @@
 package com.innovate.modules.enterprise.entity;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -25,10 +26,12 @@ public class InnovateEnterpriseAchieveEntity implements Serializable {
 	 * 自增主键
 	 */
 	@TableId
+	@ExcelIgnore
 	private Long enterpAchieveId;
 	/**
 	 * 企业 id
 	 */
+	@ExcelIgnore
 	private Long enterpriseId;
 	/**
 	 * 企业名称
@@ -62,6 +65,7 @@ public class InnovateEnterpriseAchieveEntity implements Serializable {
 	/**
 	 * 是否删除
 	 */
+	@ExcelIgnore
 	private Integer isDel;
 
 }

@@ -26,13 +26,13 @@ public class InnovateEnterpriseProjectEntity implements Serializable {
     /**
      * 自增主键
      */
-    @ExcelProperty(value = "ID")
+    @ExcelIgnore
     @TableId
     private Long enterpProjId;
     /**
      * 企业 id
      */
-	@ExcelIgnore
+    @ExcelIgnore
     private Long enterpriseId;
     /**
      * 企业名称
@@ -69,7 +69,7 @@ public class InnovateEnterpriseProjectEntity implements Serializable {
     /**
      * 用户id
      */
-    @ExcelProperty(value = "用户id")
+    @ExcelIgnore
     private Long projectUserId;
     /**
      * 是否删除

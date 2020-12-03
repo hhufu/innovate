@@ -8,6 +8,7 @@
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('profess:innovateprofessachieve:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('profess:innovateprofessachieve:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('training:innovateprofessachieve:export')" type="primary" @click="exportAchieve()">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -82,7 +83,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.professAchieveId)">查看</el-button>
+          <el-button type="text" size="small" @click="detailInfo(scope.row.professAchieveId)">查看</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.professAchieveId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.professAchieveId)">删除</el-button>
         </template>
@@ -99,18 +100,20 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <detail-info v-if="detailInfoVisible" ref="detailInfo"></detail-info>
   </div>
 </template>
 
 <script>
   import AddOrUpdate from './innovateprofessachieve-add-or-update'
-
+  import DetailInfo from './detail-info'
   export default {
     data () {
       return {
         dataForm: {
           key: ''
         },
+        detailInfoVisible: false,
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
@@ -122,7 +125,8 @@
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate,
+      DetailInfo
     },
     activated () {
       this.getDataList()
@@ -184,6 +188,13 @@
           this.$refs.addOrUpdate.init(id)
         })
       },
+      // 查看
+      detailInfo(id) {
+        this.detailInfoVisible = true
+        this.$nextTick(() => {
+          this.$refs.detailInfo.init(id)
+        })
+      },
       // 格式化学院名称
       fomatterInstitute(e) {
         var actions = [];
@@ -224,7 +235,36 @@
             }
           })
         })
-      }
+      },
+      // 导出
+      exportAchieve(){
+        this.dataListLoading = true
+        var professAchieveIds = this.dataListSelections.map(item => {
+          return item.professAchieveId
+        })
+        this.$http({
+          url: this.$http.adornUrl('/profess/innovateprofessachieve/export'),
+          method: 'post',
+          data: this.$http.adornData(professAchieveIds, false),
+          responseType: 'blob'
+        }).then((res) => {
+          this.dataListLoading = false
+          const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+          let filename = '专创结合成果.xls'
+          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+          const elink = document.createElement('a')
+          elink.download = filename
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }).catch(() => {
+          this.dataListLoading = false
+          this.$message.error('导出失败!')
+        })
+      },
     }
   }
 </script>

@@ -1,5 +1,8 @@
 package com.innovate.modules.training.service.impl;
 
+import com.innovate.modules.innovate.entity.InnovateInstituteEntity;
+import com.innovate.modules.innovate.service.InnovateInstituteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +25,8 @@ public class InnovateTrainingBaseInfoServiceImpl extends ServiceImpl<InnovateTra
 
 
 
+    @Autowired
+    private InnovateInstituteService innovateInstituteService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         Page<InnovateTrainingBaseInfoEntity> page = this.selectPage(
@@ -39,9 +44,19 @@ public class InnovateTrainingBaseInfoServiceImpl extends ServiceImpl<InnovateTra
      */
     @Override
     public List<InnovateTrainingBaseInfoEntity> queryListByDeptAndIds(Long[] trainBaseIds) {
-        return trainBaseIds.length > 0
-                ? this.selectBatchIds(Arrays.asList(trainBaseIds))
-                : this.selectList(null);
+        List<InnovateTrainingBaseInfoEntity> baseInfoEntities = new ArrayList<>();
+        if (trainBaseIds.length > 0) {
+            baseInfoEntities = this.selectBatchIds(Arrays.asList(trainBaseIds));
+        } else {
+            baseInfoEntities = this.selectList(null);
+        }
+
+        for (InnovateTrainingBaseInfoEntity baseInfo: baseInfoEntities) {
+            InnovateInstituteEntity innovateInstituteEntity = innovateInstituteService.selectById(baseInfo.getInstituteId());
+            baseInfo.setInstituteName(innovateInstituteEntity.getInstituteName());
+        }
+
+        return baseInfoEntities;
     }
 
 }

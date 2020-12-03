@@ -1,6 +1,8 @@
 package com.innovate.modules.training.service.impl;
 
 import com.innovate.common.utils.R;
+import com.innovate.modules.innovate.entity.InnovateInstituteEntity;
+import com.innovate.modules.innovate.service.InnovateInstituteService;
 import com.innovate.modules.sys.service.SysUserService;
 import com.innovate.modules.training.entity.InnovateTrainingBaseAttachEntity;
 import com.innovate.modules.training.entity.InnovateTrainingBaseAttachModel;
@@ -30,6 +32,8 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
     private InnovateTrainingBaseAttachService innovateTrainingBaseAttachService;
     @Autowired
     private SysUserService sysUserService;
+    @Autowired
+    private InnovateInstituteService innovateInstituteService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -43,10 +47,21 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
 
     @Override
     public List<InnovateTrainingBaseAchieveEntity> queryListByIds(Long[] trainAchiveIds) {
-        return trainAchiveIds.length > 0
-                ? this.selectBatchIds(Arrays.asList(trainAchiveIds))
-                : this.selectList(null);
+        List<InnovateTrainingBaseAchieveEntity> baseAchieveEntities = new ArrayList<>();
+        if (trainAchiveIds.length > 0) {
+            baseAchieveEntities = this.selectBatchIds(Arrays.asList(trainAchiveIds));
+        } else {
+            baseAchieveEntities = this.selectList(null);
+        }
+        for (InnovateTrainingBaseAchieveEntity b : baseAchieveEntities) {
+            InnovateInstituteEntity innovateInstituteEntity = innovateInstituteService.selectById(b.getInstituteId());
+            if (innovateInstituteEntity.getInstituteName() != null)
+                b.setInstituteName(innovateInstituteEntity.getInstituteName());
+        }
+
+        return baseAchieveEntities;
     }
+
     @Override
     public R insertModel(InnovateTrainingBaseAttachModel attachModel) {
         InnovateTrainingBaseAchieveEntity trainingBaseAchieveEntity = attachModel.getTrainingBaseAchieveEntity();
@@ -81,12 +96,13 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
             }
         return false;
     }
+
     @Override
     public R info(Long trainingAchieveId) {
         InnovateTrainingBaseAchieveEntity innovateTrainingBaseAchieveEntity = innovateTrainingBaseAchieveDao.selectById(trainingAchieveId);
         // 获取申请附件信息
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("training_achieve_id",trainingAchieveId);
+        map.put("training_achieve_id", trainingAchieveId);
         map.put("is_del", 0);
         List<InnovateTrainingBaseAttachEntity> attachEntityList = innovateTrainingBaseAttachService.selectByMap(map);
         return R.ok().put("innovateTrainingBaseAchieveEntity", innovateTrainingBaseAchieveEntity)

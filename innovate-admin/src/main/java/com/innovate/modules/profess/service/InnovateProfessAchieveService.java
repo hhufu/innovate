@@ -7,6 +7,7 @@ import com.innovate.modules.profess.entity.InnovateProfessAchieveEntity;
 import com.innovate.modules.profess.entity.ProfessModel;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,5 +28,7 @@ public interface InnovateProfessAchieveService extends IService<InnovateProfessA
 
     @Transactional
     boolean update(ProfessModel professModel);
+
+    List<InnovateProfessAchieveEntity> queryListByIds(Long[] professAchieveIds);
 }
 

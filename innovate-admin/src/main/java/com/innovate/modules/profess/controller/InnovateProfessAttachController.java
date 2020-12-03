@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2020-11-24 00:40:46
  */
 @RestController
-@RequestMapping("profess/profess")
+@RequestMapping("profess/attach")
 public class InnovateProfessAttachController {
     @Autowired
     private InnovateProfessAttachService innovateProfessAttachService;

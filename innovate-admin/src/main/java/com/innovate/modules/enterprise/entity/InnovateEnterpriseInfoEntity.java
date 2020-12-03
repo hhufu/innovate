@@ -27,7 +27,7 @@ public class InnovateEnterpriseInfoEntity implements Serializable {
 	 * 自增主键（入驻企业id）
 	 */
 	@TableId
-	@ExcelProperty(value = "驻企业id")
+	@ExcelIgnore
 	private Long settledEnterpId;
 	/**
 	 * 企业名称
@@ -37,7 +37,7 @@ public class InnovateEnterpriseInfoEntity implements Serializable {
 	/**
 	 * 用户ID
 	 */
-	@ExcelProperty(value = "用户ID")
+	@ExcelIgnore
 	private Long enterpriseUserId;
 	/**
 	 * 企业负责人姓名
