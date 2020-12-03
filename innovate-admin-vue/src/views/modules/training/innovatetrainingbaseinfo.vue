@@ -48,6 +48,9 @@
         header-align="center"
         align="center"
         label="建立时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.baseCreateTime, '{y}年{m}月{d}日')}}
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
