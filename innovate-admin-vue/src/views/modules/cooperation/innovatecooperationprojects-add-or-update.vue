@@ -9,7 +9,7 @@
     </el-form-item>
     <el-form-item label="二级学院" prop="instituteId">
       <el-select v-model="dataForm.instituteId" placeholder="二级学院">
-        <el-option v-for="item in instituteList" :key="item.instituteName" :label="item.instituteName" :value="item.instituteId">
+        <el-option v-for="item in instituteName" :key="item.instituteId" :label="item.instituteName" :value="item.instituteId">
         </el-option>
       </el-select>
     </el-form-item>
@@ -20,6 +20,8 @@
       <el-date-picker
         v-model="dataForm.cooperationYear"
         type="year"
+        format="yyyy"
+        value-format="yyyy"
         placeholder="选择年度">
       </el-date-picker>
     </el-form-item>
@@ -128,7 +130,7 @@
             { required: true, message: '截止时间不能为空', trigger: 'blur' }
           ]
         },
-        instituteList: []
+        instituteName: [] // 学院列表
       }
     },
     methods: {
@@ -166,6 +168,8 @@
                 this.dataListLoading = false
               }
             }).catch((e) => {})  // length异常抛出
+          } else {
+            this.reset()
           }
           // 获取文件要求：类型=>1 大创,2 中期检查,3 赛事,4 结题
           this.dataListLoading = true
@@ -228,7 +232,7 @@
           method: 'get'
         }).then(({ data }) => {
           if (data && data.code === 0) {
-            this.instituteList = data.institute
+            this.instituteName = data.institute
           }
         })
       },

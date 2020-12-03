@@ -18,6 +18,7 @@
         v-model="dataForm.agreementYear"
         type="year"
         format="yyyy"
+        value-format="yyyy"
         placeholder="选择年度">
       </el-date-picker>
     </el-form-item>

@@ -11,7 +11,7 @@
       <el-input v-model="dataForm.materialYear" placeholder="材料年度"></el-input>
     </el-form-item>
     <el-form-item label="材料类型" prop="materialType">
-      <el-select v-model="dataForm.materialType" placeholder="材料类型" @change="changeelevel($event,dataForm.trainingAchieveType)">
+      <el-select v-model="dataForm.materialType" placeholder="材料类型" @change="changeelevel">
         <el-option
           v-for="item in trainingTypes"
           :key="item.materialTypeId"
@@ -216,8 +216,10 @@
         this.attachLists = tempFileList
       },
       changeelevel (val) {
-        console.log(val)
-        // this.dataForm.materialTypeId = val
+        let list = this.trainingAchieveType.filter(item => {
+          return item.trainingAchieveType.indexOf(val)
+        })
+        this.dataForm.materialTypeId = list[0].materialTypeId
       }
     }
   }

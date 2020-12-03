@@ -44,7 +44,7 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.trainingAchieveType = data.innovatetrainingachievetype.trainingAchieveType
+                this.dataForm.trainingAchieveType = data.innovateTrainingAchieveType.trainingAchieveType
               }
             })
           }
