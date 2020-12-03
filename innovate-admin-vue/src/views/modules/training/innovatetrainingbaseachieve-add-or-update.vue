@@ -4,8 +4,16 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="基地名称" prop="trainingBaseName">
-      <el-input v-model="dataForm.trainingBaseName" placeholder="基地名称"></el-input>
+    <el-form-item label="实训基地名称" prop="trainingBaseName">
+<!--      <el-input v-model="dataForm.trainingBaseName" placeholder="基地名称"></el-input>-->
+      <el-select v-model="dataForm.trainingBaseName" placeholder="实训基地名称" >
+        <el-option
+          v-for="item in trainingnameList"
+          :key="item.trainingBaseId"
+          :label="item.trainingBaseName"
+          :value="item.trainingBaseName">
+        </el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="材料年度" prop="materialYear">
       <el-input v-model="dataForm.materialYear" placeholder="材料年度"></el-input>
@@ -49,7 +57,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileIsNull" style="color: crimson">*请上传相关附件</span>
+          <span v-if="fileList.length == 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -100,7 +108,8 @@
             { required: true, message: '材料类型不能为空', trigger: 'blur' }
           ]
         },
-        trainingTypes: []
+        trainingTypes: [],
+        trainingnameList: [] // 实训基地列表
       }
     },
     methods: {
@@ -108,6 +117,12 @@
         this.url = this.$http.adornUrl(`/training/innovatetrainingbaseattach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.trainingAchieveId = id || 0
         this.visible = true
+        this.$http({
+          url: this.$http.adornUrl(`/training/innovatetrainingbaseinfo/list`),
+          method: 'get'
+        }).then(({data}) => {
+          this.trainingnameList = data.page.list
+        })
         this.$http({
           url: this.$http.adornUrl(`/training/innovatetrainingachievetype/list`),
           method: 'get'
@@ -216,8 +231,8 @@
         this.attachLists = tempFileList
       },
       changeelevel (val) {
-        let list = this.trainingAchieveType.filter(item => {
-          return item.trainingAchieveType.indexOf(val)
+        let list = this.trainingTypes.filter(item => {
+          return item.trainingAchieveType.indexOf(val) > -1
         })
         this.dataForm.materialTypeId = list[0].materialTypeId
       }

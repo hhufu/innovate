@@ -13,7 +13,6 @@
           :value="item.enterpriseName">
         </el-option>
       </el-select>
-<!--      <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>-->
     </el-form-item>
     <el-form-item label="二级学院" prop="instituteId">
       <el-select v-model="dataForm.instituteId" placeholder="二级学院">

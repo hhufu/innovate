@@ -193,12 +193,12 @@
         })
       },
       // 格式化学院名称
-      fomatterInstitute(e) {
+      fomatterInstitute (e) {
         var actions = []
         Object.keys(this.instituteList).some((key) => {
           // eslint-disable-next-line eqeqeq
           if (this.instituteList[key].instituteId == parseInt(e.instituteId)) {
-            actions.push( this.instituteList[key].instituteName)
+            actions.push(this.instituteList[key].instituteName)
             return true
           }
         })

@@ -34,12 +34,13 @@
         prop="trainingBaseName"
         header-align="center"
         align="center"
-        label="基地名称">
+        label="实训基地名称">
       </el-table-column>
       <el-table-column
         prop="materialYear"
         header-align="center"
         align="center"
+        :formatter="dateFormat"
         label="材料年度">
       </el-table-column>
       <el-table-column
@@ -211,6 +212,12 @@
           this.dataListLoading = false
           this.$message.error('导出失败!')
         })
+      },
+      // 时间格式化
+      // 多选
+      dateFormat (row, column) {
+        var t = new Date(row.materialYear)
+        return t.getFullYear() + '年'
       }
     }
   }
