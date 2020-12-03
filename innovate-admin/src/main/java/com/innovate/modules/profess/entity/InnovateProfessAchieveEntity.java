@@ -1,10 +1,13 @@
 package com.innovate.modules.profess.entity;
 
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -47,6 +50,8 @@ public class InnovateProfessAchieveEntity implements Serializable {
 	/**
 	 * 获得时间
 	 */
+	@DateTimeFormat("yyyy-MM-dd")
+	@JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date awardTime;
 	/**
 	 * 专创成果类型（奖励、立项、教改项目、教改论文、教学成果奖、教学过程材料、教学效果）

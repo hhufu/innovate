@@ -23,7 +23,8 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="professAchieveTypeId"
+        prop=""
+        type="index"
         header-align="center"
         align="center"
         label="ID">

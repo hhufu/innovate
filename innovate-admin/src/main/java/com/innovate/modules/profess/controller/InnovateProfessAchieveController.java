@@ -3,6 +3,7 @@ package com.innovate.modules.profess.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.innovate.modules.profess.entity.ProfessModel;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,9 +50,9 @@ public class InnovateProfessAchieveController {
     @RequestMapping("/info/{professAchieveId}")
     @RequiresPermissions("profess:innovateprofessachieve:info")
     public R info(@PathVariable("professAchieveId") Long professAchieveId){
-		InnovateProfessAchieveEntity innovateProfessAchieve = innovateProfessAchieveService.selectById(professAchieveId);
+		R r = innovateProfessAchieveService.info(professAchieveId);
 
-        return R.ok().put("innovateProfessAchieve", innovateProfessAchieve);
+        return r;
     }
 
     /**
@@ -59,8 +60,8 @@ public class InnovateProfessAchieveController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("profess:innovateprofessachieve:save")
-    public R save(@RequestBody InnovateProfessAchieveEntity innovateProfessAchieve){
-		innovateProfessAchieveService.insert(innovateProfessAchieve);
+    public R save(@RequestBody ProfessModel professModel){
+        innovateProfessAchieveService.insertModel(professModel);
 
         return R.ok();
     }
@@ -70,8 +71,8 @@ public class InnovateProfessAchieveController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("profess:innovateprofessachieve:update")
-    public R update(@RequestBody InnovateProfessAchieveEntity innovateProfessAchieve){
-		innovateProfessAchieveService.updateById(innovateProfessAchieve);
+    public R update(@RequestBody ProfessModel professModel){
+		innovateProfessAchieveService.update(professModel);
 
         return R.ok();
     }

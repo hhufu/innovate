@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.trainingAchieveId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
@@ -98,15 +98,6 @@
           ],
           materialType: [
             { required: true, message: '材料类型不能为空', trigger: 'blur' }
-          ],
-          materialTypeId: [
-            { required: true, message: '材料类型id不能为空', trigger: 'blur' }
-          ],
-          trainingBaseId: [
-            { required: true, message: '实训基地id不能为空', trigger: 'blur' }
-          ],
-          isDel: [
-            { required: true, message: '是否删除不能为空', trigger: 'blur' }
           ]
         },
         trainingTypes: []

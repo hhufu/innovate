@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.integralApplyId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
@@ -79,9 +79,10 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileIsNull" style="color: crimson">*请上传相关附件</span>
+          <span v-if="fileList.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
+      <!--独立附件end-->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -219,7 +220,7 @@
         this.fileList = []
         this.fileAskContent = '无'
       },
-      getTypeList () {
+      getTypeList() {
         this.participateList = []
         this.$http({
           url: this.$http.adornUrl('/points/innovatesyspoints/list'),
@@ -241,7 +242,7 @@
         })
       },
       // 表单提交
-      dataFormSubmit () {
+      dataFormSubmit() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid && this.attachLists.length > 0) {
             this.dataForm.applyUserId = this.$store.state.user.id
@@ -270,13 +271,11 @@
                 this.$message.error(data.msg)
               }
             })
-          } else {
-            this.fileIsNull = true
           }
         })
       },
       // 选择申报类型
-      changeParticipate (e) {
+      changeParticipate(e) {
         // eslint-disable-next-line no-unused-vars
         let list = this.participateList.filter(item => {
           return item.participateType.indexOf(e) > -1
@@ -349,7 +348,7 @@
         })
       },
       // 选择--奖项等级
-      changePrizeGrade (e) {
+      changePrizeGrade(e) {
         let list = this.prizeGradeList.filter(item => {
           // eslint-disable-next-line eqeqeq
           return item.prizeGrade.indexOf(e) > -1

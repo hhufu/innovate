@@ -87,11 +87,11 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.activityName = data.innovatestudentactivity.activityName
-                this.dataForm.activitySite = data.innovatestudentactivity.activitySite
-                this.dataForm.activityPoint = data.innovatestudentactivity.activityPoint
-                this.dataForm.activityTime = data.innovatestudentactivity.activityTime
-                this.dataForm.activityEndTime = data.innovatestudentactivity.activityEndTime
+                this.dataForm.activityName = data.innovateStudentActivity.activityName
+                this.dataForm.activitySite = data.innovateStudentActivity.activitySite
+                this.dataForm.activityPoint = data.innovateStudentActivity.activityPoint
+                this.dataForm.activityTime = data.innovateStudentActivity.activityTime
+                this.dataForm.activityEndTime = data.innovateStudentActivity.activityEndTime
               }
             })
           }

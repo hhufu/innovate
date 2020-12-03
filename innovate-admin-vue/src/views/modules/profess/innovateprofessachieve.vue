@@ -22,12 +22,13 @@
         align="center"
         width="50">
       </el-table-column>
-<!--      <el-table-column-->
-<!--        prop="professAchieveId"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="自增主键">-->
-<!--      </el-table-column>-->
+      <el-table-column
+        prop=""
+        header-align="center"
+        align="center"
+        type="index"
+        label="ID">
+      </el-table-column>
 <!--      <el-table-column-->
 <!--        prop="professUserId"-->
 <!--        header-align="center"-->
@@ -70,19 +71,10 @@
         header-align="center"
         align="center"
         label="获得时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.awardTime, "{y}-{m}-{d}")}}
+        </template>
       </el-table-column>
-<!--      <el-table-column-->
-<!--        prop="professAchieveTypeId"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="专创成果类型id">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--        prop="isDel"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="是否删除">-->
-<!--      </el-table-column>-->
       <el-table-column
         fixed="right"
         header-align="center"
@@ -90,6 +82,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.professAchieveId)">查看</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.professAchieveId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.professAchieveId)">删除</el-button>
         </template>
@@ -111,6 +104,7 @@
 
 <script>
   import AddOrUpdate from './innovateprofessachieve-add-or-update'
+
   export default {
     data () {
       return {

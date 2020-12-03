@@ -24,6 +24,13 @@
         width="50">
       </el-table-column>
       <el-table-column
+        prop=""
+        type="index"
+        header-align="center"
+        align="center"
+        label="ID">
+      </el-table-column>
+      <el-table-column
         prop="trainingBaseName"
         header-align="center"
         align="center"
@@ -40,18 +47,6 @@
         header-align="center"
         align="center"
         label="材料类型">
-      </el-table-column>
-      <el-table-column
-        prop="materialTypeId"
-        header-align="center"
-        align="center"
-        label="材料类型id">
-      </el-table-column>
-      <el-table-column
-        prop="trainingBaseId"
-        header-align="center"
-        align="center"
-        label="实训基地id">
       </el-table-column>
       <el-table-column
         fixed="right"

@@ -23,10 +23,11 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="materialTypeId"
+        prop=""
+        type="index"
         header-align="center"
         align="center"
-        label="自增主键">
+        label="ID">
       </el-table-column>
       <el-table-column
         prop="trainingAchieveType"

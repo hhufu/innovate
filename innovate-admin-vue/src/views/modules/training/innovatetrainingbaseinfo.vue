@@ -23,12 +23,13 @@
         align="center"
         width="50">
       </el-table-column>
-<!--      <el-table-column-->
-<!--        prop="trainingBaseId"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="自增主键">-->
-<!--      </el-table-column>-->
+      <el-table-column
+        prop=""
+        type="index"
+        header-align="center"
+        align="center"
+        label="ID">
+      </el-table-column>
       <el-table-column
         prop="trainingBaseName"
         header-align="center"
@@ -46,12 +47,6 @@
         header-align="center"
         align="center"
         label="建立时间">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
       </el-table-column>
       <el-table-column
         fixed="right"
