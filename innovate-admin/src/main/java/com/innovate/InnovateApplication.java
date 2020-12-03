@@ -16,7 +16,7 @@ public class InnovateApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(InnovateApplication.class, args);
-		//指定jre系统属性，允许 特殊符号  | 做入参   详情见 tomcat  HttpParser类
+	 	//指定jre系统属性，允许 特殊符号  | 做入参   详情见 tomcat  HttpParser类
 		System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow","|{}[]_");
 	}
 
