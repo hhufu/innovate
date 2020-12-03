@@ -19,5 +19,9 @@ public interface InnovateEnterpriseAchieveService extends IService<InnovateEnter
     PageUtils queryPage(Map<String, Object> params);
 
     void delList(List<Long> listId);
+
+    //导出
+//    List<InnovateEnterpriseAchieveEntity> queryListByIds(List<Long> enterpAchieveIds);
+    List<InnovateEnterpriseAchieveEntity> queryListByIds(Long enterpAchieveIds);
 }
 

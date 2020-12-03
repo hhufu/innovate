@@ -16,4 +16,6 @@ import java.util.List;
 @Mapper
 public interface InnovateEnterpriseAchieveDao extends BaseMapper<InnovateEnterpriseAchieveEntity> {
     void  delList(List<Long> list);
+
+    List<InnovateEnterpriseAchieveEntity> queryListByIds(Long enterpAchieveIds);
 }

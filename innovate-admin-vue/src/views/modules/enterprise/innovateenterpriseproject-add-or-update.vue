@@ -8,7 +8,7 @@
       <el-input v-model="dataForm.enterpriseId" placeholder="企业 id"></el-input>
     </el-form-item>
   <el-form-item label="企业名称" prop="enterpriseName">
-    <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" @change="changeName"> 
+    <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" @change="changeName">
       <el-option  v-for="n in projectName" :key="n.enterpriseName" :label="n.enterpriseName" :value="n.enterpriseName" ></el-option>
     </el-select>
   </el-form-item>
@@ -264,6 +264,22 @@ export default {
       for (let index = 0; index < this.dataForm.attachLists.length; index++) {
         if (this.dataForm.attachLists[index].attachName !== file.name) {
           tempFileList.push(this.dataForm.attachLists[index]);
+        }else {
+          let attachId =this.dataForm.attachLists[index].attachId
+          if (attachId) {
+            this.$http({
+              url: this.$http.adornUrl(
+                `/enterprise/innovateenterpriseattach/delete`
+              ),
+              method: "post",
+              data: this.$http.adornData(
+                [attachId],false
+              )
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+              }
+            });
+          }
         }
       }
       this.dataForm.attachLists = tempFileList;

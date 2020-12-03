@@ -24,13 +24,14 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="awardProjectjTypeId"
+        prop=""
+        type="index"
         header-align="center"
         align="center"
-        label="自增主键">
+        label="ID">
       </el-table-column>
       <el-table-column
-        prop="awardProjectjType"
+        prop="awardProjectType"
         header-align="center"
         align="center"
         label="获奖项目类型">
@@ -42,8 +43,8 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.awardProjectjTypeId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.awardProjectjTypeId)">删除</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.awardProjectTypeId)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.awardProjectTypeId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -134,7 +135,7 @@ export default {
       var ids = id
         ? [id]
         : this.dataListSelections.map(item => {
-            return item.awardProjectjTypeId;
+            return item.awardProjectTypeId;
           });
       this.$confirm(
         `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
@@ -171,7 +172,7 @@ export default {
     exportLists() {
       this.dataListLoading = true;
       var trainBaseIds = this.dataListSelections.map(item => {
-        return item.awardProjectjTypeId;
+        return item.awardProjectTypeId;
       });
       this.$http({
         url: this.$http.adornUrl("/enterprise/innovateawardprojecttype/export"),

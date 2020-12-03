@@ -25,11 +25,11 @@ public class InnovateAwardProjectTypeEntity implements Serializable {
 	 */
 	@TableId
 	@ExcelProperty(value = "ID")
-	private Long awardProjectjTypeId;
+	private Long awardProjectTypeId;
 	/**
 	 * 获奖项目类型
 	 */
 	@ExcelProperty(value = "获奖项目类型")
-	private String awardProjectjType;
+	private String awardProjectType;
 
 }

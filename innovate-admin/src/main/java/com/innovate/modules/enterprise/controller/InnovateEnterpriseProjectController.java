@@ -123,11 +123,13 @@ public class InnovateEnterpriseProjectController {
     public R save(@RequestBody InnovateEnterpriseInfoModel innovateEnterpriseInfoModel) {
         innovateEnterpriseInfoModel.getProjectEntity().setProjectUserId(ShiroUtils.getUserId());
         innovateEnterpriseProjectService.insert( innovateEnterpriseInfoModel.getProjectEntity());
-        Long infoId = innovateEnterpriseInfoModel.getProjectEntity().getEnterpProjId();
-        for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getAttachEntities()){
-            attach.setFunctionId(infoId);
+        if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()){
+            Long infoId = innovateEnterpriseInfoModel.getProjectEntity().getEnterpProjId();
+            for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getAttachEntities()){
+                attach.setFunctionId(infoId);
+            }
+            innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         }
-        innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         return R.ok();
     }
 

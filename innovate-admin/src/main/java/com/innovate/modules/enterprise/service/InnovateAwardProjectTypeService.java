@@ -19,6 +19,6 @@ public interface InnovateAwardProjectTypeService extends IService<InnovateAwardP
 
     PageUtils queryPage(Map<String, Object> params);
     //导出
-    List<InnovateAwardProjectTypeEntity> queryListByIds(List<Long> awardProjectjTypeIds);
+    List<InnovateAwardProjectTypeEntity> queryListByIds(List<Long> awardProjectTypeIds);
 }
 

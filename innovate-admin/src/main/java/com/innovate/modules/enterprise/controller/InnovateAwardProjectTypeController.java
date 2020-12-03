@@ -8,6 +8,8 @@ import java.util.Map;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseProjectEntity;
 import com.innovate.modules.sys.entity.SysUserEntity;
@@ -33,6 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("enterprise/innovateawardprojecttype")
 public class InnovateAwardProjectTypeController {
+
+    static int a = 123;
+
     @Autowired
     private InnovateAwardProjectTypeService innovateAwardProjectTypeService;
 
@@ -51,9 +56,9 @@ public class InnovateAwardProjectTypeController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{awardProjectjTypeId}")
+    @RequestMapping("/info/{awardProjectTypeId}")
     @RequiresPermissions("enterprise:innovateawardprojecttype:info")
-    public R info(@PathVariable("awardProjectjTypeId") Long awardProjectjTypeId){
+    public R info(@PathVariable("awardProjectTypeId") Long awardProjectjTypeId){
 		InnovateAwardProjectTypeEntity innovateAwardProjectType = innovateAwardProjectTypeService.selectById(awardProjectjTypeId);
 
         return R.ok().put("innovateAwardProjectType", innovateAwardProjectType);
@@ -86,8 +91,8 @@ public class InnovateAwardProjectTypeController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("enterprise:innovateawardprojecttype:delete")
-    public R delete(@RequestBody Long[] awardProjectjTypeIds){
-		innovateAwardProjectTypeService.deleteBatchIds(Arrays.asList(awardProjectjTypeIds));
+    public R delete(@RequestBody Long[] awardProjectTypeIds){
+		innovateAwardProjectTypeService.deleteBatchIds(Arrays.asList(awardProjectTypeIds));
 
         return R.ok();
     }
@@ -97,7 +102,7 @@ public class InnovateAwardProjectTypeController {
      */
     @PostMapping("/export")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
-    public void export(@RequestBody List<Long> awardProjectjTypeIds, HttpServletResponse response){
+    public void export(@RequestBody List<Long> awardProjectTypeIds, HttpServletResponse response){
         List<InnovateAwardProjectTypeEntity> projectEntities;
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -113,7 +118,7 @@ public class InnovateAwardProjectTypeController {
             if ("wzxyGLY".equals(adminName) || true){
                 excelWriter = EasyExcel.write(response.getOutputStream(), InnovateAwardProjectTypeEntity.class).build();
                 WriteSheet writeSheet = EasyExcel.writerSheet(0, "企业获奖项目类型信息").build();
-                projectEntities = innovateAwardProjectTypeService.queryListByIds(awardProjectjTypeIds);
+                projectEntities = innovateAwardProjectTypeService.queryListByIds(awardProjectTypeIds);
                 excelWriter.write(projectEntities,writeSheet);
             }
         }catch (Exception e){
@@ -124,6 +129,17 @@ public class InnovateAwardProjectTypeController {
                 excelWriter.finish();
             }
         }
+    }
+
+    /**
+     * 企业成果类型list
+     */
+    @RequestMapping("/typeNameList")
+    @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
+    public R nameList(){
+        Wrapper<InnovateAwardProjectTypeEntity> wrapper = new EntityWrapper<InnovateAwardProjectTypeEntity>();
+        List<InnovateAwardProjectTypeEntity> list = innovateAwardProjectTypeService.selectList(wrapper);
+        return R.ok().put("list", list);
     }
 
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -22,7 +23,7 @@ public class InnovateEnterpriseAchieveServiceImpl extends ServiceImpl<InnovateEn
     public PageUtils queryPage(Map<String, Object> params) {
         Page<InnovateEnterpriseAchieveEntity> page = this.selectPage(
                 new Query<InnovateEnterpriseAchieveEntity>(params).getPage(),
-                new EntityWrapper<InnovateEnterpriseAchieveEntity>().eq("is_del",0)
+                new EntityWrapper<InnovateEnterpriseAchieveEntity>().eq("is_del", 0)
         );
 
         return new PageUtils(page);
@@ -33,5 +34,11 @@ public class InnovateEnterpriseAchieveServiceImpl extends ServiceImpl<InnovateEn
         baseMapper.delList(list);
     }
 
+    @Override
+    public List<InnovateEnterpriseAchieveEntity> queryListByIds(Long enterpAchieveIds) {
+
+//        return enterpAchieveIds.size()>0 ? this.selectBatchIds(enterpAchieveIds): this.selectList(null);
+        return baseMapper.queryListByIds(enterpAchieveIds);
+    }
 
 }

@@ -1,11 +1,11 @@
 <template>
   <el-dialog
-    :title="!dataForm.awardProjectjTypeId ? '新增' : '修改'"
+    :title="!dataForm.awardProjectTypeId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="获奖项目类型" prop="awardProjectjType">
-      <el-input v-model="dataForm.awardProjectjType" placeholder="获奖项目类型"></el-input>
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="12rem" style="width: 94%; margin: 0 auto">
+    <el-form-item label="获奖项目类型" prop="awardProjectType">
+      <el-input v-model="dataForm.awardProjectType" placeholder="获奖项目类型"></el-input>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -21,11 +21,11 @@
       return {
         visible: false,
         dataForm: {
-          awardProjectjTypeId: 0,
-          awardProjectjType: ''
+          awardProjectTypeId: 0,
+          awardProjectType: ''
         },
         dataRule: {
-          awardProjectjType: [
+          awardProjectType: [
             { required: true, message: '获奖项目类型不能为空', trigger: 'blur' }
           ]
         }
@@ -33,18 +33,19 @@
     },
     methods: {
       init (id) {
-        this.dataForm.awardProjectjTypeId = id || 0
+        debugger
+        this.dataForm.awardProjectTypeId = id || 0
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
-          if (this.dataForm.awardProjectjTypeId) {
+          if (this.dataForm.awardProjectTypeId) {
             this.$http({
-              url: this.$http.adornUrl(`/enterprise/innovateawardprojecttype/info/${this.dataForm.awardProjectjTypeId}`),
+              url: this.$http.adornUrl(`/enterprise/innovateawardprojecttype/info/${this.dataForm.awardProjectTypeId}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.awardProjectjType = data.innovateAwardProjectType.awardProjectjType
+                this.dataForm.awardProjectType = data.innovateAwardProjectType.awardProjectType
               }
             })
           }
@@ -55,11 +56,11 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/enterprise/innovateawardprojecttype/${!this.dataForm.awardProjectjTypeId ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/enterprise/innovateawardprojecttype/${!this.dataForm.awardProjectTypeId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'awardProjectjTypeId': this.dataForm.awardProjectjTypeId || undefined,
-                'awardProjectjType': this.dataForm.awardProjectjType
+                'awardProjectTypeId': this.dataForm.awardProjectTypeId || undefined,
+                'awardProjectType': this.dataForm.awardProjectType
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

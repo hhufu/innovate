@@ -48,7 +48,7 @@ public class InnovateEnterpriseInfoController {
      */
     @PostMapping("/export")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
-    public void export(@RequestBody List<Long> settledEnterpIds, HttpServletResponse response){
+    public void export(@RequestBody List<Long> settledEnterpIds, HttpServletResponse response) {
         List<InnovateEnterpriseInfoEntity> trainBaseInfoList;
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -59,17 +59,17 @@ public class InnovateEnterpriseInfoController {
 
         try {
             String fileName = URLEncoder.encode("企业入驻信息", "UTF-8");
-            response.setHeader("Content-disposition","attachment;filename"+fileName+".xlsx");
+            response.setHeader("Content-disposition", "attachment;filename" + fileName + ".xlsx");
             /* 权限判断：当前用户为管理员(暂时不做权限限制) */
-            if ("wzxyGLY".equals(adminName) || true){
+            if ("wzxyGLY".equals(adminName) || true) {
                 excelWriter = EasyExcel.write(response.getOutputStream(), InnovateEnterpriseInfoEntity.class).build();
                 WriteSheet writeSheet = EasyExcel.writerSheet(0, "企业入驻信息").build();
                 trainBaseInfoList = innovateEnterpriseInfoService.queryListByIds(settledEnterpIds);
-                excelWriter.write(trainBaseInfoList,writeSheet);
+                excelWriter.write(trainBaseInfoList, writeSheet);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             // 千万别忘记finish 会帮忙关闭流
             if (excelWriter != null) {
                 excelWriter.finish();
@@ -83,11 +83,11 @@ public class InnovateEnterpriseInfoController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         SysUserEntity loginUser = ShiroUtils.getUserEntity();
-        if (!"SuperAdmin".equals(loginUser.getUsername())){
+        if (!"SuperAdmin".equals(loginUser.getUsername())) {
             Long userId = loginUser.getUserId();
-            params.put("project_user_id",userId);
+            params.put("project_user_id", userId);
         }
         PageUtils page = innovateEnterpriseInfoService.queryPage(params);
         return R.ok().put("page", page);
@@ -99,14 +99,14 @@ public class InnovateEnterpriseInfoController {
      */
     @RequestMapping("/nameList")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
-    public R nameList(){
+    public R nameList() {
         SysUserEntity loginUser = ShiroUtils.getUserEntity();
         //apply_status 1：审核通过的企业
         Wrapper<InnovateEnterpriseInfoEntity> wrapper = new EntityWrapper<InnovateEnterpriseInfoEntity>()
                 .eq("apply_status", 1);
-        if (!"SuperAdmin".equals(loginUser.getUsername())){
+        if (!"SuperAdmin".equals(loginUser.getUsername())) {
             Long userId = loginUser.getUserId();
-            wrapper.eq("enterprise_user_id",userId);
+            wrapper.eq("enterprise_user_id", userId);
         }
         List<InnovateEnterpriseInfoEntity> list = innovateEnterpriseInfoService.selectList(wrapper);
         return R.ok().put("list", list);
@@ -117,13 +117,13 @@ public class InnovateEnterpriseInfoController {
      */
     @RequestMapping("/info/{settledEnterpId}")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:info")
-    public R info(@PathVariable("settledEnterpId") Long settledEnterpId){
-		InnovateEnterpriseInfoEntity innovateEnterpriseInfo = innovateEnterpriseInfoService.selectById(settledEnterpId);
+    public R info(@PathVariable("settledEnterpId") Long settledEnterpId) {
+        InnovateEnterpriseInfoEntity innovateEnterpriseInfo = innovateEnterpriseInfoService.selectById(settledEnterpId);
         List<InnovateEnterpriseAttachEntity> list = innovateEnterpriseAttachService.selectList(
                 new EntityWrapper<InnovateEnterpriseAttachEntity>()
-                        .eq("function_id",settledEnterpId)
+                        .eq("function_id", settledEnterpId).eq("is_del", 0)
         );
-        InnovateEnterpriseInfoModel infoModel= new InnovateEnterpriseInfoModel();
+        InnovateEnterpriseInfoModel infoModel = new InnovateEnterpriseInfoModel();
         infoModel.setInfoEntity(innovateEnterpriseInfo);
         infoModel.setAttachEntities(list);
         return R.ok().put("infoModel", infoModel);
@@ -135,14 +135,17 @@ public class InnovateEnterpriseInfoController {
     @Transactional
     @RequestMapping("/save")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:save")
-    public R save(@RequestBody(required = false) InnovateEnterpriseInfoModel  innovateEnterpriseInfoModel){
+    public R save(@RequestBody(required = false) InnovateEnterpriseInfoModel innovateEnterpriseInfoModel) {
         innovateEnterpriseInfoModel.getInfoEntity().setEnterpriseUserId(ShiroUtils.getUserId());
         innovateEnterpriseInfoService.insert(innovateEnterpriseInfoModel.getInfoEntity());
-        Long infoId = innovateEnterpriseInfoModel.getInfoEntity().getSettledEnterpId();
-        for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getAttachEntities()){
-            attach.setFunctionId(infoId);
+        if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()) {
+            Long infoId = innovateEnterpriseInfoModel.getInfoEntity().getSettledEnterpId();
+            for (InnovateEnterpriseAttachEntity attach : innovateEnterpriseInfoModel.getAttachEntities()) {
+                attach.setFunctionId(infoId);
+            }
+            innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         }
-        innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
+
         return R.ok();
     }
 
@@ -152,13 +155,15 @@ public class InnovateEnterpriseInfoController {
     @Transactional
     @RequestMapping("/update")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:update")
-    public R update(@RequestBody InnovateEnterpriseInfoModel innovateEnterpriseInfoModel){
-		innovateEnterpriseInfoService.updateById(innovateEnterpriseInfoModel.getInfoEntity());
-        Long infoId = innovateEnterpriseInfoModel.getInfoEntity().getSettledEnterpId();
-        for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getAttachEntities()){
-            attach.setFunctionId(infoId);
+    public R update(@RequestBody InnovateEnterpriseInfoModel innovateEnterpriseInfoModel) {
+        innovateEnterpriseInfoService.updateById(innovateEnterpriseInfoModel.getInfoEntity());
+        if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()) {
+            Long infoId = innovateEnterpriseInfoModel.getInfoEntity().getSettledEnterpId();
+            for (InnovateEnterpriseAttachEntity attach : innovateEnterpriseInfoModel.getAttachEntities()) {
+                attach.setFunctionId(infoId);
+            }
+            innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         }
-        innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         return R.ok();
     }
 
@@ -167,7 +172,7 @@ public class InnovateEnterpriseInfoController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:delete")
-    public R delete(@RequestBody Long[] settledEnterpIds){
+    public R delete(@RequestBody Long[] settledEnterpIds) {
         innovateEnterpriseInfoService.delList(Arrays.asList(settledEnterpIds));
 //		innovateEnterpriseInfoService.deleteBatchIds(Arrays.asList(settledEnterpIds));
         return R.ok();

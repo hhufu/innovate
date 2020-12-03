@@ -3,8 +3,9 @@
 
 <mapper namespace="com.innovate.modules.enterprise.dao.InnovateEnterpriseAchieveDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.innovate.modules.enterprise.entity.InnovateEnterpriseAchieveEntity" id="innovateEnterpriseAchieveMap">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.innovate.modules.enterprise.entity.InnovateEnterpriseAchieveEntity"
+               id="innovateEnterpriseAchieveMap">
         <result property="enterpAchieveId" column="enterp_achieve_id"/>
         <result property="enterpriseId" column="enterprise_id"/>
         <result property="enterpriseName" column="enterprise_name"/>
@@ -15,9 +16,11 @@
         <result property="awardProjectType" column="award_project_type"/>
         <result property="instituteId" column="institute_id"/>
         <result property="isDel" column="is_del"/>
+        <result property="instituteName" column="institute_name"/>
+        <result property="typeName" column="type_name"/>
     </resultMap>
 
-    <update id="delList"  parameterType="java.util.List">
+    <update id="delList" parameterType="java.util.List">
         update innovate_enterprise_achieve set is_del=1
         where enterp_achieve_id in (
         <foreach collection="list" item="item" index="index" open="" close="" separator=",">
@@ -25,4 +28,13 @@
         </foreach>
         )
     </update>
+
+    <select id="queryListByIds" parameterType="java.util.List"
+            resultType="com.innovate.modules.enterprise.entity.InnovateEnterpriseAchieveEntity">
+        SELECT a.*,b.award_project_type type_name,c.institute_name FROM
+        (innovate_enterprise_achieve a LEFT JOIN innovate_award_project_type b
+                ON a.award_project_type = b.award_project_type_id)
+                    LEFT JOIN innovate_sys_institute c ON a.institute_id = c.institute_id
+                        WHERE a.enterprise_id = 1
+    </select>
 </mapper>

@@ -28,22 +28,17 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="settledEnterpId"
+        prop=""
+        type="index"
         header-align="center"
         align="center"
-        label="自增主键（入驻企业id）">
+        label="序号">
       </el-table-column>
       <el-table-column
         prop="enterpriseName"
         header-align="center"
         align="center"
         label="企业名称">
-      </el-table-column>
-      <el-table-column
-        prop="enterpriseUserId"
-        header-align="center"
-        align="center"
-        label="用户ID">
       </el-table-column>
       <el-table-column
         prop="enterpriseDirector"
@@ -201,6 +196,7 @@ export default {
     },
     // 删除
     deleteHandle(id) {
+      debugger
       var ids = id
         ? [id]
         : this.dataListSelections.map(item => {

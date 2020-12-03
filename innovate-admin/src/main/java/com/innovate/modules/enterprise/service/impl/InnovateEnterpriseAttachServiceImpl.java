@@ -30,6 +30,10 @@ public class InnovateEnterpriseAttachServiceImpl extends ServiceImpl<InnovateEnt
         return new PageUtils(page);
     }
 
+    @Override
+    public void delList(List<Long> list) {
+        baseMapper.delList(list);
+    }
 
 
 }

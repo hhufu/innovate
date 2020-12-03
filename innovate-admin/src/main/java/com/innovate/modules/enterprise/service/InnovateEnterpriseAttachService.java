@@ -19,6 +19,6 @@ import java.util.Map;
 public interface InnovateEnterpriseAttachService extends IService<InnovateEnterpriseAttachEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
-
+    void delList(List<Long> list);
 }
 

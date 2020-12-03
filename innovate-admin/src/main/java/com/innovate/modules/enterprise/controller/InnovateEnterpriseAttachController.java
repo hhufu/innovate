@@ -3,8 +3,10 @@ package com.innovate.modules.enterprise.controller;
 import java.io.File;
 import java.util.*;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.innovate.common.utils.OSSUtils;
 import com.innovate.modules.finish.entity.FinishAttachEntity;
+import com.innovate.modules.util.FileUtils;
 import com.innovate.modules.util.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import com.innovate.common.utils.R;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -50,7 +53,6 @@ public class InnovateEnterpriseAttachController {
         }
         InnovateEnterpriseAttachEntity innovateEnterpriseAttachEntity=null;
         for(MultipartFile file : files){
-
             String fileName = file.getOriginalFilename();
             OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
             UPLOAD_FILES_PATH += fileName;
@@ -83,7 +85,8 @@ public class InnovateEnterpriseAttachController {
     @RequestMapping("/info/{attachId}")
     @RequiresPermissions("enterprise:innovateenterpriseattach:info")
     public R info(@PathVariable("attachId") Long attachId){
-		InnovateEnterpriseAttachEntity innovateEnterpriseAttach = innovateEnterpriseAttachService.selectById(attachId);
+		InnovateEnterpriseAttachEntity innovateEnterpriseAttach = innovateEnterpriseAttachService.selectOne(new EntityWrapper<InnovateEnterpriseAttachEntity>()
+        .eq("attach_id",attachId).eq("is_del",0));
 
         return R.ok().put("innovateEnterpriseAttach", innovateEnterpriseAttach);
     }
@@ -116,9 +119,21 @@ public class InnovateEnterpriseAttachController {
     @RequestMapping("/delete")
     @RequiresPermissions("enterprise:innovateenterpriseattach:delete")
     public R delete(@RequestBody Long[] attachIds){
-		innovateEnterpriseAttachService.deleteBatchIds(Arrays.asList(attachIds));
+        innovateEnterpriseAttachService.delList(Arrays.asList(attachIds));
+//		innovateEnterpriseAttachService.deleteBatchIds(Arrays.asList(attachIds));
 
         return R.ok();
+    }
+
+
+    /**
+     * 文件下载
+     */
+    @PostMapping(value = "/download")
+    @RequiresPermissions("enterprise:innovateenterpriseattach:list")
+    public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
+        String filePath = request.getParameter("filePath");
+        FileUtils.download(response, filePath);
     }
 
 }

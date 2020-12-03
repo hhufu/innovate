@@ -8,6 +8,7 @@
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:save')" type="primary" @click="addOrUpdateHandle()" >新增</el-button>
         <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:save')" type="primary" @click="exportLists()">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -35,40 +36,33 @@
         label="负责人">
       </el-table-column>
       <el-table-column
-        prop="enterpriseUserId"
-        header-align="center"
-        align="center"
-        label="用户id">
-      </el-table-column>
-      <el-table-column
         prop="awardProjectName"
         header-align="center"
         align="center"
-        label="获奖名称（项目名称）">
+        label="获奖名称">
       </el-table-column>
       <el-table-column
         prop="awardTime"
         header-align="center"
         align="center"
-        label="获奖（得）时间">
+        label="获奖时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.awardTime, "{y}年{m}月{d}日")}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="awardProjectType"
         header-align="center"
         align="center"
-        label="类型（应用成果转化/获奖/著作权/企业证书）">
+        :formatter="formatAwardType"
+        label="类型">
       </el-table-column>
       <el-table-column
         prop="instituteId"
         header-align="center"
         align="center"
+        :formatter="formatInstituteName"
         label="所属二级学院">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -104,6 +98,8 @@
         dataForm: {
           key: ''
         },
+        instituteName: [],
+        awardProjectType: [],
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
@@ -118,6 +114,8 @@
     },
     activated () {
       this.getDataList()
+      this.getInstituteName()
+      this.getTypeName()
     },
     methods: {
       // 获取数据列表
@@ -141,6 +139,27 @@
           }
           this.dataListLoading = false
         })
+      },
+      formatInstituteName (e) {
+        var actions = [];
+        Object.keys(this.instituteName).some((key) => {
+          if ((this.instituteName[key].instituteId + '') == e.instituteId) {
+            actions.push(this.instituteName[key].instituteName);
+            return true;
+          }
+        })
+        return actions.join('');
+      },
+      formatAwardType (e) {
+        var actions = [];
+        debugger
+        Object.keys(this.awardProjectType).some((key) => {
+          if ((this.awardProjectType[key].awardProjectTypeId + '') == e.awardProjectType) {
+            actions.push(this.awardProjectType[key].awardProjectType);
+            return true;
+          }
+        })
+        return actions.join('');
       },
       // 每页数
       sizeChangeHandle (val) {
@@ -192,6 +211,60 @@
               this.$message.error(data.msg)
             }
           })
+        })
+      },
+      // 导出
+      exportLists() {
+        this.dataListLoading = true;
+        var trainBaseIds = this.dataListSelections.map(item => {
+            return item.awardProjectTypeId;
+          })
+        this.$http({
+          url: this.$http.adornUrl("/enterprise/innovateenterpriseachieve/export"),
+          method: "post",
+          data: this.$http.adornData(trainBaseIds, false),
+          responseType: "blob"
+        })
+          .then(res => {
+            this.dataListLoading = false;
+            const blob = new Blob([res.data], {
+              type: "application/vnd.ms-excel"
+            });
+            let filename = "企业成果.xls";
+            // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+            const elink = document.createElement("a");
+            elink.download = filename;
+            elink.style.display = "none";
+            elink.href = URL.createObjectURL(blob);
+            document.body.appendChild(elink);
+            elink.click();
+            URL.revokeObjectURL(elink.href); // 释放URL 对象
+            document.body.removeChild(elink);
+          })
+          .catch(() => {
+            this.dataListLoading = false;
+            this.$message.error("导出失败!");
+          });
+      },
+      getInstituteName () {
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.instituteName = data.institute
+          }
+        })
+      },
+      //企业成果list
+      getTypeName () {
+        this.$http({
+          url: this.$http.adornUrl(`/enterprise/innovateawardprojecttype/typeNameList`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.awardProjectType = data.list
+          }
         })
       }
     }
