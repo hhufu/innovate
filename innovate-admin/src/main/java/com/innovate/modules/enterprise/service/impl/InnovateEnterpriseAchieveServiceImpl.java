@@ -41,4 +41,9 @@ public class InnovateEnterpriseAchieveServiceImpl extends ServiceImpl<InnovateEn
         return baseMapper.queryListByIds(enterpAchieveIds);
     }
 
+    @Override
+    public InnovateEnterpriseAchieveEntity selectListById(Long enterpAchieveId) {
+        return baseMapper.selectListById(enterpAchieveId);
+    }
+
 }

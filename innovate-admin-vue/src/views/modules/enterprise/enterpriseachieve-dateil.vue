@@ -71,111 +71,115 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        visible: false,
-        downloadLoading: false,
-        dataForm: {
-          enterpAchieveId: 0,
-          enterpriseId: '',
-          enterpriseName: '',
-          enterpriseDirector: '',
-          enterpriseUserId: '',
-          awardProjectName: '',
-          awardTime: '',
-          awardProjectType: '',
-          instituteId: '',
-          isDel: '',
-          disabled: ''
-        },
-        projectName: [],
-        instituteName: [],
-        downloadText: '下载',
-        attachLists: []
-      }
-    },
-    methods: {
-      init(id) {
-        debugger
-        this.dataForm.enterpAchieveId = id || 0
-        this.visible = true
-        this.$nextTick(() => {
-          if (this.dataForm.enterpAchieveId) {
-            this.disabled = true
-            this.$http({
-              url: this.$http.adornUrl(`/enterprise/innovateenterpriseachieve/info/${this.dataForm.enterpAchieveId}`),
-              method: 'get',
-              params: this.$http.adornParams()
-            }).then(({data}) => {
-              debugger
-              if (data && data.code === 0) {
-                this.dataForm.enterpriseId = data.innovateEnterpriseAchieve.enterpriseId
-                this.dataForm.enterpriseName = data.innovateEnterpriseAchieve.enterpriseName
-                this.dataForm.enterpriseDirector = data.innovateEnterpriseAchieve.enterpriseDirector
-                this.dataForm.enterpriseUserId = data.innovateEnterpriseAchieve.enterpriseUserId
-                this.dataForm.awardProjectName = data.innovateEnterpriseAchieve.awardProjectName
-                this.dataForm.awardTime = data.innovateEnterpriseAchieve.awardTime
-                this.dataForm.awardProjectType = data.innovateEnterpriseAchieve.awardProjectType
-                this.dataForm.instituteId = data.innovateEnterpriseAchieve.instituteId
-                this.dataForm.isDel = data.innovateEnterpriseAchieve.isDel
-                this.attachLists = data.infoModel.attachEntities
-              }
-            })
-          } else {
-            this.disabled = false
-          }
-        })
+    export default {
+      data () {
+        return {
+          downloadText: '下载',
+          visible: false,
+          dataForm: {
+            enterpAchieveId: 0,
+            enterpriseId: '',
+            downloadLoading: false,
+            enterpriseName: '',
+            enterpriseDirector: '',
+            enterpriseUserId: '',
+            awardProjectName: '',
+            awardTime: '',
+            awardProjectType: '',
+            instituteId: '',
+            isDel: '',
+            disabled: ''
+          },
+          projectName: [],
+          instituteName: [],
+          fileList: []
+        }
       },
-      // 文件下载
-      attachDown(attach) {
-        this.downloadLoading = true
-        this.downloadText = '正在下载'
-        this.$notify({
-          title: '下载提示',
-          message: '文件正在后台下载,请您稍后!',
-          duration: 0,
-          type: 'success'
-        })
-        this.$httpFile({
-          url: this.$httpFile.adornUrl(`/enterprise/innovateenterpriseattach/download`),
-          method: 'post',
-          params: this.$httpFile.adornParams({
-            'filePath': attach.attachPath
+      methods: {
+        init (id) {
+          this.dataForm.enterpAchieveId = id || 0
+          this.visible = true
+          this.$nextTick(() => {
+            if (this.dataForm.enterpAchieveId) {
+              this.disabled = true
+              this.$http({
+                url: this.$http.adornUrl(`/enterprise/innovateenterpriseachieve/info/${this.dataForm.enterpAchieveId}`),
+                method: 'get',
+                params: this.$http.adornParams()
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.dataForm.enterpriseId = data.achieveModel.achieveEntity.enterpriseId
+                  this.dataForm.enterpriseName = data.achieveModel.achieveEntity.enterpriseName
+                  this.dataForm.enterpriseDirector = data.achieveModel.achieveEntity.enterpriseDirector
+                  this.dataForm.enterpriseUserId = data.achieveModel.achieveEntity.enterpriseUserId
+                  this.dataForm.awardProjectName = data.achieveModel.achieveEntity.awardProjectName
+                  this.dataForm.awardTime = data.achieveModel.achieveEntity.awardTime
+                  this.dataForm.awardProjectType = data.achieveModel.achieveEntity.typeName
+                  this.dataForm.instituteId = data.achieveModel.achieveEntity.instituteName
+                  this.dataForm.isDel = data.achieveModel.achieveEntity.isDel
+                  this.attachLists = data.achieveModel.attachEntities
+                  // 附件回显
+                  let attachList = [];
+                    for (let i = 0; i < this.attachLists.length; i++) {
+                    attachList.push(
+                      new EnterpriseAttachment(this.attachLists[i])
+                    );
+                  }
+                  this.fileList = attachList;
+                }
+              })
+            }
           })
-        }).then(response => {
-          if (!response) {
-            this.$notify({
-              title: '下载提示',
-              message: '下载失败',
-              duration: 0,
-              type: 'error'
-            })
-            this.downloadLoading = false
-            return
-          }
-          let url = window.URL.createObjectURL(new Blob([response.data]))
-          let link = document.createElement('a')
-          link.style.display = 'none'
-          link.href = url
-          link.setAttribute('download', attach.attachName)
-          document.body.appendChild(link)
-          link.click()
+        },
+        // 文件下载
+        attachDown (attach) {
+          this.downloadLoading = true
+          this.downloadText = '正在下载'
           this.$notify({
-            title: '下载成功',
-            message: '后台文件下载成功',
+            title: '下载提示',
+            message: '文件正在后台下载,请您稍后!',
             duration: 0,
             type: 'success'
           })
-          this.downloadText = '下载'
-          this.downloadLoading = false
-        }).catch(err => {
-          console.log(err)
-          this.downloadLoading = false
-        })
+          this.$httpFile({
+            url: this.$httpFile.adornUrl(`/enterprise/innovateenterpriseattach/download`),
+            method: 'post',
+            params: this.$httpFile.adornParams({
+              'filePath': attach.attachPath
+            })
+          }).then(response => {
+            if (!response) {
+              this.$notify({
+                title: '下载提示',
+                message: '下载失败',
+                duration: 0,
+                type: 'error'
+              })
+              this.downloadLoading = false
+              return
+            }
+            let url = window.URL.createObjectURL(new Blob([response.data]))
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.setAttribute('download', attach.attachName)
+            document.body.appendChild(link)
+            link.click()
+            this.$notify({
+              title: '下载成功',
+              message: '后台文件下载成功',
+              duration: 0,
+              type: 'success'
+            })
+            this.downloadText = '下载'
+            this.downloadLoading = false
+          }).catch(err => {
+            console.log(err)
+            this.downloadLoading = false
+          })
+        }
       }
     }
-  }
 </script>
 
 <style scoped>

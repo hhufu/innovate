@@ -8,11 +8,16 @@ import java.util.Map;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.innovate.common.utils.ShiroUtils;
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
+import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
 import com.innovate.modules.sys.entity.SysUserEntity;
 import com.innovate.modules.util.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseAchieveEntity;
@@ -36,7 +41,8 @@ import javax.servlet.http.HttpServletResponse;
 public class InnovateEnterpriseAchieveController {
     @Autowired
     private InnovateEnterpriseAchieveService innovateEnterpriseAchieveService;
-
+    @Autowired
+    private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
     /**
      * 列表
      */
@@ -54,21 +60,36 @@ public class InnovateEnterpriseAchieveController {
     @RequestMapping("/info/{enterpAchieveId}")
     @RequiresPermissions("enterprise:innovateenterpriseachieve:info")
     public R info(@PathVariable("enterpAchieveId") Long enterpAchieveId){
-		InnovateEnterpriseAchieveEntity innovateEnterpriseAchieve = innovateEnterpriseAchieveService.selectById(enterpAchieveId);
-        return R.ok().put("innovateEnterpriseAchieve", innovateEnterpriseAchieve);
+
+        InnovateEnterpriseAchieveEntity innovateEnterpriseAchieve = innovateEnterpriseAchieveService.selectListById(enterpAchieveId);
+
+		List<InnovateEnterpriseAttachEntity> list = innovateEnterpriseAttachService.selectList(
+                new EntityWrapper<InnovateEnterpriseAttachEntity>()
+                        .eq("function_id", enterpAchieveId).eq("is_del", 0)
+        );
+        InnovateEnterpriseInfoModel achieveModel = new InnovateEnterpriseInfoModel();
+        achieveModel.setAchieveEntity(innovateEnterpriseAchieve);
+        achieveModel.setAttachEntities(list);
+        return R.ok().put("achieveModel", achieveModel);
     }
 
     /**
      * 保存
      */
+    @Transactional
     @RequestMapping("/save")
     @RequiresPermissions("enterprise:innovateenterpriseachieve:save")
-    public R save(@RequestBody InnovateEnterpriseAchieveEntity innovateEnterpriseAchieve){
+    public R save(@RequestBody(required = false) InnovateEnterpriseInfoModel innovateEnterpriseInfoModel){
 
-        innovateEnterpriseAchieve.setEnterpriseUserId(ShiroUtils.getUserId());
-
-		innovateEnterpriseAchieveService.insert(innovateEnterpriseAchieve);
-
+        innovateEnterpriseInfoModel.getAchieveEntity().setEnterpriseUserId(ShiroUtils.getUserId());
+		innovateEnterpriseAchieveService.insert(innovateEnterpriseInfoModel.getAchieveEntity());
+        if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()) {
+            Long infoId = innovateEnterpriseInfoModel.getAchieveEntity().getEnterpAchieveId();
+            for (InnovateEnterpriseAttachEntity attach : innovateEnterpriseInfoModel.getAttachEntities()) {
+                attach.setFunctionId(infoId);
+            }
+            innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
+        }
         return R.ok();
     }
 
@@ -77,9 +98,15 @@ public class InnovateEnterpriseAchieveController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("enterprise:innovateenterpriseachieve:update")
-    public R update(@RequestBody InnovateEnterpriseAchieveEntity innovateEnterpriseAchieve){
-		innovateEnterpriseAchieveService.updateById(innovateEnterpriseAchieve);
-
+    public R update(@RequestBody InnovateEnterpriseInfoModel innovateEnterpriseInfoModel){
+		innovateEnterpriseAchieveService.updateById(innovateEnterpriseInfoModel.getAchieveEntity());
+        if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()) {
+            Long infoId = innovateEnterpriseInfoModel.getAchieveEntity().getEnterpAchieveId();
+            for (InnovateEnterpriseAttachEntity attach : innovateEnterpriseInfoModel.getAttachEntities()) {
+                attach.setFunctionId(infoId);
+            }
+            innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
+        }
         return R.ok();
     }
 

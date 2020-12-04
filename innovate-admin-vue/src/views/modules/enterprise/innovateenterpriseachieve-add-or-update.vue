@@ -7,8 +7,7 @@
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
              label-width="12rem" style="width: 94%; margin: 0 auto">
       <el-form-item label="企业名称" prop="enterpriseName">
-        <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" style="width: 100%" :disabled="disabled"
-                   @change="changeName">
+        <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" style="width: 100%" @change="changeName">
           <el-option v-for="n in projectName" :key="n.enterpriseName" :label="n.enterpriseName"
                      :value="n.enterpriseName"></el-option>
         </el-select>
@@ -40,7 +39,7 @@
         <el-upload
           class="upload-demo"
           :action="url"
-          :data="{enterpriseName: dataForm.enterpriseName,attachType:1}"
+          :data="{enterpriseName: dataForm.enterpriseName,attachType:3}"
           :on-success="successHandle1"
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
@@ -57,11 +56,18 @@
 </template>
 
 <script>
+  class EnterpriseAttachment {
+    constructor(file) {
+      this.name = file.attachName;
+      this.url = file.attachPath;
+      this.file = file;
+    }
+  }
+
   export default {
     data() {
       return {
         visible: false,
-        disabled: '',
         dataForm: {
           enterpAchieveId: 0,
           enterpriseId: '',
@@ -99,7 +105,9 @@
         awardProjectType: [],
         awardProjectTypeId: [],
         institute: [],
-        attachLists: []
+        url: "",
+        fileIsNull: false,
+        fileList: [],
       }
     },
     methods: {
@@ -117,26 +125,35 @@
         this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
           if (this.dataForm.enterpAchieveId) {
-            this.disabled = true
             this.$http({
               url: this.$http.adornUrl(`/enterprise/innovateenterpriseachieve/info/${this.dataForm.enterpAchieveId}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.enterpriseId = data.innovateEnterpriseAchieve.enterpriseId
-                this.dataForm.enterpriseName = data.innovateEnterpriseAchieve.enterpriseName
-                this.dataForm.enterpriseDirector = data.innovateEnterpriseAchieve.enterpriseDirector
-                this.dataForm.enterpriseUserId = data.innovateEnterpriseAchieve.enterpriseUserId
-                this.dataForm.awardProjectName = data.innovateEnterpriseAchieve.awardProjectName
-                this.dataForm.awardTime = data.innovateEnterpriseAchieve.awardTime
-                this.dataForm.awardProjectType = data.innovateEnterpriseAchieve.awardProjectType
-                this.dataForm.institute = data.innovateEnterpriseAchieve.instituteId
-                this.dataForm.isDel = data.innovateEnterpriseAchieve.isDel
+                this.dataForm.enterpriseId = data.achieveModel.achieveEntity.enterpriseId
+                this.dataForm.enterpriseName = data.achieveModel.achieveEntity.enterpriseName
+                this.dataForm.enterpriseDirector = data.achieveModel.achieveEntity.enterpriseDirector
+                this.dataForm.enterpriseUserId = data.achieveModel.achieveEntity.enterpriseUserId
+                this.dataForm.awardProjectName = data.achieveModel.achieveEntity.awardProjectName
+                this.dataForm.awardTime = data.achieveModel.achieveEntity.awardTime
+                this.dataForm.awardProjectTypeId = data.achieveModel.achieveEntity.awardProjectType
+                this.dataForm.awardProjectType = data.achieveModel.achieveEntity.typeName
+                this.dataForm.institute = data.achieveModel.achieveEntity.instituteId
+                this.dataForm.instituteId = data.achieveModel.achieveEntity.instituteName
+                this.dataForm.isDel = data.achieveModel.achieveEntity.isDel
+                this.attachLists = data.achieveModel.attachEntities
+                // 附件回显
+                let attachList = [];
+                for (let i = 0; i < this.attachLists.length; i++) {
+                  attachList.push(
+                    new EnterpriseAttachment(this.attachLists[i])
+                  );
+                }
+                this.fileList = attachList;
               }
             })
           } else {
-            this.disabled = false;
             this.reset();
           }
         })
@@ -167,19 +184,26 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/enterprise/innovateenterpriseachieve/${!this.dataForm.enterpAchieveId ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(
+                `/enterprise/innovateenterpriseachieve/${
+                  !this.dataForm.enterpAchieveId ? 'save' : 'update'
+                }`
+              ),
               method: 'post',
               data: this.$http.adornData({
-                'enterpAchieveId': this.dataForm.enterpAchieveId || undefined,
-                'enterpriseId': this.dataForm.enterpriseId,
-                'enterpriseName': this.dataForm.enterpriseName,
-                'enterpriseDirector': this.dataForm.enterpriseDirector,
-                'enterpriseUserId': this.dataForm.enterpriseUserId,
-                'awardProjectName': this.dataForm.awardProjectName,
-                'awardTime': this.dataForm.awardTime,
-                'awardProjectType': this.dataForm.awardProjectTypeId,
-                'instituteId': this.dataForm.institute,
-                'isDel': this.dataForm.isDel
+                achieveEntity:{
+                enterpAchieveId: this.dataForm.enterpAchieveId || undefined,
+                enterpriseId: this.dataForm.enterpriseId,
+                enterpriseName: this.dataForm.enterpriseName,
+                enterpriseDirector: this.dataForm.enterpriseDirector,
+                enterpriseUserId: this.dataForm.enterpriseUserId,
+                awardProjectName: this.dataForm.awardProjectName,
+                awardTime: this.dataForm.awardTime,
+                awardProjectType: this.dataForm.awardProjectTypeId,
+                instituteId: this.dataForm.institute,
+                isDel: this.dataForm.isDel
+                },
+                attachEntities: this.attachLists
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -198,6 +222,42 @@
             })
           }
         })
+      },
+      // 上传成功
+      successHandle1(response, file, fileList) {
+        if (response && response.code === 0) {
+         console.log(response.innovateEnterpriseAttachEntity)
+          this.attachLists.push(response.innovateEnterpriseAttachEntity)
+          this.fileIsNull = false;
+        } else {
+          this.$message.error(response.msg);
+        }
+      },
+      fileRemoveHandler(file, fileList) {
+        // 移除attachList中的附件
+        let tempFileList = [];
+        for (let index = 0; index < this.attachLists.length; index++) {
+          if (this.attachLists[index].attachName !== file.name) {
+            tempFileList.push(this.attachLists[index]);
+          }else {
+            let attachId =this.attachLists[index].attachId
+            if (attachId) {
+              this.$http({
+                url: this.$http.adornUrl(
+                  `/enterprise/innovateenterpriseattach/delete`
+                ),
+                method: "post",
+                data: this.$http.adornData(
+                  [attachId],false
+                )
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                }
+              });
+            }
+          }
+        }
+        this.attachLists = tempFileList;
       },
       //企业名字
       getProjectName() {
@@ -230,41 +290,6 @@
             this.awardProjectType = data.list
           }
         })
-      },
-      // 上传成功
-      successHandle1(response, file, fileList) {
-        if (response && response.code === 0) {
-          this.dataForm.attachLists.push(response.innovateEnterpriseAttachEntity);
-          this.fileIsNull = false;
-        } else {
-          this.$message.error(response.msg);
-        }
-      },
-      fileRemoveHandler(file, fileList) {
-        // 移除attachList中的附件
-        let tempFileList = [];
-        for (let index = 0; index < this.dataForm.attachLists.length; index++) {
-          if (this.dataForm.attachLists[index].attachName !== file.name) {
-            tempFileList.push(this.dataForm.attachLists[index]);
-          }else {
-            let attachId =this.dataForm.attachLists[index].attachId
-            if (attachId) {
-              this.$http({
-                url: this.$http.adornUrl(
-                  `/enterprise/innovateenterpriseattach/delete`
-                ),
-                method: "post",
-                data: this.$http.adornData(
-                  [attachId],false
-                )
-              }).then(({data}) => {
-                if (data && data.code === 0) {
-                }
-              });
-            }
-          }
-        }
-        this.dataForm.attachLists = tempFileList;
       },
       changeName(query) {
         if (query !== '') {

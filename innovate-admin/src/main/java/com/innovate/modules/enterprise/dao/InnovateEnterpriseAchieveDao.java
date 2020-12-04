@@ -18,4 +18,6 @@ public interface InnovateEnterpriseAchieveDao extends BaseMapper<InnovateEnterpr
     void  delList(List<Long> list);
 
     List<InnovateEnterpriseAchieveEntity> queryListByIds(Long enterpAchieveIds);
+
+    InnovateEnterpriseAchieveEntity selectListById(Long enterpAchieveId);
 }

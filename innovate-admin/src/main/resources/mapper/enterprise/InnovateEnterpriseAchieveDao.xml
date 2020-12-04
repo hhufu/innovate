@@ -37,4 +37,13 @@
                     LEFT JOIN innovate_sys_institute c ON a.institute_id = c.institute_id
                         WHERE a.enterprise_id = 1
     </select>
+
+    <select id="selectListById" parameterType="Long"
+            resultType="com.innovate.modules.enterprise.entity.InnovateEnterpriseAchieveEntity">
+        SELECT a.*,b.award_project_type type_name,c.institute_name FROM
+        (innovate_enterprise_achieve a LEFT JOIN innovate_award_project_type b
+                ON a.award_project_type = b.award_project_type_id)
+                    LEFT JOIN innovate_sys_institute c ON a.institute_id = c.institute_id
+                        WHERE a.enterp_achieve_id = #{enterpAchieveId}
+    </select>
 </mapper>

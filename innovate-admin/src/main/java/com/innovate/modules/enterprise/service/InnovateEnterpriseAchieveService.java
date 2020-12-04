@@ -23,5 +23,8 @@ public interface InnovateEnterpriseAchieveService extends IService<InnovateEnter
     //导出
 //    List<InnovateEnterpriseAchieveEntity> queryListByIds(List<Long> enterpAchieveIds);
     List<InnovateEnterpriseAchieveEntity> queryListByIds(Long enterpAchieveIds);
+
+    InnovateEnterpriseAchieveEntity selectListById(Long enterpAchieveId);
+
 }
 
