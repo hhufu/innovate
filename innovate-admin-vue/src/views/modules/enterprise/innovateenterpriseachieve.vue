@@ -71,6 +71,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" @click="detailInfo(scope.row.enterpAchieveId)">查看</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.enterpAchieveId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpAchieveId)">删除</el-button>
         </template>
@@ -87,30 +88,32 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <detail-info v-if="detailInfoVisible" ref="detailInfo"></detail-info>
   </div>
 </template>
 
 <script>
   import AddOrUpdate from './innovateenterpriseachieve-add-or-update'
+  import DetailInfo from './enterpriseachieve-dateil'
   export default {
     data () {
       return {
         dataForm: {
           key: ''
         },
-        instituteName: [],
-        awardProjectType: [],
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        detailInfoVisible: false
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate,
+      DetailInfo
     },
     activated () {
       this.getDataList()
@@ -175,6 +178,13 @@
       // 多选
       selectionChangeHandle (val) {
         this.dataListSelections = val
+      },
+      // 查看
+      detailInfo (id) {
+        this.detailInfoVisible = true
+        this.$nextTick(() => {
+          this.$refs.detailInfo.init(id)
+        })
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {

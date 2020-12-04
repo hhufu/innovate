@@ -75,7 +75,7 @@ class EnterpriseAttachment {
   }
 }
 export default {
-  data() {
+  data () {
     return {
       visible: false,
       dataForm: {
@@ -240,7 +240,7 @@ export default {
         }
       });
     },
-    //根据改变选中值更改企业id
+    // 根据改变选中值更改企业id
     changeName(query) {
       if (query !== "") {
         let list = this.projectName.filter(item => {

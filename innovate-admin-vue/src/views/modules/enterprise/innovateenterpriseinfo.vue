@@ -103,6 +103,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" @click="detailInfo(scope.row.settledEnterpId)">查看</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.settledEnterpId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.settledEnterpId)">删除</el-button>
         </template>
@@ -119,12 +120,13 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <detail-info v-if="detailInfoVisible" ref="detailInfo"></detail-info>
   </div>
 </template>
 
 <script>
-import AddOrUpdate from "./innovateenterpriseinfo-add-or-update";
-
+import AddOrUpdate from './innovateenterpriseinfo-add-or-update'
+import DetailInfo from './enterpriseinfo-dateil'
 export default {
   data() {
     return {
@@ -137,11 +139,13 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      detailInfoVisible: false
     };
   },
   components: {
-    AddOrUpdate
+    AddOrUpdate,
+    DetailInfo
   },
   activated() {
     this.getDataList();
@@ -186,6 +190,13 @@ export default {
     // 多选
     selectionChangeHandle(val) {
       this.dataListSelections = val;
+    },
+    // 查看
+    detailInfo (id) {
+      this.detailInfoVisible = true
+      this.$nextTick(() => {
+        this.$refs.detailInfo.init(id)
+      })
     },
     // 新增 / 修改
     addOrUpdateHandle(id) {

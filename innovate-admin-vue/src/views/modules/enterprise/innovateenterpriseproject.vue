@@ -90,6 +90,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" @click="detailInfo(scope.row.enterpProjId)">查看</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.enterpProjId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpProjId)">删除</el-button>
         </template>
@@ -106,11 +107,13 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <detail-info v-if="detailInfoVisible" ref="detailInfo"></detail-info>
   </div>
 </template>
 
 <script>
 import AddOrUpdate from "./innovateenterpriseproject-add-or-update";
+import DetailInfo from './enterpriseprojects-detail'
 export default {
   data() {
     return {
@@ -127,7 +130,8 @@ export default {
     };
   },
   components: {
-    AddOrUpdate
+    AddOrUpdate,
+    DetailInfo
   },
   activated() {
     this.getDataList();
@@ -170,6 +174,13 @@ export default {
     selectionChangeHandle(val) {
       this.dataListSelections = val;
     },
+    // 查看
+    detailInfo (id) {
+      this.detailInfoVisible = true
+      this.$nextTick(() => {
+        this.$refs.detailInfo.init(id)
+      })
+    },
     // 新增 / 修改
     addOrUpdateHandle(id) {
       this.addOrUpdateVisible = true;
@@ -182,7 +193,7 @@ export default {
       var ids = id
         ? [id]
         : this.dataListSelections.map(item => {
-            return item.enterpProjId;
+          return item.enterpProjId;
           });
       this.$confirm(
         `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
