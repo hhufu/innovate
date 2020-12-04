@@ -30,6 +30,7 @@
           <th colspan="1">立项年份</th>
           <th colspan="2">项目负责人姓名</th>
           <th colspan="2">项目负责人学号</th>
+          <th colspan="2">联系电话</th>
           <th colspan="2">申报类型</th>
           <th colspan="2">申报时间</th>
           <!--<th colspan="2">参与学生人数</th>-->
@@ -64,6 +65,11 @@
             <td colspan="2">
                 <span v-for="user in item.userPersonInfoEntities" >
                   <span v-text="user.perStuNo"></span>
+                </span>
+            </td>
+            <td colspan="2">
+                <span v-for="user in item.userPersonInfoEntities" >
+                  <span v-text="user.sysUserEntity.mobile"></span>
                 </span>
             </td>
             <td colspan="2">
@@ -201,6 +207,8 @@
     },
     methods: {
       init (instituteId, time) {
+        console.log(this.$store.state.userTeacherInfoEntities)
+        console.log(this.$store.state.user.title)
         this.visible = true
         this.dataListLoading = true
         // this.dataForm.id = id || 0

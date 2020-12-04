@@ -45,6 +45,8 @@ public class InnovateStudentPointsApplyServiceImpl extends ServiceImpl<InnovateS
         if (params.get("applyStatus") != null) entityWrapper.eq("apply_status", params.get("applyStatus"));
         // 过滤不通过的记录
         if (params.get("noPass") != null) entityWrapper.gt("apply_status", -1);
+        // 过滤未提交的记录
+        if (params.get("noApply") != null) entityWrapper.notIn("apply_status", 0);
         //根据用户id查询&&非管理员
         if (params.get("apply_user_id") != null) {
             SysUserEntity user = sysUserService.selectById(Long.parseLong(params.get("apply_user_id").toString()));

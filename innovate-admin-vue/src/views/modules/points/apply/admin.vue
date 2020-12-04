@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.stuNum" placeholder="学号" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -11,6 +11,13 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <el-card>
+      <el-radio-group v-model="dataForm.applyStatus" @change="getDataList">
+        <el-radio :label="1">未审核</el-radio>
+        <el-radio :label="3">已审核</el-radio>
+        <el-radio :label="-1">未通过</el-radio>
+      </el-radio-group>
+    </el-card>
     <el-table
       :data="dataList"
       border
@@ -149,7 +156,8 @@
     data() {
       return {
         dataForm: {
-          key: ''
+          applyStatus: 1,
+          stuNum: null
         },
         dataList: [],
         pageIndex: 1,
@@ -180,8 +188,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key,
-            'applyStatus': 1,
+            'stuNum': this.dataForm.stuNum,
+            'applyStatus': this.dataForm.applyStatus,
             'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {

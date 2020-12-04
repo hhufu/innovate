@@ -2,12 +2,10 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.stuNum" placeholder="学号" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('points:innovatestudentpointsapply:save')" type="primary" @click="addOrUpdateHandle()">我要申请</el-button>
-        <el-button v-if="isAuth('points:innovatestudentpointsapply:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -75,6 +73,18 @@
         label="申请时间">
       </el-table-column>
       <el-table-column
+        prop="applyTime"
+        header-align="center"
+        align="center"
+        label="状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.applyStatus == 0">未提交</el-tag>
+          <el-tag v-if="scope.row.applyStatus == 1" type="info">待审核</el-tag>
+          <el-tag v-if="scope.row.applyStatus == 3" type="success">已通过</el-tag>
+          <el-tag v-if="scope.row.applyStatus == -1" type="danger">未通过</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -107,7 +117,7 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          stuNum: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -136,8 +146,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key,
-            'applyStatus': 3,
+            'stuNum': this.dataForm.stuNum,
+            'noApply': "noApply",
             'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {

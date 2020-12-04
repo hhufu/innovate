@@ -183,6 +183,7 @@
             'limit': this.pageSize,
             'stuNum': this.dataForm.stuNum,
             'noPass': 'noPass',
+            'noApply': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? "noApply" : null,
             'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id,
             'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
           })
