@@ -137,7 +137,7 @@
         this.getFileAsk()
         this.getTypeName()
         this.$nextTick(() => {
-        this.$refs['dataForm'].resetFields()
+          this.$refs['dataForm'].resetFields()
           if (this.dataForm.enterpAchieveId) {
             this.$http({
               url: this.$http.adornUrl(`/enterprise/innovateenterpriseachieve/info/${this.dataForm.enterpAchieveId}`),
@@ -186,12 +186,12 @@
           instituteId: '',
           isDel: ''
         };
-          this.projectName = []
-          this.instituteName = []
-          this.awardProjectType = []
-          this.awardProjectTypeId = []
-          this.institute = []
-          this.attachLists = []
+        this.projectName = []
+        this.instituteName = []
+        this.awardProjectType = []
+        this.awardProjectTypeId = []
+        this.institute = []
+        this.attachLists = []
         this.delAttachLists = []
       },
       // 表单提交
@@ -202,21 +202,21 @@
               url: this.$http.adornUrl(
                 `/enterprise/innovateenterpriseachieve/${
                   !this.dataForm.enterpAchieveId ? 'save' : 'update'
-                }`
+                  }`
               ),
               method: 'post',
               data: this.$http.adornData({
-                achieveEntity:{
-                enterpAchieveId: this.dataForm.enterpAchieveId || undefined,
-                enterpriseId: this.dataForm.enterpriseId,
-                enterpriseName: this.dataForm.enterpriseName,
-                enterpriseDirector: this.dataForm.enterpriseDirector,
-                enterpriseUserId: this.dataForm.enterpriseUserId,
-                awardProjectName: this.dataForm.awardProjectName,
-                awardTime: this.dataForm.awardTime,
-                awardProjectType: this.dataForm.awardProjectTypeId,
-                instituteId: this.dataForm.institute,
-                isDel: this.dataForm.isDel
+                achieveEntity: {
+                  enterpAchieveId: this.dataForm.enterpAchieveId || undefined,
+                  enterpriseId: this.dataForm.enterpriseId,
+                  enterpriseName: this.dataForm.enterpriseName,
+                  enterpriseDirector: this.dataForm.enterpriseDirector,
+                  enterpriseUserId: this.dataForm.enterpriseUserId,
+                  awardProjectName: this.dataForm.awardProjectName,
+                  awardTime: this.dataForm.awardTime,
+                  awardProjectType: this.dataForm.awardProjectTypeId,
+                  instituteId: this.dataForm.institute,
+                  isDel: this.dataForm.isDel
                 },
                 attachEntities: this.attachLists,
                 delAttachLists: this.delAttachLists
@@ -254,7 +254,7 @@
         for (let index = 0; index < this.attachLists.length; index++) {
           if (this.attachLists[index].attachName !== file.name) {
             tempFileList.push(this.attachLists[index]);
-          }else {
+          } else {
             this.delAttachLists.push(this.attachLists[index])
           }
         }
@@ -292,7 +292,7 @@
           }
         })
       },
-      getFileAsk () {
+      getFileAsk() {
         // 获取文件要求：类型=>1 大创,2 中期检查,3 赛事,4 结题,5 企业成果
         this.dataListLoading = true
         this.$http({
@@ -337,7 +337,7 @@
         }
       },
       // 清空附件列表
-      handleClose () {
+      handleClose() {
         this.fileList = []
       }
 

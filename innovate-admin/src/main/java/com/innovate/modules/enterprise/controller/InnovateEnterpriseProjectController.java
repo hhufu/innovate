@@ -14,6 +14,7 @@ import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
+import com.innovate.modules.finish.service.FinishAttachService;
 import com.innovate.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class InnovateEnterpriseProjectController {
 
     @Autowired
     private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
+
+    @Autowired
+    private FinishAttachService finishAttachService;
     /**
      * 列表
      */
@@ -107,7 +111,7 @@ public class InnovateEnterpriseProjectController {
 
         List<InnovateEnterpriseAttachEntity> list = innovateEnterpriseAttachService.selectList(
                 new EntityWrapper<InnovateEnterpriseAttachEntity>()
-                        .eq("function_id",enterpProjId)
+                        .eq("function_id",enterpProjId).eq("is_del", 0)
         );
         InnovateEnterpriseInfoModel infoModel= new InnovateEnterpriseInfoModel();
         infoModel.setProjectEntity(innovateEnterpriseProject);
@@ -147,6 +151,9 @@ public class InnovateEnterpriseProjectController {
             }
             innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         }
+
+        finishAttachService.delAttachLists(innovateEnterpriseInfoModel);
+
         return R.ok();
     }
 

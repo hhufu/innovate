@@ -1,6 +1,7 @@
 package com.innovate.modules.finish.service;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
 import com.innovate.modules.finish.entity.FinishAttachEntity;
 
 import java.util.List;
@@ -20,4 +21,5 @@ public interface FinishAttachService extends IService<FinishAttachEntity> {
 
     void remove(Map<String, Object> params);
 
+    void delAttachLists(InnovateEnterpriseInfoModel innovateEnterpriseInfoModel);
 }

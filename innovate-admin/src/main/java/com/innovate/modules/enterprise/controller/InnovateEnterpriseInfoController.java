@@ -12,6 +12,7 @@ import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
+import com.innovate.modules.finish.service.FinishAttachService;
 import com.innovate.modules.sys.entity.SysUserEntity;
 import com.innovate.modules.training.entity.InnovateTrainingBaseInfoEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -43,6 +44,8 @@ public class InnovateEnterpriseInfoController {
     @Autowired
     private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
 
+    @Autowired
+    private FinishAttachService finishAttachService;
     /**
      * 导出
      */
@@ -158,7 +161,10 @@ public class InnovateEnterpriseInfoController {
                 attach.setFunctionId(infoId);
             }
             innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
+
+
         }
+        finishAttachService.delAttachLists(innovateEnterpriseInfoModel);
         return R.ok();
     }
 

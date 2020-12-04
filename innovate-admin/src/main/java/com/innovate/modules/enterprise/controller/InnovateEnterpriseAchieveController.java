@@ -13,6 +13,7 @@ import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
+import com.innovate.modules.finish.service.FinishAttachService;
 import com.innovate.modules.sys.entity.SysUserEntity;
 import com.innovate.modules.util.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -41,8 +42,12 @@ import javax.servlet.http.HttpServletResponse;
 public class InnovateEnterpriseAchieveController {
     @Autowired
     private InnovateEnterpriseAchieveService innovateEnterpriseAchieveService;
+
     @Autowired
     private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
+
+    @Autowired
+    private FinishAttachService finishAttachService;
     /**
      * 列表
      */
@@ -107,15 +112,7 @@ public class InnovateEnterpriseAchieveController {
             }
             innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         }
-        if (!innovateEnterpriseInfoModel.getDelAttachLists().isEmpty()) {
-            for (InnovateEnterpriseAttachEntity a: innovateEnterpriseInfoModel.getDelAttachLists()) {
-                if (a.getAttachId() != null) {
-                    a.setIsDel(1);
-                    innovateEnterpriseAttachService.updateById(a);
-                }
-            }
-
-        }
+        finishAttachService.delAttachLists(innovateEnterpriseInfoModel);
         return R.ok();
     }
 

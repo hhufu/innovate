@@ -1,9 +1,13 @@
 package com.innovate.modules.finish.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
+import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
 import com.innovate.modules.finish.entity.FinishAttachEntity;
 import com.innovate.modules.finish.dao.FinishAttachDao;
 import com.innovate.modules.finish.service.FinishAttachService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +23,10 @@ import java.util.Map;
  */
 @Service
 public class FinishAttachServiceImpl extends ServiceImpl<FinishAttachDao, FinishAttachEntity> implements FinishAttachService {
+    @Autowired
+    private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
+
+
     @Override
     public List<FinishAttachEntity> queryAll(Map<String, Object> params) {
         return baseMapper.queryAll(params);
@@ -27,5 +35,18 @@ public class FinishAttachServiceImpl extends ServiceImpl<FinishAttachDao, Finish
     @Override
     public void remove(Map<String, Object> params) {
         baseMapper.remove(params);
+    }
+
+    @Override
+    public void delAttachLists(InnovateEnterpriseInfoModel innovateEnterpriseInfoModel) {
+        if (innovateEnterpriseInfoModel.getDelAttachLists() != null) {
+            for (InnovateEnterpriseAttachEntity a: innovateEnterpriseInfoModel.getDelAttachLists()) {
+                if (a.getAttachId() != null) {
+                    a.setIsDel(1);
+                    innovateEnterpriseAttachService.updateById(a);
+                }
+            }
+
+        }
     }
 }
