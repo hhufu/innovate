@@ -152,6 +152,10 @@
                 this.fileList = tempFinishAtta
               }
             })
+          } else {
+            this.attachLists = []
+            this.fileList = []
+            this.delAttachLists = []
           }
               // 获取文件要求：类型=>1 大创,2 中期检查,3 赛事,4 结题
           this.dataListLoading = true

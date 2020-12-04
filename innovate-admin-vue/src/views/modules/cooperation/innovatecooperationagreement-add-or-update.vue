@@ -32,8 +32,8 @@
     <el-form-item label="协议时间" prop="agreementTime">
       <el-date-picker
         v-model="dataForm.agreementTime"
-        type="datetime"
-        value-format="yyyy-MM-dd HH:mm:ss"
+        type="date"
+        value-format="yyyy-MM-dd"
         format="yyyy-MM-dd"
         placeholder="选择日期">
       </el-date-picker>
@@ -173,6 +173,10 @@
                 this.fileList = tempFinishAtta
                 this.isTeacherInfoNull()
                 this.dataListLoading = false
+              } else {
+                this.attachLists = []
+                this.fileList = []
+                this.delAttachLists = []
               }
             }).catch((e) => {})  // length异常抛出
           }

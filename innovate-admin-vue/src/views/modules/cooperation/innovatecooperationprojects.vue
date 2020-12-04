@@ -57,12 +57,6 @@
         label="年度">
       </el-table-column>
       <el-table-column
-        prop="userId"
-        header-align="center"
-        align="center"
-        label="主持人">
-      </el-table-column>
-      <el-table-column
         prop="startTime"
         header-align="center"
         align="center"
@@ -115,7 +109,7 @@
     data () {
       return {
         dataForm: {
-          enterpriseName: ''
+          projectName: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -145,7 +139,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'enterpriseName': this.dataForm.enterpriseName
+            'projectName': this.dataForm.projectName,
+            isDel: 0
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

@@ -32,9 +32,12 @@ public class InnovateCooperationProjectsServiceImpl extends ServiceImpl<Innovate
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        EntityWrapper<InnovateCooperationProjectsEntity> entityWrapper = new EntityWrapper<>();
+        if (params.get("projectName") != null) entityWrapper.like("project_name", params.get("projectName").toString());
+        if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
         Page<InnovateCooperationProjectsEntity> page = this.selectPage(
                 new Query<InnovateCooperationProjectsEntity>(params).getPage(),
-                new EntityWrapper<>()
+                entityWrapper
         );
 
         return new PageUtils(page);

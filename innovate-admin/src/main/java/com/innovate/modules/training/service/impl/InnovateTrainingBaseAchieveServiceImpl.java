@@ -37,9 +37,11 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        EntityWrapper<InnovateTrainingBaseAchieveEntity> entityEntityWrapper = new EntityWrapper<>();
+        if (params.get("trainingBaseName") != null) entityEntityWrapper.like("training_base_name", params.get("trainingBaseName").toString());
         Page<InnovateTrainingBaseAchieveEntity> page = this.selectPage(
                 new Query<InnovateTrainingBaseAchieveEntity>(params).getPage(),
-                new EntityWrapper<>()
+                entityEntityWrapper
         );
 
         return new PageUtils(page);

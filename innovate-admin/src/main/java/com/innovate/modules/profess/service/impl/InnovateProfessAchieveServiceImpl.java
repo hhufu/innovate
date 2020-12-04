@@ -33,9 +33,11 @@ public class InnovateProfessAchieveServiceImpl extends ServiceImpl<InnovateProfe
     InnovateProfessAttachService professAttachService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        EntityWrapper<InnovateProfessAchieveEntity> entityWrapper = new EntityWrapper<>();
+        if (params.get("professAchieDirector") != null) entityWrapper.like("profess_achie_director", params.get("professAchieDirector").toString());
         Page<InnovateProfessAchieveEntity> page = this.selectPage(
                 new Query<InnovateProfessAchieveEntity>(params).getPage(),
-                new EntityWrapper<>()
+                entityWrapper
         );
 
         return new PageUtils(page);

@@ -23,12 +23,13 @@
         align="center"
         width="50">
       </el-table-column>
-<!--      <el-table-column-->
-<!--        prop="InnovateRegisterAuthenticationEntity.authenticationId"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="自增主键">-->
-<!--      </el-table-column>-->
+      <el-table-column
+        prop=""
+        type="index"
+        header-align="center"
+        align="center"
+        label="ID">
+      </el-table-column>
       <el-table-column
         prop="enterpriseName"
         header-align="center"

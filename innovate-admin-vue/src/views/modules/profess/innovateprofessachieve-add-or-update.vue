@@ -164,8 +164,9 @@
               }
             })
           } else {
-            this.attachLists = []
-            this.fileList = [] // 文件列表
+              this.attachLists = []
+              this.fileList = []
+              this.delAttachLists = []
           }
         })
       },

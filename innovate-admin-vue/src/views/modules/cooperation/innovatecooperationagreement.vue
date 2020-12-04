@@ -24,12 +24,13 @@
         align="center"
         width="50">
       </el-table-column>
-<!--      <el-table-column-->
-<!--        prop="enterpriseId"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="自增主键">-->
-<!--      </el-table-column>-->
+      <el-table-column
+        prop=""
+        type="index"
+        header-align="center"
+        align="center"
+        label="ID">
+      </el-table-column>
       <el-table-column
         prop="enterpriseName"
         header-align="center"
@@ -59,23 +60,11 @@
           {{parseTime(scope.row.agreementTime, "{y}-{m}-{d}")}}
         </template>
       </el-table-column>
-<!--      <el-table-column-->
-<!--        prop="agreementMaterials"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="协议材料">-->
-<!--      </el-table-column>-->
       <el-table-column
         prop="enterpriseRecords"
         header-align="center"
         align="center"
         label="企业记录">
-      </el-table-column>
-      <el-table-column
-        prop="userId"
-        header-align="center"
-        align="center"
-        label="创建者">
       </el-table-column>
       <el-table-column
         fixed="right"

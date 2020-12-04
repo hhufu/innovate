@@ -219,6 +219,7 @@
         this.attachLists = []
         this.fileList = []
         this.fileAskContent = '无'
+        this.delAttachLists = []
       },
       getTypeList() {
         this.participateList = []

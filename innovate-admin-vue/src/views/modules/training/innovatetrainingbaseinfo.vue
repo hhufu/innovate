@@ -165,7 +165,7 @@
         Object.keys(this.instituteList).some((key) => {
           // eslint-disable-next-line eqeqeq
           if (this.instituteList[key].instituteId == parseInt(e.instituteId)) {
-            actions.push( this.instituteList[key].instituteName)
+            actions.push(this.instituteList[key].instituteName)
             return true
           }
         })
