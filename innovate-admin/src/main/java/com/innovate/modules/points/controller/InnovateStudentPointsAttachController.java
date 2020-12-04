@@ -128,7 +128,7 @@ public class InnovateStudentPointsAttachController {
      * 文件下载
      */
     @PostMapping(value = "/download")
-    @RequiresPermissions("innovate:innovatestudentpointsapply:list")
+    @RequiresPermissions("points:innovatestudentpointsapply:info")
     public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
         String filePath = request.getParameter("filePath");
         FileUtils.download(response, filePath);

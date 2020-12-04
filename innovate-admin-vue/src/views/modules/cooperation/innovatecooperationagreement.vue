@@ -142,7 +142,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'enterpriseName': this.dataForm.enterpriseName
+            'enterpriseName': this.dataForm.enterpriseName,
+            'isDel': 0
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

@@ -128,7 +128,7 @@
             type: 'success'
           })
           this.$httpFile({
-            url: this.$httpFile.adornUrl(`/points/attach/download`),
+            url: this.$httpFile.adornUrl(`/training/innovatetrainingbaseattach/download`),
             method: 'post',
             params: this.$httpFile.adornParams({
               'filePath': attach.attachPath

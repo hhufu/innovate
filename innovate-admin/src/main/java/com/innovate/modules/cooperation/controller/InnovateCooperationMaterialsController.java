@@ -127,7 +127,7 @@ public class InnovateCooperationMaterialsController {
      * 文件下载
      */
     @PostMapping(value = "/download")
-    @RequiresPermissions("innovate:innovatecooperationmaterials:list")
+    @RequiresPermissions("cooperation:innovatecooperationagreement:info")
     public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
         String filePath = request.getParameter("filePath");
         FileUtils.download(response, filePath);

@@ -11,7 +11,7 @@
       <el-input v-model="dataForm.points" placeholder="添加分数"></el-input>
     </el-form-item>
     <el-form-item label="加分原因" prop="pointsReason">
-      <el-input v-model="dataForm.pointsReason" placeholder="加分原因"></el-input>
+      <el-input v-model="dataForm.pointsReason" type="textarea" autosize placeholder="加分原因"></el-input>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -59,9 +59,9 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.stuNum = data.innovatestudentpoints.stuNum
-                this.dataForm.points = data.innovatestudentpoints.points
-                this.dataForm.pointsReason = data.innovatestudentpoints.pointsReason
+                this.dataForm.stuNum = data.innovateStudentPoints.stuNum
+                this.dataForm.points = data.innovateStudentPoints.points
+                this.dataForm.pointsReason = data.innovateStudentPoints.pointsReason
               }
             })
           }

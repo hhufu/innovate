@@ -23,12 +23,19 @@
         align="center"
         width="50">
       </el-table-column>
-<!--      <el-table-column-->
-<!--        prop="cooperationId"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="自增主键">-->
-<!--      </el-table-column>-->
+      <el-table-column
+        prop=""
+        header-align="center"
+        align="center"
+        type="index"
+        label="ID">
+      </el-table-column>
+      <el-table-column
+        prop="enterpriseName"
+        header-align="center"
+        align="center"
+        label="企业名称">
+      </el-table-column>
       <el-table-column
         prop="projectName"
         header-align="center"
@@ -41,12 +48,6 @@
         align="center"
         :formatter="fomatterInstitute"
         label="二级学院">
-      </el-table-column>
-      <el-table-column
-        prop="enterpriseName"
-        header-align="center"
-        align="center"
-        label="企业名称">
       </el-table-column>
       <el-table-column
         prop="cooperationYear"

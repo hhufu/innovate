@@ -125,7 +125,7 @@ public class InnovateTrainingBaseAttachController {
      * 文件下载
      */
     @PostMapping(value = "/download")
-    @RequiresPermissions("training:innovatetrainingbaseattach:list")
+    @RequiresPermissions("training:innovatetrainingbaseinfo:list")
     public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
         String filePath = request.getParameter("filePath");
         FileUtils.download(response, filePath);

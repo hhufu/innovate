@@ -28,14 +28,14 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
     private SysUserService sysUserService;
     @Autowired
     private InnovateCooperationMaterialsService innovateCooperationMaterialsService;
-    @Autowired
-    private InnovateCooperationAgreementDao innovateCooperationAgreementDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        EntityWrapper<InnovateCooperationAgreementEntity> entityWrapper = new EntityWrapper<>();
+        if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
         Page<InnovateCooperationAgreementEntity> page = this.selectPage(
                 new Query<InnovateCooperationAgreementEntity>(params).getPage(),
-                new EntityWrapper<>()
+                entityWrapper
         );
 
         return new PageUtils(page);
@@ -56,7 +56,7 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
     @Override
     public R insertModel(InnovateCooperationAttachModel attachModel) {
         InnovateCooperationAgreementEntity cooperationAgreementEntity = attachModel.getCooperationAgreementEntity();
-        int i = innovateCooperationAgreementDao.insertE(cooperationAgreementEntity);
+        int i = baseMapper.insertE(cooperationAgreementEntity);
         if (attachModel.getCooperationMaterialsList() != null) {
             for (InnovateCooperationMaterialsEntity a : attachModel.getCooperationMaterialsList()) {
                 a.setAttachTime(new Date());
@@ -71,7 +71,7 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
 
     @Override
     public boolean update(InnovateCooperationAttachModel attachModel) {
-        innovateCooperationAgreementDao.updateById(attachModel.getCooperationAgreementEntity());
+        baseMapper.updateById(attachModel.getCooperationAgreementEntity());
         if (attachModel.getDelMaterialsList() != null)
             for (InnovateCooperationMaterialsEntity att : attachModel.getDelMaterialsList()) {
                 if (att.getMaterialsId() != null) {// 删除附件
@@ -89,7 +89,7 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
     }
     @Override
     public R info(Long enterpriseId) {
-        InnovateCooperationAgreementEntity innovateCooperationAgreement = innovateCooperationAgreementDao.selectById(enterpriseId);
+        InnovateCooperationAgreementEntity innovateCooperationAgreement = baseMapper.selectById(enterpriseId);
         // 获取申请用户信息
         innovateCooperationAgreement.setUserEntity(sysUserService.selectById(innovateCooperationAgreement.getUserId()));
         // 获取申请附件信息
