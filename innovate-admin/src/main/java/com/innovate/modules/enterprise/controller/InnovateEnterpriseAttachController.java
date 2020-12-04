@@ -130,7 +130,7 @@ public class InnovateEnterpriseAttachController {
      * 文件下载
      */
     @PostMapping(value = "/download")
-    @RequiresPermissions("enterprise:innovateenterpriseattach:list")
+    @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
     public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
         String filePath = request.getParameter("filePath");
         FileUtils.download(response, filePath);

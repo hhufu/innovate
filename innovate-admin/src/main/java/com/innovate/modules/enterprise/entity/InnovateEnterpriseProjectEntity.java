@@ -2,6 +2,7 @@ package com.innovate.modules.enterprise.entity;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -48,13 +49,15 @@ public class InnovateEnterpriseProjectEntity implements Serializable {
      * 项目开始时间
      */
     @ExcelProperty(value = "项目开始时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
     private Date projStartTime;
     /**
      * 截止时间
      */
     @ExcelProperty(value = "截止时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
     private Date projStopTime;
     /**
      * 项目年度

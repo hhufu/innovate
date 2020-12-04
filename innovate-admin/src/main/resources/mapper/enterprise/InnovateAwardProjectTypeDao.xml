@@ -5,8 +5,8 @@
 
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.innovate.modules.enterprise.entity.InnovateAwardProjectTypeEntity" id="innovateAwardProjectTypeMap">
-        <result property="awardProjectjTypeId" column="award_projectj_type_id"/>
-        <result property="awardProjectjType" column="award_projectj_type"/>
+        <result property="awardProjectTypeId" column="award_project_type_id"/>
+        <result property="awardProjectType" column="award_project_type"/>
     </resultMap>
 
 </mapper>

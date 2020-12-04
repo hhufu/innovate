@@ -138,9 +138,15 @@ public class InnovateEnterpriseProjectController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("enterprise:innovateenterpriseproject:update")
-    public R update(@RequestBody InnovateEnterpriseProjectEntity innovateEnterpriseProject) {
-        innovateEnterpriseProjectService.updateById(innovateEnterpriseProject);
-
+    public R update(@RequestBody InnovateEnterpriseInfoModel innovateEnterpriseInfoModel) {
+        innovateEnterpriseProjectService.updateById(innovateEnterpriseInfoModel.getProjectEntity());
+        if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()) {
+            Long infoId = innovateEnterpriseInfoModel.getProjectEntity().getEnterpProjId();
+            for (InnovateEnterpriseAttachEntity attach : innovateEnterpriseInfoModel.getAttachEntities()) {
+                attach.setFunctionId(infoId);
+            }
+            innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
+        }
         return R.ok();
     }
 

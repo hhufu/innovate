@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.enterpriseName" placeholder="企业名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -12,9 +12,17 @@
         <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:delete')" type="danger" @click="deleteHandle()"
                    :disabled="dataListSelections.length <= 0">批量删除
         </el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:save')" type="primary" @click="exportLists()">导出</el-button>
+        <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:save')" type="primary" @click="exportLists()">导出
+        </el-button>
       </el-form-item>
     </el-form>
+    <el-card>
+      <el-radio-group v-model="apply_status" @change="getDataList">
+        <el-radio :label="0">未审核</el-radio>
+        <el-radio :label="1">已审核</el-radio>
+        <el-radio :label="2">未通过</el-radio>
+      </el-radio-group>
+    </el-card>
     <el-table
       :data="dataList"
       border
@@ -78,7 +86,7 @@
         label="审核状态">
         <template slot-scope="scope">
           <el-tag type="primary" v-if="scope.row.applyStatus === '0'"
-            disable-transitions>未审核
+                  disable-transitions>未审核
           </el-tag>
           <el-tag type="success" v-if="scope.row.applyStatus === '1'"
                   disable-transitions>已通过
@@ -89,12 +97,12 @@
         </template>
       </el-table-column>
 
-<!--      <el-table-column-->
-<!--        prop="isDel"-->
-<!--        header-align="center"-->
-<!--        align="center"-->
-<!--        label="是否删除">-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column-->
+      <!--        prop="isDel"-->
+      <!--        header-align="center"-->
+      <!--        align="center"-->
+      <!--        label="是否删除">-->
+      <!--      </el-table-column>-->
 
       <el-table-column
         fixed="right"
@@ -125,156 +133,157 @@
 </template>
 
 <script>
-import AddOrUpdate from './innovateenterpriseinfo-add-or-update'
-import DetailInfo from './enterpriseinfo-dateil'
-export default {
-  data() {
-    return {
-      dataForm: {
-        key: ""
+  import AddOrUpdate from './innovateenterpriseinfo-add-or-update'
+  import DetailInfo from './enterpriseinfo-dateil'
+
+  export default {
+    data () {
+      return {
+        dataForm: {
+          enterpriseName: ''
+        },
+        dataList: [],
+        pageIndex: 1,
+        pageSize: 10,
+        totalPage: 0,
+        dataListLoading: false,
+        dataListSelections: [],
+        addOrUpdateVisible: false,
+        detailInfoVisible: false,
+        apply_status: 1
+      }
+    },
+    components: {
+      AddOrUpdate,
+      DetailInfo
+    },
+    activated () {
+      this.getDataList()
+    },
+    methods: {
+      // 获取数据列表
+      getDataList () {
+        this.dataListLoading = true;
+        this.$http({
+          url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/list"),
+          method: "get",
+          params: this.$http.adornParams({
+            page: this.pageIndex,
+            limit: this.pageSize,
+            enterpriseName: this.dataForm.enterpriseName,
+            apply_status: this.apply_status
+          })
+        }).then(({data}) => {
+          console.log(data);
+          if (data && data.code === 0) {
+            this.dataList = data.page.list;
+            this.totalPage = data.page.totalCount;
+          } else {
+            this.dataList = [];
+            this.totalPage = 0;
+          }
+          this.dataListLoading = false;
+        });
       },
-      dataList: [],
-      pageIndex: 1,
-      pageSize: 10,
-      totalPage: 0,
-      dataListLoading: false,
-      dataListSelections: [],
-      addOrUpdateVisible: false,
-      detailInfoVisible: false
-    };
-  },
-  components: {
-    AddOrUpdate,
-    DetailInfo
-  },
-  activated() {
-    this.getDataList();
-  },
-  methods: {
-    // 获取数据列表
-    getDataList() {
-      // debugger
-      this.dataListLoading = true;
-      this.$http({
-        url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/list"),
-        method: "get",
-        params: this.$http.adornParams({
-          page: this.pageIndex,
-          limit: this.pageSize,
-          key: this.dataForm.key,
-          order: "apply_status"
+      // 每页数
+      sizeChangeHandle(val) {
+        this.pageSize = val;
+        this.pageIndex = 1;
+        this.getDataList();
+      },
+      // 当前页
+      currentChangeHandle(val) {
+        this.pageIndex = val;
+        this.getDataList();
+      },
+      // 多选
+      selectionChangeHandle(val) {
+        this.dataListSelections = val;
+      },
+      // 查看
+      detailInfo(id) {
+        this.detailInfoVisible = true
+        this.$nextTick(() => {
+          this.$refs.detailInfo.init(id)
         })
-      }).then(({ data }) => {
-        console.log(data);
-        if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
-        } else {
-          this.dataList = [];
-          this.totalPage = 0;
-        }
-        this.dataListLoading = false;
-      });
-    },
-    // 每页数
-    sizeChangeHandle(val) {
-      this.pageSize = val;
-      this.pageIndex = 1;
-      this.getDataList();
-    },
-    // 当前页
-    currentChangeHandle(val) {
-      this.pageIndex = val;
-      this.getDataList();
-    },
-    // 多选
-    selectionChangeHandle(val) {
-      this.dataListSelections = val;
-    },
-    // 查看
-    detailInfo (id) {
-      this.detailInfoVisible = true
-      this.$nextTick(() => {
-        this.$refs.detailInfo.init(id)
-      })
-    },
-    // 新增 / 修改
-    addOrUpdateHandle(id) {
-      this.addOrUpdateVisible = true;
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id);
-      });
-    },
-    // 删除
-    deleteHandle(id) {
-      debugger
-      var ids = id
-        ? [id]
-        : this.dataListSelections.map(item => {
+      },
+      // 新增 / 修改
+      addOrUpdateHandle(id) {
+        this.addOrUpdateVisible = true;
+        this.$nextTick(() => {
+          this.$refs.addOrUpdate.init(id);
+        });
+      },
+      // 删除
+      deleteHandle(id) {
+        debugger
+        var ids = id
+          ? [id]
+          : this.dataListSelections.map(item => {
             return item.settledEnterpId;
           });
-      this.$confirm(
-        `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
-        "提示",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }
-      ).then(() => {
-        this.$http({
-          url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/delete"),
-          method: "post",
-          data: this.$http.adornData(ids, false)
-        }).then(({ data }) => {
-          if (data && data.code === 0) {
-            this.$message({
-              message: "操作成功",
-              type: "success",
-              duration: 1500,
-              onClose: () => {
-                this.getDataList();
-              }
-            });
-          } else {
-            this.$message.error(data.msg);
+        this.$confirm(
+          `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
           }
-        });
-      });
-    },
-    // 导出
-    exportLists() {
-      this.dataListLoading = true;
-      var trainBaseIds = this.dataListSelections.map(item => {
-        return item.settledEnterpId;
-      });
-      this.$http({
-        url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/export"),
-        method: "post",
-        data: this.$http.adornData(trainBaseIds, false),
-        responseType: "blob"
-      })
-        .then(res => {
-          this.dataListLoading = false;
-          const blob = new Blob([res.data], {
-            type: "application/vnd.ms-excel"
+        ).then(() => {
+          this.$http({
+            url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/delete"),
+            method: "post",
+            data: this.$http.adornData(ids, false)
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: "操作成功",
+                type: "success",
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList();
+                }
+              });
+            } else {
+              this.$message.error(data.msg);
+            }
           });
-          let filename = "入驻企业.xls";
-          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
-          const elink = document.createElement("a");
-          elink.download = filename;
-          elink.style.display = "none";
-          elink.href = URL.createObjectURL(blob);
-          document.body.appendChild(elink);
-          elink.click();
-          URL.revokeObjectURL(elink.href); // 释放URL 对象
-          document.body.removeChild(elink);
-        })
-        .catch(() => {
-          this.dataListLoading = false;
-          this.$message.error("导出失败!");
         });
+      },
+      // 导出
+      exportLists() {
+        this.dataListLoading = true;
+        var trainBaseIds = this.dataListSelections.map(item => {
+          return item.settledEnterpId;
+        });
+        this.$http({
+          url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/export"),
+          method: "post",
+          data: this.$http.adornData(trainBaseIds, false),
+          responseType: "blob"
+        })
+          .then(res => {
+            this.dataListLoading = false;
+            const blob = new Blob([res.data], {
+              type: "application/vnd.ms-excel"
+            });
+            let filename = "入驻企业.xls";
+            // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+            const elink = document.createElement("a");
+            elink.download = filename;
+            elink.style.display = "none";
+            elink.href = URL.createObjectURL(blob);
+            document.body.appendChild(elink);
+            elink.click();
+            URL.revokeObjectURL(elink.href); // 释放URL 对象
+            document.body.removeChild(elink);
+          })
+          .catch(() => {
+            this.dataListLoading = false;
+            this.$message.error("导出失败!");
+          });
+      }
     }
-  }
-};
+  };
 </script>

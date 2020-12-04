@@ -76,11 +76,10 @@
       data () {
         return {
           visible: false,
+          downloadLoading: false,
           dataForm: {
             settledEnterpId: 0,
             enterpriseName: '',
-            downloadLoading: false,
-            downloadText: '下载',
             enterpriseUserId: '',
             enterpriseDirector: '',
             departmentDirector: '',
@@ -88,13 +87,14 @@
             enterpriseType: '',
             businessScope: '',
             applyStatus: 0,
-            isDel: 0,
-            attachLists: []
+            isDel: 0
           },
           fileIsNull: false,
           fileList: [],
           url: '',
-          instituteList: []
+          downloadText: '下载',
+          instituteList: [],
+          attachLists: []
         }
       },
       methods: {
@@ -135,7 +135,7 @@
                     data.infoModel.infoEntity.applyStatus || 0
                   )
                   this.dataForm.isDel = data.infoModel.infoEntity.isDel
-                  this.dataForm.attachLists = data.infoModel.attachEntities
+                  this.attachLists = data.infoModel.attachEntities
                 }
               })
             }
@@ -152,7 +152,7 @@
             type: 'success'
           })
           this.$httpFile({
-            url: this.$httpFile.adornUrl(`/cooperation/innovatecooperationmaterials/download`),
+            url: this.$httpFile.adornUrl(`/enterprise/innovateenterpriseattach/download`),
             method: 'post',
             params: this.$httpFile.adornParams({
               'filePath': attach.attachPath

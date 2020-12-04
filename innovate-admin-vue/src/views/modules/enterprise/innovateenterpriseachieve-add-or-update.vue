@@ -2,7 +2,8 @@
   <el-dialog
     :title="!dataForm.enterpAchieveId ? '新增' : '修改'"
     :close-on-click-modal="false"
-    :visible.sync="visible">
+    :visible.sync="visible"
+    @close="handleClose">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
              label-width="12rem" style="width: 94%; margin: 0 auto">
       <el-form-item label="企业名称" prop="enterpriseName">
@@ -292,6 +293,10 @@
           })
           this.dataForm.institute = list[0].instituteId
         }
+      },
+      // 清空附件列表
+      handleClose () {
+        this.fileList = []
       }
 
     }

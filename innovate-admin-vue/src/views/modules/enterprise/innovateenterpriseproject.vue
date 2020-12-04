@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.projectName" placeholder="项目名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -24,16 +24,11 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="enterpProjId"
+        prop=""
+        type="index"
         header-align="center"
         align="center"
-        label="自增主键">
-      </el-table-column>
-      <el-table-column
-        prop="enterpriseId"
-        header-align="center"
-        align="center"
-        label="企业 id">
+        label="序号">
       </el-table-column>
       <el-table-column
         prop="enterpriseName"
@@ -72,18 +67,6 @@
         label="项目负责人">
       </el-table-column>
       <el-table-column
-        prop="projectUserId"
-        header-align="center"
-        align="center"
-        label="用户id">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        header-align="center"
-        align="center"
-        label="是否删除">
-      </el-table-column>
-      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -112,13 +95,13 @@
 </template>
 
 <script>
-import AddOrUpdate from "./innovateenterpriseproject-add-or-update";
+import AddOrUpdate from './innovateenterpriseproject-add-or-update'
 import DetailInfo from './enterpriseprojects-detail'
 export default {
-  data() {
+  data () {
     return {
       dataForm: {
-        key: ""
+        projectName: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -128,7 +111,7 @@ export default {
       dataListSelections: [],
       addOrUpdateVisible: false,
       detailInfoVisible: false
-    };
+    }
   },
   components: {
     AddOrUpdate,
@@ -147,7 +130,7 @@ export default {
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
-          key: this.dataForm.key
+          project_name: this.dataForm.projectName
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {

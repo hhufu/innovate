@@ -21,9 +21,14 @@ public class InnovateAwardProjectTypeServiceImpl extends ServiceImpl<InnovateAwa
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        Object awardProjectType = params.get("award_project_type");
+        EntityWrapper<InnovateAwardProjectTypeEntity> wrapper = new EntityWrapper<>();
+        if (!"".equals(awardProjectType)){
+            wrapper.like("award_project_type",awardProjectType.toString());
+        }
         Page<InnovateAwardProjectTypeEntity> page = this.selectPage(
                 new Query<InnovateAwardProjectTypeEntity>(params).getPage(),
-                new EntityWrapper<>()
+                wrapper
         );
 
         return new PageUtils(page);

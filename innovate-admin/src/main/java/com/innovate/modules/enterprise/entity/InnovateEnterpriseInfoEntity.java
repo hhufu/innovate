@@ -2,6 +2,7 @@ package com.innovate.modules.enterprise.entity;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -53,7 +54,8 @@ public class InnovateEnterpriseInfoEntity implements Serializable {
 	 * 入驻时间
 	 */
 	@ExcelProperty(value = "入驻时间")
-	@JsonFormat( pattern="yyyy-MM-dd")
+	@JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat("yyyy-MM-dd HH:mm:ss")
 	private Date settledTime;
 	/**
 	 * 企业类型
