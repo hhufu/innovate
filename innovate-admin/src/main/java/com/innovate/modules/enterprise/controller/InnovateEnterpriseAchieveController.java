@@ -107,6 +107,15 @@ public class InnovateEnterpriseAchieveController {
             }
             innovateEnterpriseAttachService.insertOrUpdateBatch(innovateEnterpriseInfoModel.getAttachEntities());
         }
+        if (!innovateEnterpriseInfoModel.getDelAttachLists().isEmpty()) {
+            for (InnovateEnterpriseAttachEntity a: innovateEnterpriseInfoModel.getDelAttachLists()) {
+                if (a.getAttachId() != null) {
+                    a.setIsDel(1);
+                    innovateEnterpriseAttachService.updateById(a);
+                }
+            }
+
+        }
         return R.ok();
     }
 

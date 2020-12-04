@@ -7,11 +7,14 @@ import java.util.List;
 @Data
 public class InnovateEnterpriseInfoModel {
     //入驻企业
-    InnovateEnterpriseInfoEntity infoEntity;
+    private InnovateEnterpriseInfoEntity infoEntity;
     //企业成果
-    InnovateEnterpriseAchieveEntity achieveEntity;
+    private InnovateEnterpriseAchieveEntity achieveEntity;
     //企业项目
-    InnovateEnterpriseProjectEntity projectEntity;
+    private InnovateEnterpriseProjectEntity projectEntity;
     //附件集合
-    List<InnovateEnterpriseAttachEntity> attachEntities;
+    private List<InnovateEnterpriseAttachEntity> attachEntities;
+    //删除附件
+    private List<InnovateEnterpriseAttachEntity> delAttachLists;
+
 }

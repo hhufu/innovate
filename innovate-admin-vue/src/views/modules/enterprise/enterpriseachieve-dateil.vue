@@ -75,11 +75,11 @@
       data () {
         return {
           downloadText: '下载',
+          downloadLoading: false,
           visible: false,
           dataForm: {
             enterpAchieveId: 0,
             enterpriseId: '',
-            downloadLoading: false,
             enterpriseName: '',
             enterpriseDirector: '',
             enterpriseUserId: '',
@@ -92,7 +92,9 @@
           },
           projectName: [],
           instituteName: [],
-          fileList: []
+          fileList: [],
+          attachLists: [],
+          url: ''
         }
       },
       methods: {
@@ -118,14 +120,6 @@
                   this.dataForm.instituteId = data.achieveModel.achieveEntity.instituteName
                   this.dataForm.isDel = data.achieveModel.achieveEntity.isDel
                   this.attachLists = data.achieveModel.attachEntities
-                  // 附件回显
-                  let attachList = [];
-                    for (let i = 0; i < this.attachLists.length; i++) {
-                    attachList.push(
-                      new EnterpriseAttachment(this.attachLists[i])
-                    );
-                  }
-                  this.fileList = attachList;
                 }
               })
             }

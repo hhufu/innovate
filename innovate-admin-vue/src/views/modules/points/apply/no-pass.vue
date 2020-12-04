@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.stuNum" placeholder="学号" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -80,7 +80,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small"
-                     v-if="isAuth('points:innovatestudentpointsapply:stuApply') && (scope.row.applyStatus === 0 || scope.row.applyStatus === -1)"
+                     v-if="$store.state.user.id === scope.row.applyUserId && (scope.row.applyStatus === 0 || scope.row.applyStatus === -1)"
                      @click="editApplyStatus(scope.row, 1)">重新提交
           </el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.integralApplyId)">查看</el-button>
@@ -116,7 +116,7 @@
     data() {
       return {
         dataForm: {
-          key: ''
+          stuNum: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -145,7 +145,7 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key,
+            'stuNum': this.dataForm.stuNum,
             'applyStatus': -1,
             'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id,
             'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId

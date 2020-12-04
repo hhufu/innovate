@@ -35,6 +35,16 @@
                      :value="n.instituteName"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="附件要求">
+        <template>
+          <el-alert
+            title=""
+            type="success"
+            :closable="false"
+            :description="fileAskContent">
+          </el-alert>
+        </template>
+      </el-form-item>
       <el-form-item label="相关附件" prop="attachLists">
         <el-upload
           class="upload-demo"
@@ -68,6 +78,9 @@
     data() {
       return {
         visible: false,
+        fileAskContent: '无',// 附件要求
+        delAttachLists: [],
+        attachLists: [],
         dataForm: {
           enterpAchieveId: 0,
           enterpriseId: '',
@@ -121,6 +134,7 @@
         this.visible = true
         this.getProjectName()
         this.getInstituteName()
+        this.getFileAsk()
         this.getTypeName()
         this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
@@ -178,6 +192,7 @@
           this.awardProjectTypeId = []
           this.institute = []
           this.attachLists = []
+        this.delAttachLists = []
       },
       // 表单提交
       dataFormSubmit() {
@@ -203,7 +218,8 @@
                 instituteId: this.dataForm.institute,
                 isDel: this.dataForm.isDel
                 },
-                attachEntities: this.attachLists
+                attachEntities: this.attachLists,
+                delAttachLists: this.delAttachLists
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -226,7 +242,6 @@
       // 上传成功
       successHandle1(response, file, fileList) {
         if (response && response.code === 0) {
-         console.log(response.innovateEnterpriseAttachEntity)
           this.attachLists.push(response.innovateEnterpriseAttachEntity)
           this.fileIsNull = false;
         } else {
@@ -240,21 +255,7 @@
           if (this.attachLists[index].attachName !== file.name) {
             tempFileList.push(this.attachLists[index]);
           }else {
-            let attachId =this.attachLists[index].attachId
-            if (attachId) {
-              this.$http({
-                url: this.$http.adornUrl(
-                  `/enterprise/innovateenterpriseattach/delete`
-                ),
-                method: "post",
-                data: this.$http.adornData(
-                  [attachId],false
-                )
-              }).then(({data}) => {
-                if (data && data.code === 0) {
-                }
-              });
-            }
+            this.delAttachLists.push(this.attachLists[index])
           }
         }
         this.attachLists = tempFileList;
@@ -291,6 +292,23 @@
           }
         })
       },
+      getFileAsk () {
+        // 获取文件要求：类型=>1 大创,2 中期检查,3 赛事,4 结题,5 企业成果
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/file/ask/query`),
+          method: 'get',
+          params: this.$http.adornParams({
+            'fileAskType': 5,
+            'fileAskTime': new Date().getFullYear()
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.fileAskContent = data.fileAsk == null ? '无' : data.fileAsk.fileAskContent
+            this.dataListLoading = false
+          }
+        })
+      },
       changeName(query) {
         if (query !== '') {
           let list = this.projectName.filter(item => {
@@ -311,7 +329,6 @@
       },
       changeInstituteId(query) {
         if (query !== '') {
-          console.log(this.instituteName)
           let list = this.instituteName.filter(item => {
             return item.instituteName
               .indexOf(query) > -1

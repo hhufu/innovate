@@ -155,7 +155,6 @@
       },
       formatAwardType (e) {
         var actions = [];
-        debugger
         Object.keys(this.awardProjectType).some((key) => {
           if ((this.awardProjectType[key].awardProjectTypeId + '') == e.awardProjectType) {
             actions.push(this.awardProjectType[key].awardProjectType);
