@@ -74,6 +74,7 @@
     export default {
       data () {
         return {
+          downloadLoading: false,
           downloadText: '下载',
           downloadLoading: false,
           visible: false,
@@ -168,7 +169,6 @@
             this.downloadText = '下载'
             this.downloadLoading = false
           }).catch(err => {
-            console.log(err)
             this.downloadLoading = false
           })
         }

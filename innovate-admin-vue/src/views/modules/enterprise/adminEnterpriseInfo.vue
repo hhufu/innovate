@@ -6,23 +6,11 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:save')" type="primary" @click="addOrUpdateHandle()">
-          新增
-        </el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:delete')" type="danger" @click="deleteHandle()"
-                   :disabled="dataListSelections.length <= 0">批量删除
-        </el-button>
         <el-button v-if="isAuth('enterprise:innovateenterpriseinfo:save')" type="primary" @click="exportLists()">导出
         </el-button>
       </el-form-item>
     </el-form>
-    <el-card>
-      <el-radio-group v-model="apply_status" @change="getDataList">
-        <el-radio :label="0">未审核</el-radio>
-        <el-radio :label="1">已审核</el-radio>
-        <el-radio :label="2">未通过</el-radio>
-      </el-radio-group>
-    </el-card>
+
     <el-table
       :data="dataList"
       border
@@ -85,14 +73,8 @@
         align="center"
         label="审核状态">
         <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.applyStatus === '0'"
+          <el-tag type="danger"
                   disable-transitions>未审核
-          </el-tag>
-          <el-tag type="success" v-if="scope.row.applyStatus === '1'"
-                  disable-transitions>已通过
-          </el-tag>
-          <el-tag type="danger" v-if="scope.row.applyStatus === '2'"
-                  disable-transitions>未通过
           </el-tag>
         </template>
       </el-table-column>
@@ -105,7 +87,9 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailInfo(scope.row.settledEnterpId)">查看</el-button>
-          <el-button type="text" v-if="isAuth('enterprise:innovateenterpriseinfo:update')" size="small" @click="addOrUpdateHandle(scope.row.settledEnterpId)">修改</el-button>
+<!--          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.settledEnterpId)">修改</el-button>-->
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.settledEnterpId,1)">通过</el-button>
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.settledEnterpId,2)">不通过</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.settledEnterpId)">删除</el-button>
         </template>
       </el-table-column>
@@ -143,7 +127,8 @@
         dataListSelections: [],
         addOrUpdateVisible: false,
         detailInfoVisible: false,
-        apply_status: 1
+        apply_status: 0
+
       }
     },
     components: {
@@ -169,6 +154,7 @@
             instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
           })
         }).then(({data}) => {
+          console.log(data);
           if (data && data.code === 0) {
             this.dataList = data.page.list;
             this.totalPage = data.page.totalCount;
@@ -277,8 +263,36 @@
             this.dataListLoading = false;
             this.$message.error("导出失败!");
           });
+      },
+      // 状态审核
+      applyStatus(settledEnterpId,status){
+        this.$http({
+          url: this.$http.adornUrl(
+            `/enterprise/innovateenterpriseinfo/update`
+          ),
+          method: 'post',
+          data: this.$http.adornData({
+            infoEntity: {
+              settledEnterpId: settledEnterpId,
+              applyStatus: status
+            },
+            attachEntities: []
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 1500,
+              onClose: () => {
+               this.getDataList()
+              }
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
       }
-
     }
   };
 </script>

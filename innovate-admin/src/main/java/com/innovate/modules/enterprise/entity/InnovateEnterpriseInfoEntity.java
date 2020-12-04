@@ -45,6 +45,12 @@ public class InnovateEnterpriseInfoEntity implements Serializable {
 	 */
 	@ExcelProperty(value = "企业负责人姓名")
 	private String enterpriseDirector;
+
+	/**
+	 * 负责人所在学院ID
+	 */
+	@ExcelIgnore
+	private String instituteId;
 	/**
 	 * 负责人所在学院
 	 */

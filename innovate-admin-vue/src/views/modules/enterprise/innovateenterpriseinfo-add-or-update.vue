@@ -16,12 +16,16 @@
         <el-input v-model="dataForm.enterpriseDirector" placeholder="企业负责人姓名"></el-input>
       </el-form-item>
       <el-form-item label="负责人所在学院" prop="departmentDirector">
-        <el-select v-model="dataForm.departmentDirector" placeholder="负责人所在学院">
+        <el-select v-model="dataForm.departmentDirector" placeholder="负责人所在学院" @change="changeName">
           <el-option v-for="item in instituteList" :key="item.instituteName" :label="item.instituteName"
                      :value="item.instituteName">
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="负责人所在学院 id" prop="enterpriseId" v-show="false">
+        <el-input v-model="dataForm.enterpriseId" placeholder="企业 id"></el-input>
+      </el-form-item>
+
       <el-form-item label="入驻时间" prop="settledTime">
         <el-date-picker
           v-model="dataForm.settledTime"
@@ -32,7 +36,7 @@
       </el-form-item>
       <el-form-item label="企业类型" prop="enterpriseType">
         <el-select v-model="dataForm.enterpriseType" placeholder="企业类型">
-          <el-option v-for="item in projectTypeList" :key="item.value" :label="item.label" :value="item.value">
+          <el-option v-for="item in projectTypeList" :key="item.value" :label="item.label" :value="item.label">
           </el-option>
         </el-select>
       </el-form-item>
@@ -40,19 +44,6 @@
       <el-form-item label="主要经营范围" prop="businessScope">
         <el-input v-model="dataForm.businessScope" placeholder="主要经营范围"></el-input>
       </el-form-item>
-      <el-form-item label="审核状态" prop="applyStatus">
-        <el-radio-group v-model="dataForm.applyStatus">
-          <el-radio :label="0" :disabled="noClick">未审核</el-radio>
-          <el-radio :label="1" :disabled="noClick">通过</el-radio>
-          <el-radio :label="2" :disabled="noClick">不通过</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <!--      <el-form-item label="是否删除" prop="isDel" v-if="dataForm.settledEnterpId">-->
-      <!--        <el-radio-group v-model="dataForm.isDel">-->
-      <!--          <el-radio :label="0">否</el-radio>-->
-      <!--          <el-radio :label="1">是</el-radio>-->
-      <!--        </el-radio-group>-->
-      <!--      </el-form-item>-->
       <el-form-item label="相关附件" prop="attachLists">
         <el-upload
           class="upload-demo"
@@ -99,7 +90,8 @@
           businessScope: '',
           applyStatus: 0,
           isDel: 0,
-          attachLists: []
+          attachLists: [],
+          instituteId: ''
         },
         dataRule: {
           enterpriseName: [
@@ -119,9 +111,6 @@
           ],
           businessScope: [
             {required: true, message: '主要经营范围不能为空', trigger: 'blur'}
-          ],
-          applyStatus: [
-            {required: true, message: '审核状态不能为空', trigger: 'blur'}
           ]
         },
         projectTypeList: [
@@ -178,7 +167,9 @@
                   data.infoModel.infoEntity.applyStatus || 0
                 )
                 this.dataForm.isDel = data.infoModel.infoEntity.isDel
+                this.dataForm.instituteId = data.infoModel.infoEntity.instituteId
                 this.dataForm.attachLists = data.infoModel.attachEntities
+
                 // 审核点击状态
                 if (this.dataForm.applyStatus === 1 || this.dataForm.applyStatus === 2) {
                   this.noClick = true
@@ -217,7 +208,8 @@
                   settledTime: this.dataForm.settledTime,
                   enterpriseType: this.dataForm.enterpriseType,
                   businessScope: this.dataForm.businessScope,
-                  applyStatus: this.dataForm.applyStatus
+                  applyStatus: this.dataForm.applyStatus,
+                  instituteId: this.dataForm.instituteId
                 },
                 attachEntities: this.dataForm.attachLists
               })
@@ -287,9 +279,18 @@
         })
       },
       // 清空附件列表
-      handleClose () {
+      handleClose() {
         this.fileList = []
-      }
+      },
+      //根据改变选中值更改学院id
+      changeName(query) {
+        if (query !== "") {
+          let list = this.instituteList.filter(item => {
+            return item.instituteName.indexOf(query) > -1;
+          });
+          this.dataForm.instituteId = list[0].instituteId;
+        }
+      },
     }
   }
 </script>

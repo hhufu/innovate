@@ -84,11 +84,6 @@ public class InnovateEnterpriseInfoController {
     @RequestMapping("/list")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
     public R list(@RequestParam Map<String, Object> params) {
-        SysUserEntity loginUser = ShiroUtils.getUserEntity();
-        if (!"SuperAdmin".equals(loginUser.getUsername())) {
-            Long userId = loginUser.getUserId();
-            params.put("project_user_id", userId);
-        }
         PageUtils page = innovateEnterpriseInfoService.queryPage(params);
         return R.ok().put("page", page);
     }

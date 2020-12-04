@@ -6,6 +6,7 @@ import java.util.*;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.innovate.common.utils.OSSUtils;
 import com.innovate.modules.finish.entity.FinishAttachEntity;
+import com.innovate.modules.innovate.config.ConfigApi;
 import com.innovate.modules.util.FileUtils;
 import com.innovate.modules.util.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -43,7 +44,7 @@ public class InnovateEnterpriseAttachController {
      * @return
      */
     @PostMapping(value = "/upload")
-    @RequiresPermissions("enterprise:innovateenterpriseattach:save")
+    @RequiresPermissions("enterprise:innovateenterpriseinfo:save")
     public Object uploadFile(@RequestParam("file") List<MultipartFile> files,HttpServletRequest request) {
         String enterpriseName = request.getParameter("enterpriseName");
         String attachType = request.getParameter("attachType");
@@ -126,14 +127,6 @@ public class InnovateEnterpriseAttachController {
     }
 
 
-    /**
-     * 文件下载
-     */
-    @PostMapping(value = "/download")
-    @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
-    public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
-        String filePath = request.getParameter("filePath");
-        FileUtils.download(response, filePath);
-    }
+
 
 }

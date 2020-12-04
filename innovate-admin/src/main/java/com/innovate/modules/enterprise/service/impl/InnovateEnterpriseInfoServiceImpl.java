@@ -1,6 +1,8 @@
 package com.innovate.modules.enterprise.service.impl;
 
+import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.enterprise.entity.InnovateEnterpriseProjectEntity;
+import com.innovate.modules.sys.entity.SysUserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -24,12 +26,24 @@ public class InnovateEnterpriseInfoServiceImpl extends ServiceImpl<InnovateEnter
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        Object userId = params.get("project_user_id");
+//        SysUserEntity loginUser = ShiroUtils.getUserEntity();
+//        if (!"SuperAdmin".equals(loginUser.getUsername())) {
+//            Long userId = loginUser.getUserId();
+//            params.put("project_user_id", userId);
+//        }
+//        Object userId = params.get("project_user_id");
         Object enterpriseName = params.get("enterpriseName");
+        Object userId = params.get("enterpriseUserId");
+        Object instituteId = params.get("instituteId");
         EntityWrapper<InnovateEnterpriseInfoEntity> wrapper = new EntityWrapper<>();
         wrapper.eq("is_del", 0).eq("apply_status",params.get("apply_status"));
-        if (userId != null) {
-            wrapper.eq("enterprise_user_id", userId.toString());
+
+        if (userId!=null ){
+            if (instituteId!=null){
+                wrapper.eq("institute_id", instituteId.toString());
+            }else {
+                wrapper.eq("enterprise_user_id", userId.toString());
+            }
         }
         if (!"".equals(enterpriseName)){
             wrapper.like("enterprise_name" , enterpriseName.toString());
