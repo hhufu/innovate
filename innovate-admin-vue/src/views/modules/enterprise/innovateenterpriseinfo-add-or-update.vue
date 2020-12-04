@@ -124,7 +124,8 @@
         fileList: [],
         url: '',
         instituteList: [],
-        noClick: false
+        noClick: false,
+        delAttachLists:[]
       }
     },
     methods: {
@@ -228,6 +229,18 @@
                 this.$message.error(data.msg)
               }
             })
+            this.$http({
+              url: this.$http.adornUrl(
+                `/enterprise/innovateenterpriseattach/delete`
+              ),
+              method: "post",
+              data: this.$http.adornData(
+                this.delAttachLists, false
+              )
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+              }
+            });
           }
         })
       },
@@ -250,18 +263,7 @@
           } else {
             let attachId = this.dataForm.attachLists[index].attachId
             if (attachId) {
-              this.$http({
-                url: this.$http.adornUrl(
-                  `/enterprise/innovateenterpriseattach/delete`
-                ),
-                method: 'post',
-                data: this.$http.adornData(
-                  [attachId], false
-                )
-              }).then(({data}) => {
-                if (data && data.code === 0) {
-                }
-              })
+              this.delAttachLists.push(attachId)
             }
           }
         }

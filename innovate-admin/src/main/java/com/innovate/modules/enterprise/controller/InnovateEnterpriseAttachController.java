@@ -118,7 +118,7 @@ public class InnovateEnterpriseAttachController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("enterprise:innovateenterpriseattach:delete")
+    @RequiresPermissions("enterprise:innovateenterpriseinfo:delete")
     public R delete(@RequestBody Long[] attachIds){
         innovateEnterpriseAttachService.delList(Arrays.asList(attachIds));
 //		innovateEnterpriseAttachService.deleteBatchIds(Arrays.asList(attachIds));
