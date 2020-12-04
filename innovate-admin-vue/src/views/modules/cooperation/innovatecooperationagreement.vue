@@ -55,6 +55,9 @@
         header-align="center"
         align="center"
         label="协议时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.agreementTime, "{y}-{m}-{d}")}}
+        </template>
       </el-table-column>
 <!--      <el-table-column-->
 <!--        prop="agreementMaterials"-->

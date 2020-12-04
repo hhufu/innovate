@@ -66,12 +66,18 @@
         header-align="center"
         align="center"
         label="起始时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.startTime, "{y}-{m}-{d}")}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="endTime"
         header-align="center"
         align="center"
         label="截止时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.endTime, "{y}-{m}-{d}")}}
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -263,7 +269,7 @@
           this.$message.error('导出失败!')
         })
       },
-      // 时间格式化
+      // 年度格式化
       // 多选
       dateFormat (row, column) {
         var t = new Date(row.cooperationYear)

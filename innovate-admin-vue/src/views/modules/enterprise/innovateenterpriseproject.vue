@@ -126,7 +126,8 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      detailInfoVisible: false
     };
   },
   components: {

@@ -16,7 +16,7 @@
       </tr>
       <tr align='center'>
         <th colspan="2">主持人</th>
-        <td colspan="8">{{dataForm.userId}}</td>
+        <td colspan="8">{{userEntity.name}}</td>
       </tr>
       <tr align='center'>
         <th colspan="2">企业名称</th>
@@ -24,7 +24,7 @@
       </tr>
       <tr align='center' >
         <th colspan="2">二级学院</th>
-        <td colspan="8">{{dataForm.instituteId}}</td>
+        <td colspan="8">{{dataForm.instituteName}}</td>
       </tr>
       <tr align='center' >
         <th colspan="2">年度</th>
@@ -76,6 +76,7 @@
           downloadLoading: false,
           downloadText: '下载',
           url: '',
+          userEntity: {}, // 用户信息
           fileAskContent: '无',
           fileIsNull: false,
           fileList: [],
@@ -85,6 +86,7 @@
             enterpriseId: 0,
             enterpriseName: '',
             instituteId: '',
+            instituteName: '', // 二级学院名称
             agreementYear: '',
             agreementTime: '',
             agreementMaterials: '',
@@ -96,6 +98,7 @@
       },
       methods: {
         init (id) {
+          this.getInstituteName()
           this.url = this.$http.adornUrl(`/cooperation/innovatecooperationmaterials/upload?token=${this.$cookie.get('token')}`)
           this.dataForm.enterpriseId = id || 0
           this.visible = true
@@ -110,12 +113,14 @@
                   // this.dataForm = data.innovateCooperationAgreement
                   this.dataForm.enterpriseName = data.innovateCooperationAgreement.enterpriseName
                   this.dataForm.instituteId = data.innovateCooperationAgreement.instituteId
+                  this.fomatterInstitute(data.innovateCooperationAgreement)
                   this.dataForm.agreementYear = data.innovateCooperationAgreement.agreementYear
                   this.dataForm.agreementTime = data.innovateCooperationAgreement.agreementTime
                   this.dataForm.agreementMaterials = data.innovateCooperationAgreement.agreementMaterials
                   this.dataForm.enterpriseRecords = data.innovateCooperationAgreement.enterpriseRecords
                   this.dataForm.userId = data.innovateCooperationAgreement.userId
                   this.attachLists = data.materialsEntityList
+                  this.userEntity = data.innovateCooperationAgreement.userEntity
                 }
               })
             }
@@ -168,11 +173,25 @@
             this.downloadLoading = false
           })
         },
-        // 时间格式化
-        // 多选
-        dateFormat (row, column) {
-          var t = new Date(row.agreementYear)
-          return t.getFullYear() + '年'
+        getInstituteName () {
+          debugger
+          this.$http({
+            url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+            method: 'get'
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.instituteList = data.institute
+            }
+          })
+        },
+        // 格式化学院名称
+        fomatterInstitute (e) {
+          for (let i = 0; i <= this.instituteList.length; i++) {
+            if (parseInt(this.instituteList[i].instituteId) === parseInt(e.instituteId)) {
+              this.dataForm.instituteName = this.instituteList[i].instituteName
+              break
+            }
+          }
         }
       }
     }
