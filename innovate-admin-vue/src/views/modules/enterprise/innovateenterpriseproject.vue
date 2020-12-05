@@ -146,7 +146,7 @@ export default {
     return {
       dataForm: {
         projectName: '',
-        projectYear:new Date()
+        projectYear: null
       },
       dataList: [],
       pageIndex: 1,

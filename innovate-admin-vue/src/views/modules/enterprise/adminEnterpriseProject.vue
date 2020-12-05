@@ -151,7 +151,7 @@ export default {
           limit: this.pageSize,
           apply_status: this.apply_status,
           project_name: this.dataForm.projectName,
-          projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear,
+          projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear.getFullYear(),
           enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
           instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
         })
