@@ -4,6 +4,8 @@ import com.innovate.modules.training.entity.InnovateTrainingBaseInfoEntity;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 实训基地信息
  *
@@ -13,5 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface InnovateTrainingBaseInfoDao extends BaseMapper<InnovateTrainingBaseInfoEntity> {
-
+    int deleteList(List<Long> asList);
 }

@@ -81,13 +81,7 @@ public class InnovateSysPointsController {
     @RequestMapping("/delete")
     @RequiresPermissions("points:innovatesyspoints:delete")
     public R delete(@RequestBody Long[] integralIds){
-        for (Long l: integralIds) {
-            InnovateSysPointsEntity innovateSysPoints = new InnovateSysPointsEntity();
-            innovateSysPoints.setIntegralId(l);
-            innovateSysPoints.setIsDel(1);
-            innovateSysPointsService.updateById(innovateSysPoints);
-        }
-//		innovateSysPointsService.deleteBatchIds(Arrays.asList(integralIds));
+		innovateSysPointsService.deleteList(Arrays.asList(integralIds));
 
         return R.ok();
     }

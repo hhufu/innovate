@@ -97,7 +97,7 @@ public class InnovateTrainingBaseAttachController {
      * @return
      */
     @PostMapping(value = "/upload")
-    @RequiresPermissions("training:innovatetrainingbaseattach:save")
+    @RequiresPermissions("training:innovatetrainingbaseachieve:list")
     public Object uploadFile(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
         String trainingBaseName = request.getParameter("trainingBaseName");
 //        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + enterpriseName + "/"+ RandomUtils.getRandomNums()+"/";
@@ -125,7 +125,7 @@ public class InnovateTrainingBaseAttachController {
      * 文件下载
      */
     @PostMapping(value = "/download")
-    @RequiresPermissions("training:innovatetrainingbaseinfo:list")
+    @RequiresPermissions("training:innovatetrainingbaseachieve:list")
     public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
         String filePath = request.getParameter("filePath");
         FileUtils.download(response, filePath);

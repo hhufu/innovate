@@ -43,6 +43,8 @@ public class InnovateStudentPointsApplyServiceImpl extends ServiceImpl<InnovateS
         EntityWrapper<InnovateStudentPointsApplyEntity> entityWrapper = new EntityWrapper<>();
         // 根据申请状态查询
         if (params.get("applyStatus") != null) entityWrapper.eq("apply_status", params.get("applyStatus"));
+        // 查詢没删除的记录
+        if (params.get("isDel") != null) entityWrapper.eq("is_del", params.get("isDel"));
         // 过滤不通过的记录
         if (params.get("noPass") != null) entityWrapper.gt("apply_status", -1);
         // 过滤未提交的记录

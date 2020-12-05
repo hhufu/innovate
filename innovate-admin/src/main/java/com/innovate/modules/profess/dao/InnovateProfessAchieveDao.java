@@ -20,4 +20,6 @@ public interface InnovateProfessAchieveDao extends BaseMapper<InnovateProfessAch
     int insertE(InnovateProfessAchieveEntity professAchieveEntity);
 
     List<InnovateProfessAchieveEntity> selectProfessAchieveIds(Map<String, Object> map);
+
+    int deleteList(List<Long> asList);
 }

@@ -5,10 +5,11 @@ import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
 import com.innovate.modules.points.entity.InnovateStudentPointsEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ *
  *
  * @author Mikey
  * @email biaogejiushibiao@outlook.com
@@ -21,5 +22,7 @@ public interface InnovateStudentPointsService extends IService<InnovateStudentPo
     Integer queryPointByParams(Map<String, Object> params);
 
     R insertAndCheck(InnovateStudentPointsEntity innovateStudentPoints);
+
+    List<InnovateStudentPointsEntity> queryListByIds(Map<String, Object> params);
 }
 

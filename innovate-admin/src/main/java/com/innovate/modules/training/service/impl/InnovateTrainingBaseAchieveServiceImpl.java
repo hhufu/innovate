@@ -1,5 +1,6 @@
 package com.innovate.modules.training.service.impl;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.innovate.common.utils.R;
 import com.innovate.modules.innovate.entity.InnovateInstituteEntity;
 import com.innovate.modules.innovate.service.InnovateInstituteService;
@@ -47,13 +48,20 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
         return new PageUtils(page);
     }
 
+    /**
+     * 导出
+     * @param trainAchiveIds
+     * @return
+     */
     @Override
     public List<InnovateTrainingBaseAchieveEntity> queryListByIds(Long[] trainAchiveIds) {
         List<InnovateTrainingBaseAchieveEntity> baseAchieveEntities = new ArrayList<>();
         if (trainAchiveIds.length > 0) {
             baseAchieveEntities = this.selectBatchIds(Arrays.asList(trainAchiveIds));
         } else {
-            baseAchieveEntities = this.selectList(null);
+            EntityWrapper<InnovateTrainingBaseAchieveEntity> wrapper = new EntityWrapper<>();
+            wrapper.eq("is_del", 0);
+            baseAchieveEntities = this.selectList(wrapper);
         }
         for (InnovateTrainingBaseAchieveEntity b : baseAchieveEntities) {
             InnovateInstituteEntity innovateInstituteEntity = innovateInstituteService.selectById(b.getInstituteId());
@@ -109,6 +117,11 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
         List<InnovateTrainingBaseAttachEntity> attachEntityList = innovateTrainingBaseAttachService.selectByMap(map);
         return R.ok().put("innovateTrainingBaseAchieveEntity", innovateTrainingBaseAchieveEntity)
                 .put("attachEntityList", attachEntityList);
+    }
+
+    @Override
+    public int deleteList(List<Long> asList) {
+        return baseMapper.deleteList(asList);
     }
 
 }

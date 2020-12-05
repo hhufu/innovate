@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.Query;
@@ -99,6 +98,21 @@ public class InnovateStudentPointsServiceImpl extends ServiceImpl<InnovateStuden
             insert(innovateStudentPoints);
             return R.ok();
         }else return R.error("你已经签到过了，请勿重复签到");
+    }
+
+    @Override
+    public List<InnovateStudentPointsEntity> queryListByIds(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("stuNum", null);
+        if (params.get("ids") != null && !params.get("ids").toString().equals("[]")) {
+            map.put("ids", params.get("ids"));
+        } else {
+            map.put("ids", null);
+        }
+        map.put("stuNum", params.get("stuNum"));
+        map.put("instituteId", params.get("instituteId"));
+
+        return baseMapper.selectPointsIds(map);
     }
 
 

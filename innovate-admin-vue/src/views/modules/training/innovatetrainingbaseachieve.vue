@@ -188,7 +188,7 @@
       exportAchieve () {
         this.dataListLoading = true
         var trainBaseIds = this.dataListSelections.map(item => {
-          return item.trainingBaseId
+          return item.trainingAchieveId
         })
         this.$http({
           url: this.$http.adornUrl('/training/innovatetrainingbaseachieve/export'),

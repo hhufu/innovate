@@ -44,13 +44,21 @@
 
     <select id="selectProfessAchieveIds" parameterType="map" resultType="InnovateProfessAchieveEntity" >
      select a.*,b.institute_name from innovate_profess_achieve a LEFT JOIN innovate_sys_institute b on a.institute_id = b.institute_id
-     where 1 = 1
+     where 1 = 1 and a.is_del = 0
      <if test="professAchieveIds != null">
      and profess_achieve_id in
-        <foreach item="id" index="index" collection="professAchieveIds"  separator=",">
+        <foreach item="id" index="index" collection="professAchieveIds" open="(" separator="," close=")">
             #{id}
         </foreach>
      </if>
     </select>
+
+    <update id="deleteList" parameterType="List">
+        update innovate_profess_achieve set is_del = 1
+        where profess_achieve_id in
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>

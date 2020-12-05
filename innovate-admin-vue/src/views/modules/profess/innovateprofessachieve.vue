@@ -8,7 +8,7 @@
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('profess:innovateprofessachieve:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('profess:innovateprofessachieve:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
-        <el-button v-if="isAuth('training:innovateprofessachieve:export')" type="primary" @click="exportAchieve()">导出</el-button>
+        <el-button v-if="isAuth('profess:innovateprofessachieve:export')" type="primary" @click="exportAchieve()">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table

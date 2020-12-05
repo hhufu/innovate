@@ -174,7 +174,7 @@
               if (status == 3) {
                 let pointsReason = this.dataForm.participateType + '-' + this.dataForm.raceGrade
                 if (this.dataForm.prizeGrade != '' && this.dataForm.prizeGrade != null)
-                  pointsReason = pointsReason + '-' + this.dataForm.prizeGrade
+                  pointsReason = pointsReason + '-获得' + this.dataForm.prizeGrade
                 if (this.dataForm.persionType != '' && this.dataForm.persionType != null) {
                   let name = '负责人'
                   if (this.dataForm.persionType == 2) {

@@ -29,6 +29,9 @@
       <el-form-item  v-if="isAuth('points:innovatestudentpoints:save')">
         <el-button type="primary" @click="exportModul()">下载模板</el-button>
       </el-form-item>
+      <el-form-item v-if="isAuth('points:innovatestudentpoints:export')">
+        <el-button type="primary" @click="exportAchieve()">导出</el-button>
+      </el-form-item>
     </el-form>
     <el-table
       :data="dataList"
@@ -115,6 +118,7 @@
   import AddOrUpdate from './innovatestudentpoints-add-or-update'
   import FileSaver from 'file-saver'
   import XLSX from 'xlsx'
+  import {isAuth} from "../../../utils";
   export default {
     data () {
       return {
@@ -154,7 +158,6 @@
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            console.log(data)
             this.dataList = data.page.list
             this.points = data.total
             this.totalPage = data.page.totalCount
@@ -229,7 +232,7 @@
         this.$message.error(err)
         this.getDataList()
       },
-    // 导出
+    // 导入
       exportModul () {
         var msg = '操作成功'
         var type = 'success'
@@ -248,7 +251,42 @@
           duration: 1500
         })
         return wbout
-      }
+      },
+      // 导出
+      exportAchieve(){
+        this.dataListLoading = true
+        var ids = this.dataListSelections.map(item => {
+          return item.id
+        })
+        let dataForm = {
+          ids: ids,
+          stuNum: (this.isAuth("points:export:erAdmin") === true || this.isAuth("points:export:admin") === true) ? null : this.$store.state.user.username,
+          instituteId: this.isAuth("points:export:admin") === true ? null : this.$store.state.user.instituteId
+        }
+
+        this.$http({
+          url: this.$http.adornUrl('/points/innovatestudentpoints/export'),
+          method: 'post',
+          data: this.$http.adornData(dataForm, false),
+          responseType: 'blob'
+        }).then((res) => {
+          this.dataListLoading = false
+          const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+          let filename = '学生积分数据.xls'
+          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+          const elink = document.createElement('a')
+          elink.download = filename
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }).catch(() => {
+          this.dataListLoading = false
+          this.$message.error('导出失败!')
+        })
+      },
     }
   }
 </script>

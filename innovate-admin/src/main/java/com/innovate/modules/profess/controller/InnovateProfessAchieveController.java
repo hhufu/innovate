@@ -89,7 +89,7 @@ public class InnovateProfessAchieveController {
     @RequestMapping("/delete")
     @RequiresPermissions("profess:innovateprofessachieve:delete")
     public R delete(@RequestBody Long[] professAchieveIds){
-		innovateProfessAchieveService.deleteBatchIds(Arrays.asList(professAchieveIds));
+		innovateProfessAchieveService.deleteList(Arrays.asList(professAchieveIds));
 
         return R.ok();
     }

@@ -89,7 +89,7 @@ public class InnovateTrainingBaseInfoController {
     @RequestMapping("/delete")
     @RequiresPermissions("training:innovatetrainingbaseinfo:delete")
     public R delete(@RequestBody Long[] trainingBaseIds){
-		innovateTrainingBaseInfoService.deleteBatchIds(Arrays.asList(trainingBaseIds));
+		innovateTrainingBaseInfoService.deleteList(Arrays.asList(trainingBaseIds));
 
         return R.ok();
     }

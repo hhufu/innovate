@@ -6,13 +6,14 @@ import java.util.Date;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 /**
- * 
- * 
+ *
+ *
  * @author Mikey
  * @email biaogejiushibiao@outlook.com
  * @date 2020-08-09 09:13:27
@@ -34,6 +35,18 @@ public class InnovateStudentPointsEntity implements Serializable {
 	@ExcelProperty("学号")
 	private String stuNum;
 	/**
+	 * 姓名
+	 */
+	@TableField(exist = false)
+	@ExcelProperty("姓名")
+	private String name;
+	/**
+	 * 班级
+	 */
+	@ExcelProperty("班级")
+	@TableField(exist = false)
+	private String perClassNo;
+	/**
 	 * 添加分数
 	 */
 	@ExcelProperty("积分")
@@ -50,6 +63,7 @@ public class InnovateStudentPointsEntity implements Serializable {
 	@ExcelIgnore
 	private Date operationTime;
 
+	@ExcelIgnore
 	private Integer activityId;
 
 }

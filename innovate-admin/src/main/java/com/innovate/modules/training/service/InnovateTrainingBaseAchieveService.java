@@ -29,5 +29,7 @@ public interface InnovateTrainingBaseAchieveService extends IService<InnovateTra
     R insertModel(InnovateTrainingBaseAttachModel attachModel);
 
     R info(Long trainingAchieveId);
+
+    int deleteList(List<Long> asList);
 }
 

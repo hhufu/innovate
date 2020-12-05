@@ -30,5 +30,7 @@ public interface InnovateProfessAchieveService extends IService<InnovateProfessA
     boolean update(ProfessModel professModel);
 
     List<InnovateProfessAchieveEntity> queryListByIds(Long[] professAchieveIds);
+
+    int deleteList(List<Long> asList);
 }
 

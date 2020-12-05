@@ -9,5 +9,4 @@
         <result property="trainingAchieveType" column="training_achieve_type"/>
     </resultMap>
 
-
 </mapper>

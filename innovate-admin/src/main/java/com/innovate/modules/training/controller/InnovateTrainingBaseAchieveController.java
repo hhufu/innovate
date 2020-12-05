@@ -87,7 +87,7 @@ public class InnovateTrainingBaseAchieveController {
     @RequestMapping("/delete")
     @RequiresPermissions("training:innovatetrainingbaseachieve:delete")
     public R delete(@RequestBody Long[] trainingAchieveIds){
-		innovateTrainingBaseAchieveService.deleteBatchIds(Arrays.asList(trainingAchieveIds));
+		innovateTrainingBaseAchieveService.deleteList(Arrays.asList(trainingAchieveIds));
 
         return R.ok();
     }

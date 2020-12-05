@@ -36,4 +36,12 @@
             <if test="isDel != null">#{isDel},</if>
         </trim>
     </insert>
+
+    <update id="deleteList" parameterType="List">
+        update innovate_training_base_achieve set is_del = 1
+        where training_achieve_id in
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">\
+            #{id}
+        </foreach>
+    </update>
 </mapper>

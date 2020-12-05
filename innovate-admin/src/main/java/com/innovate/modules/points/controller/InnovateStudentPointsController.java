@@ -1,11 +1,17 @@
 package com.innovate.modules.points.controller;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.*;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.innovate.config.ConfigApi;
 import com.innovate.modules.points.utils.InnovateStudentPointsEntityListener;
+import com.innovate.modules.profess.entity.InnovateProfessAchieveEntity;
+import com.innovate.modules.sys.entity.SysUserEntity;
 import com.innovate.modules.util.FileUtils;
 import com.innovate.modules.util.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -19,6 +25,7 @@ import com.innovate.common.utils.R;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -122,5 +129,38 @@ public class InnovateStudentPointsController {
         Boolean f = innovateStudentPointsService.insert(innovateStudentPoints);
 
         return R.ok("保存成功");
+    }
+
+    /**
+     * 导出
+     */
+    @PostMapping("/export")
+    @RequiresPermissions("points:innovatestudentpoints:export")
+    public void export(@RequestBody Map<String, Object> params, HttpServletResponse response){
+        List<InnovateStudentPointsEntity> studentPointsEntities = new ArrayList<>();
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        /* 获取当前登录用户 */
+        SysUserEntity userEntity = ShiroUtils.getUserEntity();
+        String adminName = userEntity.getUsername();
+        ExcelWriter excelWriter = null;
+        try {
+            String fileName = URLEncoder.encode("学生积分数据", "UTF-8");
+            response.setHeader("Content-disposition","attachment;filename"+fileName+".xlsx");
+            /* 权限判断：当前用户为管理员(暂时不做权限限制) */
+            if ("wzxyGLY".equals(adminName) || true){
+                excelWriter = EasyExcel.write(response.getOutputStream(), InnovateStudentPointsEntity.class).build();
+                WriteSheet writeSheet = EasyExcel.writerSheet(0, "学生积分数据").build();
+                studentPointsEntities = innovateStudentPointsService.queryListByIds(params);
+                excelWriter.write(studentPointsEntities,writeSheet);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            // 千万别忘记finish 会帮忙关闭流
+            if (excelWriter != null) {
+                excelWriter.finish();
+            }
+        }
     }
 }

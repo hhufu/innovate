@@ -3,6 +3,8 @@ package com.innovate.modules.points.service.impl;
 import com.innovate.modules.innovate.entity.UserPersonInfoEntity;
 import com.innovate.modules.points.entity.InnovateStudentPointsEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -35,6 +37,12 @@ public class InnovateSysPointsServiceImpl extends ServiceImpl<InnovateSysPointsD
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public int deleteList(List<Long> asList) {
+
+        return baseMapper.deleteList(asList);
     }
 
 }

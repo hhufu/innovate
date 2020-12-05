@@ -59,4 +59,9 @@ public class InnovateTrainingBaseInfoServiceImpl extends ServiceImpl<InnovateTra
         return baseInfoEntities;
     }
 
+    @Override
+    public int deleteList(List<Long> asList) {
+        return baseMapper.deleteList(asList);
+    }
+
 }

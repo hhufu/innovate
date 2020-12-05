@@ -27,8 +27,7 @@ import com.innovate.modules.profess.service.InnovateProfessAchieveService;
 
 @Service("innovateProfessAchieveService")
 public class InnovateProfessAchieveServiceImpl extends ServiceImpl<InnovateProfessAchieveDao, InnovateProfessAchieveEntity> implements InnovateProfessAchieveService {
-    @Autowired
-    InnovateProfessAchieveDao professAchieveDao;
+
     @Autowired
     InnovateProfessAttachService professAttachService;
     @Override
@@ -47,7 +46,7 @@ public class InnovateProfessAchieveServiceImpl extends ServiceImpl<InnovateProfe
     public boolean insertModel(ProfessModel professModel) {
         InnovateProfessAchieveEntity professAchieveEntity = professModel.getProfessAchieveEntity();
 
-        int i = professAchieveDao.insertE(professAchieveEntity);
+        int i = baseMapper.insertE(professAchieveEntity);
         for (InnovateProfessAttachEntity p : professModel.getAttachEntityList()) {
             p.setAttachTime(new Date());
             p.setProfessAchieveId(professAchieveEntity.getProfessAchieveId());
@@ -60,7 +59,7 @@ public class InnovateProfessAchieveServiceImpl extends ServiceImpl<InnovateProfe
 
     @Override
     public boolean update(ProfessModel professModel) {
-        professAchieveDao.updateById(professModel.getProfessAchieveEntity());
+        baseMapper.updateById(professModel.getProfessAchieveEntity());
         if (professModel.getDelAttachEntityList() != null)
             for (InnovateProfessAttachEntity att : professModel.getDelAttachEntityList()) {
                 if (att.getAttachId() != null) {// 删除附件
@@ -91,12 +90,17 @@ public class InnovateProfessAchieveServiceImpl extends ServiceImpl<InnovateProfe
             map.put("professAchieveIds", null);
         }
 
-        return professAchieveDao.selectProfessAchieveIds(map);
+        return baseMapper.selectProfessAchieveIds(map);
+    }
+
+    @Override
+    public int deleteList(List<Long> asList) {
+        return baseMapper.deleteList(asList);
     }
 
     @Override
     public R info(Long professAchieveId) {
-        InnovateProfessAchieveEntity professAchieveEntity = professAchieveDao.selectById(professAchieveId);
+        InnovateProfessAchieveEntity professAchieveEntity = baseMapper.selectById(professAchieveId);
         // 获取申请附件信息
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("profess_achieve_id", professAchieveId);
