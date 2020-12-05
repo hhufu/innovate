@@ -268,16 +268,6 @@
         var t = new Date(row.materialYear)
         return t.getFullYear() + '年'
       },
-      gettraninfoId(){
-        this.$http({
-          url: this.$http.adornUrl(`/training/innovatetrainingbaseinfo/list`),
-          method: 'get'
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataForm.instituteId = data.list
-          }
-        })
-      }
     }
   }
 </script>

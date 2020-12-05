@@ -18,7 +18,7 @@
     <insert id="insertE" parameterType="InnovateTrainingBaseAchieveEntity" useGeneratedKeys="true" keyProperty="trainingAchieveId">
         insert into innovate_training_base_achieve
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="trainingBaseName != null">training_achieve_id,</if>
+            <if test="trainingBaseName != null">training_base_name,</if>
             <if test="materialYear != null">material_year,</if>
             <if test="materialType != null">material_type,</if>
             <if test="materialTypeId != null">material_type_id,</if>
@@ -40,7 +40,7 @@
     <update id="deleteList" parameterType="List">
         update innovate_training_base_achieve set is_del = 1
         where training_achieve_id in
-        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">\
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>

@@ -5,8 +5,7 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="100px">
     <el-form-item label="基地名称" prop="trainingBaseName">
-<!--      <el-input v-model="dataForm.trainingBaseName" placeholder="基地名称"></el-input>-->
-      <el-select v-model="dataForm.trainingBaseName" placeholder="实训基地名称" >
+      <el-select v-model="dataForm.trainingBaseName" placeholder="实训基地名称" @change="changeId">
         <el-option
           v-for="item in trainingnameList"
           :key="item.trainingBaseId"
@@ -89,6 +88,7 @@
           trainingBaseName: '',
           materialYear: '',
           materialType: '',
+          instituteId: '',
           materialTypeId: '',
           trainingBaseId: '',
           isDel: ''
@@ -120,6 +120,7 @@
           method: 'get'
         }).then(({data}) => {
           this.trainingnameList = data.page.list
+          this.dataForm.instituteId = data.page.list[0]
         })
         this.$http({
           url: this.$http.adornUrl(`/training/innovatetrainingachievetype/list`),
@@ -140,6 +141,7 @@
                 this.dataForm.trainingBaseName = data.innovateTrainingBaseAchieveEntity.trainingBaseName
                 this.dataForm.materialYear = data.innovateTrainingBaseAchieveEntity.materialYear
                 this.dataForm.materialType = data.innovateTrainingBaseAchieveEntity.materialType
+                this.dataForm.instituteId = data.innovateTrainingBaseAchieveEntity.instituteId
                 this.dataForm.materialTypeId = data.innovateTrainingBaseAchieveEntity.materialTypeId
                 this.dataForm.trainingBaseId = data.innovateTrainingBaseAchieveEntity.trainingBaseId
                 this.dataForm.isDel = data.innovateTrainingBaseAchieveEntity.isDel
@@ -240,6 +242,14 @@
           return item.trainingAchieveType.indexOf(val) > -1
         })
         this.dataForm.materialTypeId = list[0].materialTypeId
+      },
+      changeId (a){
+        let List = this.trainingnameList.filter(item => {
+          return item.trainingBaseName.indexOf(a) > -1
+        })
+        this.dataForm.instituteId = List[0].instituteId
+        this.dataForm.trainingBaseId = List[0].trainingBaseId
+        alert(this.dataForm.instituteId)
       }
     }
   }
