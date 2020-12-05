@@ -151,7 +151,9 @@ export default {
       dataListSelections: [],
       addOrUpdateVisible: false,
       detailInfoVisible: false,
-      apply_status: 1
+      apply_status: 1,
+      enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+      instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
     }
   },
   components: {
@@ -174,8 +176,8 @@ export default {
           project_name: this.dataForm.projectName,
           projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear,
           applyStatus: this.apply_status,
-          enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
-          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          enterpriseUserId: this.enterpriseUserId,
+          instituteId: this.instituteId
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
@@ -257,38 +259,42 @@ export default {
     },
     // 导出
     exportLists() {
-      this.dataListLoading = true;
-      var trainBaseIds = this.dataListSelections.map(item => {
-        return item.enterpProjId;
-      });
-      this.$http({
-        url: this.$http.adornUrl(
-          "/enterprise/innovateenterpriseproject/export"
-        ),
-        method: "post",
-        data: this.$http.adornData(trainBaseIds, false),
-        responseType: "blob"
-      })
-        .then(res => {
-          this.dataListLoading = false;
-          const blob = new Blob([res.data], {
-            type: "application/vnd.ms-excel"
-          });
-          let filename = "企业项目.xls";
-          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
-          const elink = document.createElement("a");
-          elink.download = filename;
-          elink.style.display = "none";
-          elink.href = URL.createObjectURL(blob);
-          document.body.appendChild(elink);
-          elink.click();
-          URL.revokeObjectURL(elink.href); // 释放URL 对象
-          document.body.removeChild(elink);
-        })
-        .catch(() => {
-          this.dataListLoading = false;
-          this.$message.error("导出失败!");
+      if (this.dataList.length>0){
+        this.dataListLoading = true;
+        var trainBaseIds = this.dataListSelections.map(item => {
+          return item.enterpProjId;
         });
+        this.$http({
+          url: this.$http.adornUrl(
+            "/enterprise/innovateenterpriseproject/export"
+          ),
+          method: "post",
+          data: this.$http.adornData(trainBaseIds, false),
+          responseType: "blob"
+        })
+          .then(res => {
+            this.dataListLoading = false;
+            const blob = new Blob([res.data], {
+              type: "application/vnd.ms-excel"
+            });
+            let filename = "企业项目.xls";
+            // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+            const elink = document.createElement("a");
+            elink.download = filename;
+            elink.style.display = "none";
+            elink.href = URL.createObjectURL(blob);
+            document.body.appendChild(elink);
+            elink.click();
+            URL.revokeObjectURL(elink.href); // 释放URL 对象
+            document.body.removeChild(elink);
+          })
+          .catch(() => {
+            this.dataListLoading = false;
+            this.$message.error("导出失败!");
+          });
+      }else {
+        this.$message.error('无导出数据');
+      }
     }
   }
 };
