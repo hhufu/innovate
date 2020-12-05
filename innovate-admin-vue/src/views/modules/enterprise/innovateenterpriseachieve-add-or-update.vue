@@ -30,7 +30,9 @@
         </el-select>
       </el-form-item>
       <el-form-item label="所属二级学院" prop="instituteId">
-        <el-select v-model="dataForm.instituteId" placeholder="所属二级学院" style="width: 100%" @change="changeInstituteId">
+<!--        <el-select v-model="dataForm.instituteId" placeholder="所属二级学院" style="width: 100%" @change="changeInstituteId"-->
+        <el-select v-model="dataForm.instituteId" placeholder="所属二级学院" style="width: 100%">
+                   disabled>
           <el-option v-for="n in instituteName" :key="n.instituteName" :label="n.instituteName"
                      :value="n.instituteName"></el-option>
         </el-select>
@@ -314,8 +316,16 @@
           let list = this.projectName.filter(item => {
             return item.enterpriseName
               .indexOf(query) > -1
+          });
+          this.dataForm.enterpriseId = list[0].settledEnterpId;
+          debugger
+          this.dataForm.institute = list[0].instituteId;
+
+          let instituteIds = this.instituteName.filter(item => {
+            return item.instituteId === parseInt(this.dataForm.institute)
+
           })
-          this.dataForm.enterpriseId = list[0].settledEnterpId
+          this.dataForm.instituteId = instituteIds[0].instituteName;
         }
       },
       changeTypeId(query) {
@@ -327,15 +337,16 @@
           this.dataForm.awardProjectTypeId = list[0].awardProjectTypeId
         }
       },
-      changeInstituteId(query) {
-        if (query !== '') {
-          let list = this.instituteName.filter(item => {
-            return item.instituteName
-              .indexOf(query) > -1
-          })
-          this.dataForm.institute = list[0].instituteId
-        }
-      },
+      // changeInstituteId(query) {
+      //   debugger
+      //   if (query !== '') {
+      //     let list = this.instituteName.filter(item => {
+      //       return item.instituteName
+      //         .indexOf(query) > -1
+      //     })
+      //     this.dataForm.institute = list[0].instituteId
+      //   }
+      // },
       // 清空附件列表
       handleClose() {
         this.fileList = []
