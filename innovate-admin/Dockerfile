@@ -1,5 +1,5 @@
 FROM java:8
-EXPOSE 8080
+EXPOSE 8088
 
 VOLUME /tmp
 ADD /target/innovate-admin.jar /app.jar

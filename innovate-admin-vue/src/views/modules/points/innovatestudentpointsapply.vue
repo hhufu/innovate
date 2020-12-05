@@ -51,7 +51,7 @@
                 <el-steps
                   :active="props.row.applyStatus"
                   finish-status="success">
-                  <el-step title="待提交"></el-step>
+                  <el-step title="申请人提交"></el-step>
                   <el-step title="二级学院审批"></el-step>
                   <el-step title="审批完成"></el-step>
                 </el-steps>
@@ -183,9 +183,11 @@
             'limit': this.pageSize,
             'stuNum': this.dataForm.stuNum,
             'isDel': 0,
-            'noPass': 'noPass',
-            'noApply': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? "noApply" : null,
+            'noPass': 'false',
+            'adminUserId': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? this.$store.state.user.id : null,
+            'applyStatus': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? 1 : null,
             'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id,
+            // 如果为管理员 则不根据学院查询
             'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {

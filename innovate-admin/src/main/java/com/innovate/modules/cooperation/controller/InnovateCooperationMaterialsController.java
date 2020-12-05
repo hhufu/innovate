@@ -98,7 +98,7 @@ public class InnovateCooperationMaterialsController {
      * @return
      */
     @PostMapping(value = "/upload")
-    @RequiresPermissions("cooperation:innovatecooperationmaterials:save")
+    @RequiresPermissions("cooperation:innovatecooperationagreement:list")
     public Object uploadFile(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
         String name = request.getParameter("fileName");
 //        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + enterpriseName + "/"+ RandomUtils.getRandomNums()+"/";

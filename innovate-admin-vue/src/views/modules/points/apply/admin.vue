@@ -55,7 +55,7 @@
                 <el-steps
                   :active="props.row.applyStatus"
                   finish-status="success">
-                  <el-step title="待提交"></el-step>
+                  <el-step title="申请人提交"></el-step>
                   <el-step title="二级学院审批"></el-step>
                   <el-step title="审批完成"></el-step>
                 </el-steps>

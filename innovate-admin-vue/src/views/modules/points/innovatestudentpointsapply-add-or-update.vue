@@ -23,7 +23,7 @@
           <el-option v-for="item in raceGradeList"
                      :label="item.raceGrade"
                      :value="item.raceGrade"
-                     :key="item.applyIntegral"
+                     :key="item.integralId"
           >
 
           </el-option>
@@ -35,7 +35,7 @@
           <el-option v-for="item in prizeGradeList"
                      :label="item.prizeGrade"
                      :value="item.prizeGrade"
-                     :key="item.applyIntegral"
+                     :key="item.integralId"
           >
 
           </el-option>
@@ -342,6 +342,8 @@
               this.integral = list[0].integral
               this.integralTo = list[0].integralTo
               this.dataForm.sysPointsId = list[0].integralId
+              // 改变已选人员类别积分
+              this.personChickChange()
             }
           } else {
             this.prizeGradeList = []
@@ -352,13 +354,15 @@
       changePrizeGrade(e) {
         let list = this.prizeGradeList.filter(item => {
           // eslint-disable-next-line eqeqeq
-          return item.prizeGrade.indexOf(e) > -1
+          return item.prizeGrade === e
         })
         // 获取对应积分
         this.dataForm.applyIntegral = list[0].integral
         this.integral = list[0].integral
         this.integralTo = list[0].integralTo
         this.dataForm.sysPointsId = list[0].integralId
+        // 改变已选人员类别积分
+        this.personChickChange()
       },
       // 选择人员类别
       changePersionType(e) {
@@ -368,6 +372,17 @@
           this.dataForm.applyIntegral = this.integral
           // eslint-disable-next-line eqeqeq
         } else if (e == 2) {
+          // 参与人员积分
+          this.dataForm.applyIntegral = this.integral - this.integralTo
+        }
+      },
+      personChickChange() {
+        // eslint-disable-next-line eqeqeq
+        if (this.dataForm.persionType === 1) {
+          // 负责人积分
+          this.dataForm.applyIntegral = this.integral
+          // eslint-disable-next-line eqeqeq
+        } else if (this.dataForm.persionType === 2) {
           // 参与人员积分
           this.dataForm.applyIntegral = this.integral - this.integralTo
         }
