@@ -10,7 +10,8 @@
         <el-input v-model="dataForm.enterpriseId" placeholder="企业 id"></el-input>
       </el-form-item>
       <el-form-item label="企业名称" prop="enterpriseName">
-        <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" @change="changeName" style="display: unset">
+        <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" @change="changeName"
+                   style="display: unset">
           <el-option v-for="n in projectName" :key="n.enterpriseName" :label="n.enterpriseName"
                      :value="n.enterpriseName"></el-option>
         </el-select>
@@ -20,29 +21,29 @@
       </el-form-item>
       <el-form-item label="项目时间" prop="projStartTime">
         <el-date-picker style="width: 100%"
-          v-model="dataForm.projStartTime"
-          type="date"
-          placeholder="项目开始时间"
-          value-format="yyyy-MM-dd">
+                        v-model="dataForm.projStartTime"
+                        type="date"
+                        placeholder="项目开始时间"
+                        value-format="yyyy-MM-dd">
         </el-date-picker>
 
       </el-form-item>
       <el-form-item label="截止时间" prop="projStopTime">
         <el-date-picker style="width: 100%"
-          v-model="dataForm.projStopTime"
-          type="date"
-          placeholder="截止时间"
-          value-format="yyyy-MM-dd">
+                        v-model="dataForm.projStopTime"
+                        type="date"
+                        placeholder="截止时间"
+                        value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
 
       <el-form-item label="项目年度" prop="projectYear">
         <el-date-picker style="width: 100%"
-          v-model="dataForm.projectYear"
-          type="year"
-          format="yyyy"
-          value-format="yyyy"
-          placeholder="选择年度">
+                        v-model="dataForm.projectYear"
+                        type="year"
+                        format="yyyy"
+                        value-format="yyyy"
+                        placeholder="选择年度">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="项目负责人" prop="projectDirector">
@@ -92,6 +93,7 @@
           projectYear: "",
           projectDirector: "",
           projectUserId: "",
+          applyStatus: 0,
           isDel: 0,
           attachLists: []
         },
@@ -167,6 +169,9 @@
                   data.infoModel.projectEntity.projectUserId;
                 this.dataForm.isDel = data.infoModel.projectEntity.isDel;
                 this.dataForm.attachLists = data.infoModel.attachEntities;
+                this.dataForm.applyStatus = parseInt(
+                  data.infoModel.projectEntity.applyStatus
+                ) || 0
                 // 附件回显
                 let attachList = [];
                 for (let i = 0; i < this.dataForm.attachLists.length; i++) {
