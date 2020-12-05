@@ -2,6 +2,15 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-date-picker
+          @change="getDataList"
+          v-model="dataForm.materialYear"
+          align="right"
+          type="year"
+          placeholder="请选择年度">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
         <el-input v-model="dataForm.trainingBaseName" placeholder="实训基地名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
@@ -50,6 +59,13 @@
         label="材料类型">
       </el-table-column>
       <el-table-column
+        prop="instituteId"
+        header-align="center"
+        align="center"
+        :formatter="fomatterInstitute"
+        label="所属二级学院">
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -84,7 +100,8 @@
     data () {
       return {
         dataForm: {
-          trainingBaseName: ''
+          trainingBaseName: '',
+          materialYear: new Date()
         },
         dataList: [],
         pageIndex: 1,
@@ -102,6 +119,7 @@
     },
     activated () {
       this.getDataList()
+      this.getInstituteName()
     },
     methods: {
       // 获取数据列表
@@ -113,6 +131,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
+            isDel: 0,
+            'materialYear': this.dataForm.materialYear == null ? null : this.dataForm.materialYear.getFullYear(),
             'trainingBaseName': this.dataForm.trainingBaseName
           })
         }).then(({data}) => {
@@ -125,6 +145,30 @@
           }
           this.dataListLoading = false
         })
+      },
+      // 查询学院列表
+      getInstituteName () {
+        debugger
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.instituteList = data.institute
+          }
+        })
+      },
+      // 格式化学院名称
+      fomatterInstitute (e) {
+        var actions = []
+        Object.keys(this.instituteList).some((key) => {
+          // eslint-disable-next-line eqeqeq
+          if (this.instituteList[key].instituteId == parseInt(e.instituteId)) {
+            actions.push(this.instituteList[key].instituteName)
+            return true
+          }
+        })
+        return actions.join('')
       },
       // 每页数
       sizeChangeHandle (val) {
@@ -187,13 +231,18 @@
       },
       exportAchieve () {
         this.dataListLoading = true
-        var trainBaseIds = this.dataListSelections.map(item => {
+        var ids = this.dataListSelections.map(item => {
           return item.trainingAchieveId
         })
+        let dataForm = {
+          ids: ids,
+          instituteId: this.isAuth("training:export:admin") === true ? null : this.dataForm.instituteId,
+          materialYear: (this.isAuth("training:export:erAdmin") === true || this.isAuth("training:export:admin") === true) ? null : this.dataForm.materialYear.getFullYear()
+        }
         this.$http({
           url: this.$http.adornUrl('/training/innovatetrainingbaseachieve/export'),
           method: 'post',
-          data: this.$http.adornData(trainBaseIds, false),
+          data: this.$http.adornData(dataForm, false),
           responseType: 'blob'
         }).then((res) => {
           this.dataListLoading = false
@@ -218,6 +267,16 @@
       dateFormat (row, column) {
         var t = new Date(row.materialYear)
         return t.getFullYear() + '年'
+      },
+      gettraninfoId(){
+        this.$http({
+          url: this.$http.adornUrl(`/training/innovatetrainingbaseinfo/list`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.dataForm.instituteId = data.list
+          }
+        })
       }
     }
   }

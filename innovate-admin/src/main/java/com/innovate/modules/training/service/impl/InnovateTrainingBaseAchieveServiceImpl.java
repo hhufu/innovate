@@ -2,6 +2,7 @@ package com.innovate.modules.training.service.impl;
 
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.innovate.common.utils.R;
+import com.innovate.modules.cooperation.entity.InnovateCooperationAgreementEntity;
 import com.innovate.modules.innovate.entity.InnovateInstituteEntity;
 import com.innovate.modules.innovate.service.InnovateInstituteService;
 import com.innovate.modules.sys.service.SysUserService;
@@ -38,11 +39,15 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        EntityWrapper<InnovateTrainingBaseAchieveEntity> entityEntityWrapper = new EntityWrapper<>();
-        if (params.get("trainingBaseName") != null) entityEntityWrapper.like("training_base_name", params.get("trainingBaseName").toString());
+        EntityWrapper<InnovateTrainingBaseAchieveEntity> entityWrapper = new EntityWrapper<>();
+        if (params.get("materialYear") != null) entityWrapper.eq("material_year", params.get("materialYear").toString());
+        if (params.get("trainingBaseName") != null) entityWrapper.like("training_base_name", params.get("trainingBaseName").toString());
+        if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
+        // 按时间倒序
+        entityWrapper.orderBy("training_achieve_id", false);
         Page<InnovateTrainingBaseAchieveEntity> page = this.selectPage(
                 new Query<InnovateTrainingBaseAchieveEntity>(params).getPage(),
-                entityEntityWrapper
+                entityWrapper
         );
 
         return new PageUtils(page);
@@ -50,27 +55,42 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
 
     /**
      * 导出
-     * @param trainAchiveIds
+     * @param
      * @return
      */
     @Override
-    public List<InnovateTrainingBaseAchieveEntity> queryListByIds(Long[] trainAchiveIds) {
-        List<InnovateTrainingBaseAchieveEntity> baseAchieveEntities = new ArrayList<>();
-        if (trainAchiveIds.length > 0) {
-            baseAchieveEntities = this.selectBatchIds(Arrays.asList(trainAchiveIds));
+    public List<InnovateTrainingBaseAchieveEntity> queryListByIds(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("materialYear", null);
+        if (params.get("ids") != null && !params.get("ids").toString().equals("[]")) {
+            map.put("ids", params.get("ids"));
         } else {
-            EntityWrapper<InnovateTrainingBaseAchieveEntity> wrapper = new EntityWrapper<>();
-            wrapper.eq("is_del", 0);
-            baseAchieveEntities = this.selectList(wrapper);
+            map.put("ids", null);
         }
-        for (InnovateTrainingBaseAchieveEntity b : baseAchieveEntities) {
-            InnovateInstituteEntity innovateInstituteEntity = innovateInstituteService.selectById(b.getInstituteId());
-            if (innovateInstituteEntity.getInstituteName() != null)
-                b.setInstituteName(innovateInstituteEntity.getInstituteName());
-        }
+        map.put("materialYear", params.get("materialYear"));
+        map.put("instituteId", params.get("instituteId"));
 
-        return baseAchieveEntities;
+        return baseMapper.selectMaterialYear(map);
     }
+
+//    @Override
+//    public List<InnovateTrainingBaseAchieveEntity> queryListByIds(Long[] trainAchiveIds) {
+//        List<InnovateTrainingBaseAchieveEntity> baseAchieveEntities = new ArrayList<>();
+//        if (trainAchiveIds.length > 0) {
+//            baseAchieveEntities = this.selectBatchIds(Arrays.asList(trainAchiveIds));
+//        } else {
+//            EntityWrapper<InnovateTrainingBaseAchieveEntity> wrapper = new EntityWrapper<>();
+//            wrapper.eq("is_del", 0);
+//            baseAchieveEntities = this.selectList(wrapper);
+//        }
+//        for (InnovateTrainingBaseAchieveEntity b : baseAchieveEntities) {
+//            InnovateInstituteEntity innovateInstituteEntity = innovateInstituteService.selectById(b.getInstituteId());
+//            if (innovateInstituteEntity.getInstituteName() != null)
+//                b.setInstituteName(innovateInstituteEntity.getInstituteName());
+//        }
+//
+//        return baseAchieveEntities;
+//    }
 
     @Override
     public R insertModel(InnovateTrainingBaseAttachModel attachModel) {

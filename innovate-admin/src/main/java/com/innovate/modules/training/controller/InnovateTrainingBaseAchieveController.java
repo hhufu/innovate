@@ -97,7 +97,7 @@ public class InnovateTrainingBaseAchieveController {
      */
     @PostMapping("/export")
     @RequiresPermissions("training:innovatetrainingbaseinfo:list")
-    public void export(@RequestBody Long[] trainBaseIds, HttpServletResponse response){
+    public void export(@RequestBody Map<String, Object> params, HttpServletResponse response){
         List<InnovateTrainingBaseAchieveEntity> trainBaseInfoList = new ArrayList<>();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -112,7 +112,7 @@ public class InnovateTrainingBaseAchieveController {
             if ("wzxyGLY".equals(adminName) || true){
                 excelWriter = EasyExcel.write(response.getOutputStream(), InnovateTrainingBaseAchieveEntity.class).build();
                 WriteSheet writeSheet = EasyExcel.writerSheet(0, "实训基地成果信息").build();
-                trainBaseInfoList = innovateTrainingBaseAchieveService.queryListByIds(trainBaseIds);
+                trainBaseInfoList = innovateTrainingBaseAchieveService.queryListByIds(params);
                 excelWriter.write(trainBaseInfoList,writeSheet);
             }
         }catch (Exception e){

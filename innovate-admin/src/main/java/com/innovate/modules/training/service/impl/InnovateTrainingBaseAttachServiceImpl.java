@@ -1,5 +1,6 @@
 package com.innovate.modules.training.service.impl;
 
+import com.innovate.modules.training.entity.InnovateTrainingAchieveTypeEntity;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -18,9 +19,12 @@ public class InnovateTrainingBaseAttachServiceImpl extends ServiceImpl<InnovateT
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        EntityWrapper<InnovateTrainingBaseAttachEntity> entityWrapper = new EntityWrapper<>();
+        // 按时间倒序
+        entityWrapper.orderBy("attach_id", false);
         Page<InnovateTrainingBaseAttachEntity> page = this.selectPage(
                 new Query<InnovateTrainingBaseAttachEntity>(params).getPage(),
-                new EntityWrapper<>()
+                entityWrapper
         );
 
         return new PageUtils(page);

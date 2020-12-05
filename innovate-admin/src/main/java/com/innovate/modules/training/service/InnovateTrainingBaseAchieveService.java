@@ -22,7 +22,7 @@ public interface InnovateTrainingBaseAchieveService extends IService<InnovateTra
 
     PageUtils queryPage(Map<String, Object> params);
 
-    List<InnovateTrainingBaseAchieveEntity> queryListByIds(Long[] trainAchiveIds);
+    List<InnovateTrainingBaseAchieveEntity> queryListByIds(Map<String, Object> params);
     @Transactional
     boolean update(InnovateTrainingBaseAttachModel attachModel);
     @Transactional

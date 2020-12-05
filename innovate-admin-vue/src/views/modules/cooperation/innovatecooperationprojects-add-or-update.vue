@@ -32,28 +32,23 @@
         placeholder="选择年度">
       </el-date-picker>
     </el-form-item>
-<!--    <el-form-item label="主持人" prop="userId">-->
-<!--      <el-input v-model="dataForm.userId" placeholder="主持人"></el-input>-->
-<!--    </el-form-item>-->
     <el-form-item label="起始时间" prop="startTime">
       <el-date-picker
         v-model="dataForm.startTime"
         type="date"
-        value-format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd  HH:mm:ss"
         format="yyyy-MM-dd"
         placeholder="选择日期">
       </el-date-picker>
-<!--      <el-input v-model="dataForm.startTime" placeholder="起始时间"></el-input>-->
     </el-form-item>
     <el-form-item label="截止时间" prop="endTime">
       <el-date-picker
         v-model="dataForm.endTime"
         type="date"
-        value-format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd  HH:mm:ss"
         format="yyyy-MM-dd"
         placeholder="选择日期">
       </el-date-picker>
-<!--      <el-input v-model="dataForm.endTime" placeholder="截止时间"></el-input>-->
     </el-form-item>
       <el-form-item label="附件要求">
         <template>
@@ -75,7 +70,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileList.length === 0" style="color: crimson">*请上传相关附件</span>
+          <span v-if="this.attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -213,18 +208,11 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.dataForm.userId = this.$store.state.user.id
             this.$http({
               url: this.$http.adornUrl(`/cooperation/innovatecooperationprojects/${!this.dataForm.cooperationId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                // 'cooperationId': this.dataForm.cooperationId || undefined,
-                // 'projectName': this.dataForm.projectName,
-                // 'instituteId': this.dataForm.instituteId,
-                // 'enterpriseName': this.dataForm.enterpriseName,
-                // 'cooperationYear': this.dataForm.cooperationYear,
-                // 'userId': this.dataForm.userId,
-                // 'startTime': this.dataForm.startTime,
-                // 'endTime': this.dataForm.endTime
                 cooperationProjectsEntity: this.dataForm,
                 delMaterialsList: this.delMaterialsList,
                 cooperationMaterialsList: this.attachLists

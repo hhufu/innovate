@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 企业协议管理
@@ -19,4 +20,6 @@ public interface InnovateCooperationAgreementDao extends BaseMapper<InnovateCoop
     void deleteList(List<Long> list);
 
     int insertE(InnovateCooperationAgreementEntity cooperationAgreementEntity);
+
+    List<InnovateCooperationAgreementEntity> selectAgreementYear(Map<String, Object> map);
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 实训基地成果表
@@ -19,4 +20,6 @@ public interface InnovateTrainingBaseAchieveDao extends BaseMapper<InnovateTrain
     int insertE(InnovateTrainingBaseAchieveEntity trainingBaseAchieveEntity);
 
     int deleteList(List<Long> asList);
+
+    List<InnovateTrainingBaseAchieveEntity> selectMaterialYear(Map<String, Object> map);
 }

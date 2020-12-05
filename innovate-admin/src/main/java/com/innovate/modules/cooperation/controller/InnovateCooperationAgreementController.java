@@ -96,7 +96,7 @@ public class InnovateCooperationAgreementController {
      */
     @PostMapping("/export")
     @RequiresPermissions("cooperation:innovatecooperationagreement:list")
-    public void export(@RequestBody Long[] cooperationagreementIds, HttpServletResponse response){
+    public void export(@RequestBody Map<String, Object> params, HttpServletResponse response){
         List<InnovateCooperationAgreementEntity> cooperationagreementIdsList = new ArrayList<>();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -111,7 +111,7 @@ public class InnovateCooperationAgreementController {
             if ("wzxyGLY".equals(adminName) || true){
                 excelWriter = EasyExcel.write(response.getOutputStream(), InnovateCooperationAgreementEntity.class).build();
                 WriteSheet writeSheet = EasyExcel.writerSheet(0, "企业协议管理信息").build();
-                cooperationagreementIdsList = innovateCooperationAgreementService.queryListByIds(cooperationagreementIds);
+                cooperationagreementIdsList = innovateCooperationAgreementService.queryListByIds(params);
                 excelWriter.write(cooperationagreementIdsList,writeSheet);
             }
         }catch (Exception e){

@@ -18,11 +18,13 @@ public class InnovateTrainingAchieveTypeServiceImpl extends ServiceImpl<Innovate
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        EntityWrapper<InnovateTrainingAchieveTypeEntity> entityEntityWrapper = new EntityWrapper<>();
-        if (params.get("trainingAchieveType") != null) entityEntityWrapper.like("training_achieve_type", params.get("trainingAchieveType").toString());
+        EntityWrapper<InnovateTrainingAchieveTypeEntity> entityWrapper = new EntityWrapper<>();
+        if (params.get("trainingAchieveType") != null) entityWrapper.like("training_achieve_type", params.get("trainingAchieveType").toString());
+        // 按时间倒序
+        entityWrapper.orderBy("material_type_id", false);
         Page<InnovateTrainingAchieveTypeEntity> page = this.selectPage(
                 new Query<InnovateTrainingAchieveTypeEntity>(params).getPage(),
-                entityEntityWrapper
+                entityWrapper
         );
 
         return new PageUtils(page);

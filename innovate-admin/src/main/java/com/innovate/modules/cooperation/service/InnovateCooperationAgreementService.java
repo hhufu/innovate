@@ -23,7 +23,7 @@ public interface InnovateCooperationAgreementService extends IService<InnovateCo
 
     PageUtils queryPage(Map<String, Object> params);
 
-    List<InnovateCooperationAgreementEntity> queryListByIds(Long[] cooperationagreementIds);
+    List<InnovateCooperationAgreementEntity> queryListByIds(Map<String, Object> params);
 
     void deleteList(List<Long> asList);
 

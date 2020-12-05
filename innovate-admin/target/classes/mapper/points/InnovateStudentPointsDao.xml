@@ -11,5 +11,23 @@
         <result property="pointsReason" column="points_reason"/>
     </resultMap>
 
+    <select id="selectPointsIds" parameterType="map" resultType="InnovateStudentPointsEntity">
+        select s.*, p.per_class_no, u.name
+        from innovate_student_points s LEFT JOIN innovate_user_person_info p ON s.stu_num = p.per_stu_no
+        LEFT JOIN sys_user u ON s.stu_num = u.username
+        where 1 = 1
+        <if test="ids != null">
+        and s.id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+           #{id}
+        </foreach>
+        </if>
+        <if test="stuNum != null">
+            and s.stu_num = #{stuNum}
+        </if>
+        <if test="instituteId != null">
+            and u.institute_id = #{instituteId}
+        </if>
+    </select>
 
 </mapper>

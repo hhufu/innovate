@@ -46,4 +46,24 @@
             <if test="userId != null">#{userId}</if>
         </trim>
     </insert>
+
+    <select id="selectAgreementYear" parameterType="map" resultType="InnovateCooperationAgreementEntity">
+        select a.*, u.name
+        from innovate_cooperation_agreement a LEFT JOIN sys_user u ON a.user_id = u.user_id
+        where 1 = 1
+        <if test="ids != null">
+            and a.enterprise_id in
+            <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="agreementYear != null">
+            and a.agreement_year = #{agreementYear}
+        </if>
+        <if test="instituteId != null">
+            and a.institute_id = #{instituteId}
+        </if>
+
+    </select>
+
 </mapper>

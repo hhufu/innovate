@@ -4,6 +4,7 @@ import com.innovate.common.utils.R;
 import com.innovate.modules.cooperation.entity.InnovateCooperationAttachModel;
 import com.innovate.modules.cooperation.entity.InnovateCooperationMaterialsEntity;
 import com.innovate.modules.cooperation.service.InnovateCooperationMaterialsService;
+import com.innovate.modules.points.entity.InnovateStudentPointsEntity;
 import com.innovate.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,19 +35,16 @@ public class InnovateCooperationProjectsServiceImpl extends ServiceImpl<Innovate
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateCooperationProjectsEntity> entityWrapper = new EntityWrapper<>();
         if (params.get("projectName") != null) entityWrapper.like("project_name", params.get("projectName").toString());
+        if (params.get("cooperationYear") != null) entityWrapper.eq("cooperation_year", params.get("cooperationYear").toString());
         if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
+        // 按时间倒序
+        entityWrapper.orderBy("cooperation_id", false);
         Page<InnovateCooperationProjectsEntity> page = this.selectPage(
                 new Query<InnovateCooperationProjectsEntity>(params).getPage(),
                 entityWrapper
         );
 
         return new PageUtils(page);
-    }
-    @Override
-    public List<InnovateCooperationProjectsEntity> queryListByIds(Long[] cooperationProjectsInfoIds) {
-        return cooperationProjectsInfoIds.length > 0
-                ? this.selectBatchIds(Arrays.asList(cooperationProjectsInfoIds))
-                : this.selectList(null);
     }
 
     @Override
@@ -57,7 +55,7 @@ public class InnovateCooperationProjectsServiceImpl extends ServiceImpl<Innovate
     @Override
     public R insertModel(InnovateCooperationAttachModel attachModel) {
         InnovateCooperationProjectsEntity cooperationProjectsEntity = attachModel.getCooperationProjectsEntity();
-        int i = innovateCooperationProjectsDao.insertE(cooperationProjectsEntity);
+        int i = baseMapper.insertE(cooperationProjectsEntity);
         if (attachModel.getCooperationMaterialsList() != null) {
             for (InnovateCooperationMaterialsEntity a : attachModel.getCooperationMaterialsList()) {
                 a.setAttachTime(new Date());
@@ -72,7 +70,7 @@ public class InnovateCooperationProjectsServiceImpl extends ServiceImpl<Innovate
 
     @Override
     public boolean update(InnovateCooperationAttachModel attachModel) {
-        innovateCooperationProjectsDao.updateById(attachModel.getCooperationProjectsEntity());
+        baseMapper.updateById(attachModel.getCooperationProjectsEntity());
         if (attachModel.getDelMaterialsList() != null)
             for (InnovateCooperationMaterialsEntity att : attachModel.getDelMaterialsList()) {
                 if (att.getMaterialsId() != null) {// 删除附件
@@ -88,9 +86,10 @@ public class InnovateCooperationProjectsServiceImpl extends ServiceImpl<Innovate
             }
         return false;
     }
+
     @Override
     public R info(Long cooperationId) {
-        InnovateCooperationProjectsEntity innovateCooperationProjectsEntity = innovateCooperationProjectsDao.selectById(cooperationId);
+        InnovateCooperationProjectsEntity innovateCooperationProjectsEntity = baseMapper.selectById(cooperationId);
         // 获取申请用户信息
         innovateCooperationProjectsEntity.setUserEntity(sysUserService.selectById(innovateCooperationProjectsEntity.getUserId()));
         // 获取申请附件信息
@@ -100,5 +99,20 @@ public class InnovateCooperationProjectsServiceImpl extends ServiceImpl<Innovate
         List<InnovateCooperationMaterialsEntity> materialsEntityList = innovateCooperationMaterialsService.selectByMap(map);
         return R.ok().put("innovateCooperationProjectsEntity", innovateCooperationProjectsEntity)
                 .put("materialsEntityList", materialsEntityList);
+    }
+
+    @Override
+    public List<InnovateCooperationProjectsEntity> queryListByIds(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("cooperationYear", null);
+        if (params.get("ids") != null && !params.get("ids").toString().equals("[]")) {
+            map.put("ids", params.get("ids"));
+        } else {
+            map.put("ids", null);
+        }
+        map.put("cooperationYear", params.get("cooperationYear"));
+        map.put("instituteId", params.get("instituteId"));
+
+        return baseMapper.selectCooperationYear(map);
     }
 }

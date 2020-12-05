@@ -24,6 +24,8 @@ public class InnovateRegisterAuthenticationServiceImpl extends ServiceImpl<Innov
         EntityWrapper<InnovateRegisterAuthenticationEntity> entityWrapper = new EntityWrapper<>();
         if (params.get("enterpriseName") != null) entityWrapper.like("enterprise_name", params.get("enterpriseName").toString());
         if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
+        // 按时间倒序
+        entityWrapper.orderBy("authentication_id", false);
         Page<InnovateRegisterAuthenticationEntity> page = this.selectPage(
                 new Query<InnovateRegisterAuthenticationEntity>(params).getPage(),
                 entityWrapper

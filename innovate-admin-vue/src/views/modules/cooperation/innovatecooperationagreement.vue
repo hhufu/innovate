@@ -2,6 +2,16 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-date-picker
+          @change="getDataList"
+          v-model="dataForm.agreementYear"
+          align="right"
+          clearable
+          type="year"
+          placeholder="请选择年度">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
         <el-input v-model="dataForm.enterpriseName" placeholder="企业名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
@@ -101,7 +111,8 @@
     data () {
       return {
         dataForm: {
-          enterpriseName: ''
+          enterpriseName: '',
+          agreementYear: new Date()
         },
         dataList: [],
         pageIndex: 1,
@@ -132,7 +143,8 @@
             'page': this.pageIndex,
             'limit': this.pageSize,
             'enterpriseName': this.dataForm.enterpriseName,
-            'isDel': 0
+            isDel: 0,
+            'agreementYear':this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear.getFullYear(),
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -230,13 +242,18 @@
       // 导出
       exportAchieve () {
         this.dataListLoading = true
-        var enterpriseIds = this.dataListSelections.map(item => {
+        var ids = this.dataListSelections.map(item => {
           return item.enterpriseId
         })
+        let dataForm = {
+          ids: ids,
+          instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.dataForm.instituteId,
+          agreementYear: (this.isAuth("cooperation:export:erAdmin") === true || this.isAuth("cooperation:export:admin") === true) ? null : this.dataForm.agreementYear.getFullYear()
+        }
         this.$http({
           url: this.$http.adornUrl('/cooperation/innovatecooperationagreement/export'),
           method: 'post',
-          data: this.$http.adornData(enterpriseIds, false),
+          data: this.$http.adornData(dataForm, false),
           responseType: 'blob'
         }).then((res) => {
           this.dataListLoading = false

@@ -19,12 +19,12 @@
         <td colspan="8">{{dataForm.trainingBaseName}}</td>
       </tr>
       <tr align='center'>
-      <th colspan="2">实训基地</th>
-      <td colspan="8">{{dataForm.trainingBaseId}}</td>
+      <th colspan="2">二级学院</th>
+      <td colspan="8">{{dataForm.instituteName}}</td>
     </tr>
       <tr align='center' >
         <th colspan="2">材料年度</th>
-        <td colspan="8">{{dataForm.materialYear}}</td>
+        <td colspan="8">{{dataForm.materialYear}}年</td>
       </tr>
       <tr align='center'>
         <th colspan="2">材料类型</th>
@@ -75,6 +75,8 @@
           dataForm: {
             trainingAchieveId: 0,
             trainingBaseName: '',
+            instituteId: '',
+            instituteName: '', // 二级学院名称
             materialYear: '',
             materialType: '',
             materialTypeId: '',
@@ -87,6 +89,7 @@
       },
       methods: {
         init (id) {
+          this.getInstituteName()
           this.url = this.$http.adornUrl(`/training/innovatetrainingbaseachieve/upload?token=${this.$cookie.get('token')}`)
           this.dataForm.trainingAchieveId = id || 0
           this.visible = true
@@ -107,6 +110,8 @@
                 if (data && data.code === 0) {
                   this.dataForm.trainingBaseName = data.innovateTrainingBaseAchieveEntity.trainingBaseName
                   this.dataForm.materialYear = data.innovateTrainingBaseAchieveEntity.materialYear
+                  this.dataForm.instituteId = data.innovateTrainingBaseAchieveEntity.instituteId
+                  this.fomatterInstitute(data.innovateTrainingBaseAchieveEntity)
                   this.dataForm.materialType = data.innovateTrainingBaseAchieveEntity.materialType
                   this.dataForm.materialTypeId = data.innovateTrainingBaseAchieveEntity.materialTypeId
                   this.dataForm.trainingBaseId = data.innovateTrainingBaseAchieveEntity.trainingBaseId
@@ -163,6 +168,26 @@
             console.log(err)
             this.downloadLoading = false
           })
+        },
+        getInstituteName () {
+          debugger
+          this.$http({
+            url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+            method: 'get'
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.instituteList = data.institute
+            }
+          })
+        },
+        // 格式化学院名称
+        fomatterInstitute (e) {
+          for (let i = 0; i <= this.instituteList.length; i++) {
+            if (parseInt(this.instituteList[i].instituteId) === parseInt(e.instituteId)) {
+              this.dataForm.instituteName = this.instituteList[i].instituteName
+              break
+            }
+          }
         }
       }
     }

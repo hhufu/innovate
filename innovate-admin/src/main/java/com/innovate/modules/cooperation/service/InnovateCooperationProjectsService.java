@@ -21,7 +21,7 @@ public interface InnovateCooperationProjectsService extends IService<InnovateCoo
 
     PageUtils queryPage(Map<String, Object> params);
 
-    List<InnovateCooperationProjectsEntity> queryListByIds(Long[] cooperationProjectsInfoIds);
+    List<InnovateCooperationProjectsEntity> queryListByIds(Map<String, Object> params);
 
     void deleteList(List<Long> asList);
 

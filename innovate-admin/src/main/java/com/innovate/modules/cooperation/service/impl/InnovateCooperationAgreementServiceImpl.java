@@ -3,6 +3,7 @@ package com.innovate.modules.cooperation.service.impl;
 import com.innovate.common.utils.R;
 import com.innovate.modules.cooperation.entity.InnovateCooperationAttachModel;
 import com.innovate.modules.cooperation.entity.InnovateCooperationMaterialsEntity;
+import com.innovate.modules.cooperation.entity.InnovateCooperationProjectsEntity;
 import com.innovate.modules.cooperation.service.InnovateCooperationMaterialsService;
 import com.innovate.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,10 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateCooperationAgreementEntity> entityWrapper = new EntityWrapper<>();
         if (params.get("enterpriseName") != null) entityWrapper.like("enterprise_name", params.get("enterpriseName").toString());
+        if (params.get("agreementYear") != null) entityWrapper.eq("agreement_year", params.get("agreementYear").toString());
         if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
+        // 按时间倒序
+        entityWrapper.orderBy("enterprise_id", false);
         Page<InnovateCooperationAgreementEntity> page = this.selectPage(
                 new Query<InnovateCooperationAgreementEntity>(params).getPage(),
                 entityWrapper
@@ -42,11 +46,20 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
         return new PageUtils(page);
     }
 
+
     @Override
-    public List<InnovateCooperationAgreementEntity> queryListByIds(Long[] cooperationagreementIds) {
-        return cooperationagreementIds.length > 0
-                ? this.selectBatchIds(Arrays.asList(cooperationagreementIds))
-                : this.selectList(null);
+    public List<InnovateCooperationAgreementEntity> queryListByIds(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("agreementYear", null);
+        if (params.get("ids") != null && !params.get("ids").toString().equals("[]")) {
+            map.put("ids", params.get("ids"));
+        } else {
+            map.put("ids", null);
+        }
+        map.put("agreementYear", params.get("agreementYear"));
+        map.put("instituteId", params.get("instituteId"));
+
+        return baseMapper.selectAgreementYear(map);
     }
 
     @Override
