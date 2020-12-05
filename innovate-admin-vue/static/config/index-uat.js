@@ -5,7 +5,7 @@
   window.SITE_CONFIG = {};
 
   // api接口请求地址
-  window.SITE_CONFIG['baseUrl'] = 'http://47.112.103.217:8080/innovate-admin';
+  window.SITE_CONFIG['baseUrl'] = 'http://47.112.103.217:8088/innovate-admin';
 
   // cdn地址 = 域名 + 版本号
   window.SITE_CONFIG['domain']  = './'; // 域名
