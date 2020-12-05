@@ -70,7 +70,7 @@ public class InnovateEnterpriseAchieveController {
 
 		List<InnovateEnterpriseAttachEntity> list = innovateEnterpriseAttachService.selectList(
                 new EntityWrapper<InnovateEnterpriseAttachEntity>()
-                        .eq("function_id", enterpAchieveId).eq("is_del", 0)
+                        .eq("function_id", enterpAchieveId).eq("is_del", 0).eq("attach_type",3)
         );
         InnovateEnterpriseInfoModel achieveModel = new InnovateEnterpriseInfoModel();
         achieveModel.setAchieveEntity(innovateEnterpriseAchieve);

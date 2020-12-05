@@ -119,7 +119,7 @@ public class InnovateEnterpriseInfoController {
         InnovateEnterpriseInfoEntity innovateEnterpriseInfo = innovateEnterpriseInfoService.selectById(settledEnterpId);
         List<InnovateEnterpriseAttachEntity> list = innovateEnterpriseAttachService.selectList(
                 new EntityWrapper<InnovateEnterpriseAttachEntity>()
-                        .eq("function_id", settledEnterpId).eq("is_del", 0)
+                        .eq("function_id", settledEnterpId).eq("is_del", 0).eq("attach_type",1)
         );
         InnovateEnterpriseInfoModel infoModel = new InnovateEnterpriseInfoModel();
         infoModel.setInfoEntity(innovateEnterpriseInfo);

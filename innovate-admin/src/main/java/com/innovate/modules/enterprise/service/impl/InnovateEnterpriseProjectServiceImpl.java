@@ -22,15 +22,27 @@ public class InnovateEnterpriseProjectServiceImpl extends ServiceImpl<InnovateEn
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        Object userId = params.get("project_user_id");
+        Object userId = params.get("enterpriseUserId");
+        Object instituteId = params.get("instituteId");
         Object projectName = params.get("project_name");
+        Object projectYear = params.get("projectYear");
         EntityWrapper<InnovateEnterpriseProjectEntity> wrapper = new EntityWrapper<>();
         wrapper.eq("is_del", 0);
-        if (userId != null) {
-            wrapper.eq("project_user_id", userId.toString());
+
+        if (userId!=null ){
+//            if (instituteId!=null){
+//                wrapper.eq("institute_id", instituteId.toString());
+//            }else {
+                wrapper.eq("project_user_id", userId.toString());
+//            }
         }
+
         if (!"".equals(projectName)){
             wrapper.like("project_name" , projectName.toString());
+        }
+
+        if (projectYear != null){
+            wrapper.eq("project_year" , projectYear.toString());
         }
         Page<InnovateEnterpriseProjectEntity> page = this.selectPage(
                 new Query<InnovateEnterpriseProjectEntity>(params).getPage(),

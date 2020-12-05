@@ -67,17 +67,17 @@
         label="主要经营范围">
       </el-table-column>
 
-      <el-table-column
-        prop="applyStatus"
-        header-align="center"
-        align="center"
-        label="审核状态">
-        <template slot-scope="scope">
-          <el-tag type="danger"
-                  disable-transitions>未审核
-          </el-tag>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="applyStatus"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="审核状态">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-tag type="danger"-->
+<!--                  disable-transitions>未审核-->
+<!--          </el-tag>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
 
       <el-table-column
         fixed="right"

@@ -2,6 +2,15 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-date-picker
+          v-model="dataForm.projectYear"
+          @change="getDataList"
+          align="right"
+          type="year"
+          placeholder="请选择年度">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
         <el-input v-model="dataForm.projectName" placeholder="项目名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
@@ -47,12 +56,18 @@
         header-align="center"
         align="center"
         label="项目开始时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.projStartTime, "{y}年{m}月{d}日")}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="projStopTime"
         header-align="center"
         align="center"
         label="截止时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.projStopTime, "{y}年{m}月{d}日")}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="projectYear"
@@ -101,7 +116,8 @@ export default {
   data () {
     return {
       dataForm: {
-        projectName: ''
+        projectName: '',
+        projectYear:null
       },
       dataList: [],
       pageIndex: 1,
@@ -130,7 +146,10 @@ export default {
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
-          project_name: this.dataForm.projectName
+          project_name: this.dataForm.projectName,
+          projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear,
+          enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {

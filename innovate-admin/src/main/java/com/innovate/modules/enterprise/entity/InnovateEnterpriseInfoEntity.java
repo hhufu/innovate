@@ -60,8 +60,8 @@ public class InnovateEnterpriseInfoEntity implements Serializable {
 	 * 入驻时间
 	 */
 	@ExcelProperty(value = "入驻时间")
-	@JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-	@DateTimeFormat("yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd")
+	@DateTimeFormat("yyyy-MM-dd")
 	private Date settledTime;
 	/**
 	 * 企业类型

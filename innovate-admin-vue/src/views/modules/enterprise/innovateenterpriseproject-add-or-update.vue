@@ -5,12 +5,12 @@
     :visible.sync="visible"
     @close="handleClose">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
-             label-width="80px">
+             label-width="120px">
       <el-form-item label="企业 id" prop="enterpriseId" v-show="false">
         <el-input v-model="dataForm.enterpriseId" placeholder="企业 id"></el-input>
       </el-form-item>
       <el-form-item label="企业名称" prop="enterpriseName">
-        <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" @change="changeName">
+        <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" @change="changeName" style="display: unset">
           <el-option v-for="n in projectName" :key="n.enterpriseName" :label="n.enterpriseName"
                      :value="n.enterpriseName"></el-option>
         </el-select>
@@ -19,41 +19,36 @@
         <el-input v-model="dataForm.projectName" placeholder="项目名称"></el-input>
       </el-form-item>
       <el-form-item label="项目时间" prop="projStartTime">
-        <el-date-picker
+        <el-date-picker style="width: 100%"
           v-model="dataForm.projStartTime"
-          type="datetime"
+          type="date"
           placeholder="项目开始时间"
-          value-format="yyyy-MM-dd HH:mm:ss">
+          value-format="yyyy-MM-dd">
         </el-date-picker>
 
       </el-form-item>
       <el-form-item label="截止时间" prop="projStopTime">
-        <el-date-picker
+        <el-date-picker style="width: 100%"
           v-model="dataForm.projStopTime"
-          type="datetime"
+          type="date"
           placeholder="截止时间"
-          value-format="yyyy-MM-dd HH:mm:ss">
+          value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
+
       <el-form-item label="项目年度" prop="projectYear">
-        <el-select v-model="dataForm.projectYear" placeholder="项目年度">
-          <el-option label="一年期" value="一年期"></el-option>
-          <el-option label="二年期" value="二年期"></el-option>
-          <el-option label="三年期" value="三年期"></el-option>
-        </el-select>
+        <el-date-picker style="width: 100%"
+          v-model="dataForm.projectYear"
+          type="year"
+          format="yyyy"
+          value-format="yyyy"
+          placeholder="选择年度">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="项目负责人" prop="projectDirector">
         <el-input v-model="dataForm.projectDirector" placeholder="项目负责人"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="用户id" prop="projectUserId" >
-        <el-input v-model="dataForm.projectUserId" placeholder="用户id"></el-input>
-      </el-form-item> -->
-<!--      <el-form-item label="是否删除" prop="isDel" v-if="dataForm.enterpProjId">-->
-<!--        <el-radio-group v-model="dataForm.isDel">-->
-<!--          <el-radio :label="0">否</el-radio>-->
-<!--          <el-radio :label="1">是</el-radio>-->
-<!--        </el-radio-group>-->
-<!--      </el-form-item>-->
+
       <el-form-item label="相关附件" prop="attachLists">
         <el-upload
           class="upload-demo"
@@ -137,7 +132,7 @@
         fileIsNull: false,
         fileList: [],
         url: "",
-        delAttachLists:[]
+        delAttachLists: []
       };
     },
     methods: {
@@ -235,18 +230,20 @@
                 this.$message.error(data.msg);
               }
             });
-            this.$http({
-              url: this.$http.adornUrl(
-                `/enterprise/innovateenterpriseattach/delete`
-              ),
-              method: "post",
-              data: this.$http.adornData(
-                this.delAttachLists, false
-              )
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-              }
-            });
+            if (this.delAttachEntityList) {
+              this.$http({
+                url: this.$http.adornUrl(
+                  `/enterprise/innovateenterpriseattach/delete`
+                ),
+                method: "post",
+                data: this.$http.adornData(
+                  this.delAttachLists, false
+                )
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                }
+              });
+            }
           }
         });
       },
@@ -295,7 +292,7 @@
         this.dataForm.attachLists = tempFileList;
       },
       // 清空附件列表
-      handleClose () {
+      handleClose() {
         this.fileList = []
       }
     }

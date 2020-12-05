@@ -5,7 +5,7 @@
     :visible.sync="visible"
     @close="handleClose">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
-             label-width="80px">
+             label-width="120px">
       <el-form-item label="企业名称" prop="enterpriseName">
         <el-input v-model="dataForm.enterpriseName" placeholder="企业名称"></el-input>
       </el-form-item>
@@ -16,7 +16,7 @@
         <el-input v-model="dataForm.enterpriseDirector" placeholder="企业负责人姓名"></el-input>
       </el-form-item>
       <el-form-item label="负责人所在学院" prop="departmentDirector">
-        <el-select v-model="dataForm.departmentDirector" placeholder="负责人所在学院" @change="changeName">
+        <el-select v-model="dataForm.departmentDirector" placeholder="负责人所在学院" @change="changeName" style="display: unset">
           <el-option v-for="item in instituteList" :key="item.instituteName" :label="item.instituteName"
                      :value="item.instituteName">
           </el-option>
@@ -27,15 +27,15 @@
       </el-form-item>
 
       <el-form-item label="入驻时间" prop="settledTime">
-        <el-date-picker
+        <el-date-picker style="width: 100%"
           v-model="dataForm.settledTime"
-          type="datetime"
+          type="date"
           placeholder="入驻时间"
-          value-format="yyyy-MM-dd HH:mm:ss">
+          value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="企业类型" prop="enterpriseType">
-        <el-select v-model="dataForm.enterpriseType" placeholder="企业类型">
+        <el-select v-model="dataForm.enterpriseType" placeholder="企业类型" style="display: unset">
           <el-option v-for="item in projectTypeList" :key="item.value" :label="item.label" :value="item.label">
           </el-option>
         </el-select>
@@ -229,18 +229,20 @@
                 this.$message.error(data.msg)
               }
             })
-            this.$http({
-              url: this.$http.adornUrl(
-                `/enterprise/innovateenterpriseattach/delete`
-              ),
-              method: "post",
-              data: this.$http.adornData(
-                this.delAttachLists, false
-              )
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-              }
-            });
+            if (this.delAttachEntityList) {
+              this.$http({
+                url: this.$http.adornUrl(
+                  `/enterprise/innovateenterpriseattach/delete`
+                ),
+                method: "post",
+                data: this.$http.adornData(
+                  this.delAttachLists, false
+                )
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                }
+              });
+            }
           }
         })
       },
