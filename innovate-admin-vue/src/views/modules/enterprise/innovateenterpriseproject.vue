@@ -141,7 +141,7 @@ export default {
     return {
       dataForm: {
         projectName: '',
-        projectYear:null
+        projectYear:new Date()
       },
       dataList: [],
       pageIndex: 1,
@@ -174,7 +174,7 @@ export default {
           page: this.pageIndex,
           limit: this.pageSize,
           project_name: this.dataForm.projectName,
-          projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear,
+          projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear.getFullYear(),
           applyStatus: this.apply_status,
           enterpriseUserId: this.enterpriseUserId,
           instituteId: this.instituteId
