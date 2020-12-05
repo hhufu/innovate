@@ -79,5 +79,10 @@ public class InnovateEnterpriseProjectEntity implements Serializable {
      */
 	@ExcelIgnore
     private Integer isDel;
+    /**
+     * 审核状态
+     */
+    @ExcelIgnore
+    private String applyStatus;
 
 }

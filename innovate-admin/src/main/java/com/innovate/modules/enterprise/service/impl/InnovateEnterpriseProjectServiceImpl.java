@@ -22,27 +22,37 @@ public class InnovateEnterpriseProjectServiceImpl extends ServiceImpl<InnovateEn
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        // 用户id
         Object userId = params.get("enterpriseUserId");
+//        学院id
         Object instituteId = params.get("instituteId");
+//        项目名称
         Object projectName = params.get("project_name");
+//        项目年度
         Object projectYear = params.get("projectYear");
+//审核状态
+        Object applyStatus = params.get("applyStatus");
         EntityWrapper<InnovateEnterpriseProjectEntity> wrapper = new EntityWrapper<>();
         wrapper.eq("is_del", 0);
 
-        if (userId!=null ){
+        if (userId != null) { //非空无管理权限
 //            if (instituteId!=null){
 //                wrapper.eq("institute_id", instituteId.toString());
 //            }else {
-                wrapper.eq("project_user_id", userId.toString());
+            wrapper.eq("project_user_id", userId.toString());
 //            }
         }
 
-        if (!"".equals(projectName)){
-            wrapper.like("project_name" , projectName.toString());
+        if (!"".equals(projectName)) { //根据项目名称搜索
+            wrapper.like("project_name", projectName.toString());
         }
 
-        if (projectYear != null){
-            wrapper.eq("project_year" , projectYear.toString());
+        if (projectYear != null) { //根据年份搜索
+            wrapper.eq("project_year", projectYear.toString());
+        }
+
+        if (applyStatus != null) {
+            wrapper.eq("apply_status", applyStatus.toString());
         }
         Page<InnovateEnterpriseProjectEntity> page = this.selectPage(
                 new Query<InnovateEnterpriseProjectEntity>(params).getPage(),

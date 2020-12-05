@@ -26,26 +26,23 @@ public class InnovateEnterpriseInfoServiceImpl extends ServiceImpl<InnovateEnter
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-//        SysUserEntity loginUser = ShiroUtils.getUserEntity();
-//        if (!"SuperAdmin".equals(loginUser.getUsername())) {
-//            Long userId = loginUser.getUserId();
-//            params.put("project_user_id", userId);
-//        }
-//        Object userId = params.get("project_user_id");
+        //企业名称 搜索信息
         Object enterpriseName = params.get("enterpriseName");
+        //用户id
         Object userId = params.get("enterpriseUserId");
+        //学院id
         Object instituteId = params.get("instituteId");
         EntityWrapper<InnovateEnterpriseInfoEntity> wrapper = new EntityWrapper<>();
         wrapper.eq("is_del", 0).eq("apply_status",params.get("apply_status"));
 
-        if (userId!=null ){
-            if (instituteId!=null){
+        if (userId!=null ){ //空为管理员 不执行
+            if (instituteId!=null){   //非空 二级学院管理员
                 wrapper.eq("institute_id", instituteId.toString());
-            }else {
+            }else {  //无管理权限 只获取自己得信息
                 wrapper.eq("enterprise_user_id", userId.toString());
             }
         }
-        if (!"".equals(enterpriseName)){
+        if (!"".equals(enterpriseName)){  //根据企业名称搜索
             wrapper.like("enterprise_name" , enterpriseName.toString());
         }
         Page<InnovateEnterpriseInfoEntity> page = this.selectPage(

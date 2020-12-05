@@ -15,18 +15,11 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseproject:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseproject:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+<!--        <el-button v-if="isAuth('enterprise:innovateenterpriseproject:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
+<!--        <el-button v-if="isAuth('enterprise:innovateenterpriseproject:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
         <el-button v-if="isAuth('enterprise:innovateenterpriseproject:save')" type="primary" @click="exportLists()">导出</el-button>
       </el-form-item>
     </el-form>
-    <el-card>
-      <el-radio-group v-model="apply_status" @change="getDataList">
-        <el-radio :label="0">未审核</el-radio>
-        <el-radio :label="1">已审核</el-radio>
-        <el-radio :label="2">未通过</el-radio>
-      </el-radio-group>
-    </el-card>
     <el-table
       :data="dataList"
       border
@@ -89,23 +82,6 @@
         label="项目负责人">
       </el-table-column>
       <el-table-column
-        prop="applyStatus"
-        header-align="center"
-        align="center"
-        label="审核状态">
-        <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.applyStatus === '0'"
-                  disable-transitions>未审核
-          </el-tag>
-          <el-tag type="success" v-if="scope.row.applyStatus === '1'"
-                  disable-transitions>已通过
-          </el-tag>
-          <el-tag type="danger" v-if="scope.row.applyStatus === '2'"
-                  disable-transitions>未通过
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -113,7 +89,9 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpProjId)">查看</el-button>
-          <el-button type="text" size="small"  v-if="isAuth('enterprise:innovateenterpriseproject:update')" @click="addOrUpdateHandle(scope.row.enterpProjId)">修改</el-button>
+<!--          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.enterpProjId)">修改</el-button>-->
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpProjId,1)">通过</el-button>
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpProjId,2)">不通过</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpProjId)">删除</el-button>
         </template>
       </el-table-column>
@@ -150,8 +128,7 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false,
-      detailInfoVisible: false,
-      apply_status: 1
+      detailInfoVisible: false
     }
   },
   components: {
@@ -173,9 +150,9 @@ export default {
           limit: this.pageSize,
           project_name: this.dataForm.projectName,
           projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear,
-          applyStatus: this.apply_status,
           enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
-          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null,
+          applyStatus: 0
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
@@ -289,6 +266,35 @@ export default {
           this.dataListLoading = false;
           this.$message.error("导出失败!");
         });
+    },
+    // 状态审核
+    applyStatus(enterpProjId,status){
+      this.$http({
+        url: this.$http.adornUrl(
+          `/enterprise/innovateenterpriseproject/update`
+        ),
+        method: 'post',
+        data: this.$http.adornData({
+          projectEntity: {
+            enterpProjId: enterpProjId,
+            applyStatus: status
+          },
+          attachEntities: []
+        })
+      }).then(({data}) => {
+        if (data && data.code === 0) {
+          this.$message({
+            message: '操作成功',
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.getDataList()
+            }
+          })
+        } else {
+          this.$message.error(data.msg)
+        }
+      })
     }
   }
 };

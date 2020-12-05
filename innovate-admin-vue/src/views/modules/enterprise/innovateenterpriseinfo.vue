@@ -40,7 +40,7 @@
         type="index"
         header-align="center"
         align="center"
-        label="序号">
+        label="ID">
       </el-table-column>
       <el-table-column
         prop="enterpriseName"

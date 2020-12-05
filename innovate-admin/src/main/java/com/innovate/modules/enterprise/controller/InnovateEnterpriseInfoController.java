@@ -117,6 +117,7 @@ public class InnovateEnterpriseInfoController {
     @RequiresPermissions("enterprise:innovateenterpriseinfo:info")
     public R info(@PathVariable("settledEnterpId") Long settledEnterpId) {
         InnovateEnterpriseInfoEntity innovateEnterpriseInfo = innovateEnterpriseInfoService.selectById(settledEnterpId);
+        //获取所以附件信息
         List<InnovateEnterpriseAttachEntity> list = innovateEnterpriseAttachService.selectList(
                 new EntityWrapper<InnovateEnterpriseAttachEntity>()
                         .eq("function_id", settledEnterpId).eq("is_del", 0).eq("attach_type",1)
@@ -136,6 +137,7 @@ public class InnovateEnterpriseInfoController {
     public R save(@RequestBody(required = false) InnovateEnterpriseInfoModel innovateEnterpriseInfoModel) {
         innovateEnterpriseInfoModel.getInfoEntity().setEnterpriseUserId(ShiroUtils.getUserId());
         innovateEnterpriseInfoService.insert(innovateEnterpriseInfoModel.getInfoEntity());
+        //附件不为空时保存附件集合
         if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()) {
             Long infoId = innovateEnterpriseInfoModel.getInfoEntity().getSettledEnterpId();
             for (InnovateEnterpriseAttachEntity attach : innovateEnterpriseInfoModel.getAttachEntities()) {
@@ -155,6 +157,7 @@ public class InnovateEnterpriseInfoController {
     @RequiresPermissions("enterprise:innovateenterpriseinfo:update")
     public R update(@RequestBody InnovateEnterpriseInfoModel innovateEnterpriseInfoModel) {
         innovateEnterpriseInfoService.updateById(innovateEnterpriseInfoModel.getInfoEntity());
+        //附件不为空时保存或附件集合
         if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()) {
             Long infoId = innovateEnterpriseInfoModel.getInfoEntity().getSettledEnterpId();
             for (InnovateEnterpriseAttachEntity attach : innovateEnterpriseInfoModel.getAttachEntities()) {
@@ -174,6 +177,7 @@ public class InnovateEnterpriseInfoController {
     @RequestMapping("/delete")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:delete")
     public R delete(@RequestBody Long[] settledEnterpIds) {
+        //伪删除
         innovateEnterpriseInfoService.delList(Arrays.asList(settledEnterpIds));
 //		innovateEnterpriseInfoService.deleteBatchIds(Arrays.asList(settledEnterpIds));
         return R.ok();

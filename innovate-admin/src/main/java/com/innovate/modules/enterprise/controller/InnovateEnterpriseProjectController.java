@@ -103,7 +103,7 @@ public class InnovateEnterpriseProjectController {
     @RequiresPermissions("enterprise:innovateenterpriseproject:info")
     public R info(@PathVariable("enterpProjId") Long enterpProjId) {
         InnovateEnterpriseProjectEntity innovateEnterpriseProject = innovateEnterpriseProjectService.selectById(enterpProjId);
-
+        //获取所以附件信息
         List<InnovateEnterpriseAttachEntity> list = innovateEnterpriseAttachService.selectList(
                 new EntityWrapper<InnovateEnterpriseAttachEntity>()
                         .eq("function_id",enterpProjId).eq("is_del", 0).eq("attach_type",2)
@@ -122,6 +122,7 @@ public class InnovateEnterpriseProjectController {
     public R save(@RequestBody InnovateEnterpriseInfoModel innovateEnterpriseInfoModel) {
         innovateEnterpriseInfoModel.getProjectEntity().setProjectUserId(ShiroUtils.getUserId());
         innovateEnterpriseProjectService.insert( innovateEnterpriseInfoModel.getProjectEntity());
+        //附件不为空时保存或附件集合
         if (!innovateEnterpriseInfoModel.getAttachEntities().isEmpty()){
             Long infoId = innovateEnterpriseInfoModel.getProjectEntity().getEnterpProjId();
             for (InnovateEnterpriseAttachEntity attach:innovateEnterpriseInfoModel.getAttachEntities()){

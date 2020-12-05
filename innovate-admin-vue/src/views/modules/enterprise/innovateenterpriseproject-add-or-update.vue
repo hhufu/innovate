@@ -116,16 +116,7 @@
           ],
           projectDirector: [
             {required: true, message: "项目负责人不能为空", trigger: "blur"}
-          ],
-          // projectUserId: [
-          //   { required: true, message: "用户id不能为空", trigger: "blur" }
-          // ],
-          // isDel: [
-          //   {required: true, message: "是否删除不能为空", trigger: "blur"}
-          // ]
-          // attachLists: [
-          //   {required: true, message: "附件不能为空", trigger: "blur"}
-          // ]
+          ]
         },
         projectName: [],
         loading: false,
@@ -230,6 +221,7 @@
                 this.$message.error(data.msg);
               }
             });
+            //删除附件
             if (this.delAttachEntityList) {
               this.$http({
                 url: this.$http.adornUrl(

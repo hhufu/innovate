@@ -24,6 +24,13 @@
         width="50">
       </el-table-column>
       <el-table-column
+        prop=""
+        type="index"
+        header-align="center"
+        align="center"
+        label="ID">
+      </el-table-column>
+      <el-table-column
         prop="enterpriseName"
         header-align="center"
         align="center"
