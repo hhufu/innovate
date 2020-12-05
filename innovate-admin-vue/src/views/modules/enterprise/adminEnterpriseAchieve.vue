@@ -6,19 +6,9 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:save')" type="primary" @click="addOrUpdateHandle()" >新增</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
         <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:save')" type="primary" @click="exportLists()">导出</el-button>
       </el-form-item>
     </el-form>
-    <el-card>
-      <el-radio-group v-model="apply_status" @change="getDataList">
-        <el-radio :label="9">提交审核</el-radio>
-        <el-radio :label="0">审核中</el-radio>
-        <el-radio :label="1">已审核</el-radio>
-        <el-radio :label="2">未通过</el-radio>
-      </el-radio-group>
-    </el-card>
     <el-table
       :data="dataList"
       border
@@ -30,13 +20,6 @@
         header-align="center"
         align="center"
         width="50">
-      </el-table-column>
-      <el-table-column
-        prop=""
-        type="index"
-        header-align="center"
-        align="center"
-        label="ID">
       </el-table-column>
       <el-table-column
         prop="enterpriseName"
@@ -81,37 +64,17 @@
       </el-table-column>
 
       <el-table-column
-        prop="applyStatus"
-        header-align="center"
-        align="center"
-        label="审核状态">
-        <template slot-scope="scope">
-          <el-tag type="info" v-if="scope.row.applyStatus === '9'"
-                  disable-transitions>待提交
-          </el-tag>
-          <el-tag type="primary" v-if="scope.row.applyStatus === '0'"
-                  disable-transitions>审核中
-          </el-tag>
-          <el-tag type="success" v-if="scope.row.applyStatus === '1'"
-                  disable-transitions>已通过
-          </el-tag>
-          <el-tag type="danger" v-if="scope.row.applyStatus === '2'"
-                  disable-transitions>未通过
-          </el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="applyStatus(scope.row.enterpAchieveId,0)">提交审核</el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpAchieveId)">查看</el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="addOrUpdateHandle(scope.row.enterpAchieveId)">修改</el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="deleteHandle(scope.row.enterpAchieveId)">删除</el-button>
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpAchieveId,9)">驳回</el-button>
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpAchieveId,1)">通过</el-button>
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpAchieveId,2)">不通过</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpAchieveId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -148,7 +111,7 @@
         dataListSelections: [],
         addOrUpdateVisible: false,
         detailInfoVisible: false,
-        apply_status: 9
+        apply_status: 0
       }
     },
     components: {
@@ -168,9 +131,9 @@
           url: this.$http.adornUrl('/enterprise/innovateenterpriseachieve/list'),
           method: 'get',
           params: this.$http.adornParams({
-            page: this.pageIndex,
-            limit: this.pageSize,
-            key: this.dataForm.key,
+            'page': this.pageIndex,
+            'limit': this.pageSize,
+            'key': this.dataForm.key,
             apply_status: this.apply_status,
             enterpriseName: this.dataForm.enterpriseName,
             enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
@@ -227,13 +190,6 @@
         this.detailInfoVisible = true
         this.$nextTick(() => {
           this.$refs.detailInfo.init(id)
-        })
-      },
-      // 新增 / 修改
-      addOrUpdateHandle (id) {
-        this.addOrUpdateVisible = true
-        this.$nextTick(() => {
-          this.$refs.addOrUpdate.init(id)
         })
       },
       // 删除

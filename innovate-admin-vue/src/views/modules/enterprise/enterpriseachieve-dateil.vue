@@ -128,6 +128,7 @@
         },
         // 文件下载
         attachDown (attach) {
+          debugger
           this.downloadLoading = true
           this.downloadText = '正在下载'
           this.$notify({

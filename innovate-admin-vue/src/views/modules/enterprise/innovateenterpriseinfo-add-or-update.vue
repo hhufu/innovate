@@ -88,7 +88,7 @@
           settledTime: '',
           enterpriseType: '',
           businessScope: '',
-          applyStatus: 0,
+          applyStatus: 9,
           isDel: 0,
           attachLists: [],
           instituteId: ''

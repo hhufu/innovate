@@ -31,7 +31,7 @@
       </el-form-item>
       <el-form-item label="所属二级学院" prop="instituteId">
 <!--        <el-select v-model="dataForm.instituteId" placeholder="所属二级学院" style="width: 100%" @change="changeInstituteId"-->
-        <el-select v-model="dataForm.instituteId" placeholder="所属二级学院" style="width: 100%">
+        <el-select v-model="dataForm.instituteId" placeholder="所属二级学院" style="width: 100%" disabled>
                    disabled>
           <el-option v-for="n in instituteName" :key="n.instituteName" :label="n.instituteName"
                      :value="n.instituteName"></el-option>
@@ -93,6 +93,7 @@
           awardTime: '',
           awardProjectType: '',
           instituteId: '',
+          applyStatus: 9,
           isDel: ''
         },
         dataRule: {
@@ -186,7 +187,8 @@
           awardTime: '',
           awardProjectType: '',
           instituteId: '',
-          isDel: ''
+          isDel: '',
+          applyStatus: 9,
         };
         this.projectName = []
         this.instituteName = []
@@ -218,7 +220,8 @@
                   awardTime: this.dataForm.awardTime,
                   awardProjectType: this.dataForm.awardProjectTypeId,
                   instituteId: this.dataForm.institute,
-                  isDel: this.dataForm.isDel
+                  isDel: this.dataForm.isDel,
+                  applyStatus: this.dataForm.applyStatus
                 },
                 attachEntities: this.attachLists,
                 delAttachLists: this.delAttachLists

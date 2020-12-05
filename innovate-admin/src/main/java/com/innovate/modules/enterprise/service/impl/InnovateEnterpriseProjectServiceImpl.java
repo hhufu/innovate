@@ -33,7 +33,8 @@ public class InnovateEnterpriseProjectServiceImpl extends ServiceImpl<InnovateEn
 //审核状态
         Object applyStatus = params.get("applyStatus");
         EntityWrapper<InnovateEnterpriseProjectEntity> wrapper = new EntityWrapper<>();
-        wrapper.eq("is_del", 0);
+        wrapper.eq("is_del", 0)
+               .eq("apply_status",params.get("apply_status"));
 
         if (userId != null) { //非空无管理权限
 //            if (instituteId!=null){

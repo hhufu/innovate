@@ -18,6 +18,7 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="apply_status" @change="getDataList">
+        <el-radio :label="9">提交审核</el-radio>
         <el-radio :label="0">未审核</el-radio>
         <el-radio :label="1">已审核</el-radio>
         <el-radio :label="2">未通过</el-radio>
@@ -88,8 +89,11 @@
         align="center"
         label="审核状态">
         <template slot-scope="scope">
+          <el-tag type="info" v-if="scope.row.applyStatus === '9'"
+                  disable-transitions>待提交
+          </el-tag>
           <el-tag type="primary" v-if="scope.row.applyStatus === '0'"
-                  disable-transitions>未审核
+                  disable-transitions>审核中
           </el-tag>
           <el-tag type="success" v-if="scope.row.applyStatus === '1'"
                   disable-transitions>已通过
@@ -107,6 +111,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="applyStatus(scope.row.settledEnterpId,0)">提交审核</el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.settledEnterpId)">查看</el-button>
           <el-button type="text" v-if="isAuth('enterprise:innovateenterpriseinfo:update')" size="small"
                      @click="addOrUpdateHandle(scope.row.settledEnterpId)">修改
@@ -148,7 +153,7 @@
         dataListSelections: [],
         addOrUpdateVisible: false,
         detailInfoVisible: false,
-        apply_status: 1
+        apply_status: 9
       }
     },
     components: {
@@ -286,9 +291,36 @@
         } else {
           this.$message.error('无导出数据');
         }
-
+      },
+      // 状态审核
+      applyStatus(settledEnterpId,status){
+        this.$http({
+          url: this.$http.adornUrl(
+            `/enterprise/innovateenterpriseinfo/update`
+          ),
+          method: 'post',
+          data: this.$http.adornData({
+            infoEntity: {
+              settledEnterpId: settledEnterpId,
+              applyStatus: status
+            },
+            attachEntities: []
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 1500,
+              onClose: () => {
+                this.getDataList()
+              }
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
       }
-
-    }
+    },
   };
 </script>

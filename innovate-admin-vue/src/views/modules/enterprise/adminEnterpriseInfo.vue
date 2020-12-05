@@ -87,6 +87,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailInfo(scope.row.settledEnterpId)">查看</el-button>
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.settledEnterpId,9)">驳回</el-button>
 <!--          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.settledEnterpId)">修改</el-button>-->
           <el-button type="text" size="small"  @click="applyStatus(scope.row.settledEnterpId,1)">通过</el-button>
           <el-button type="text" size="small"  @click="applyStatus(scope.row.settledEnterpId,2)">不通过</el-button>
@@ -128,7 +129,6 @@
         addOrUpdateVisible: false,
         detailInfoVisible: false,
         apply_status: 0
-
       }
     },
     components: {

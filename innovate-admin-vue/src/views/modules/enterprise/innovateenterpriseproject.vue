@@ -22,7 +22,8 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="apply_status" @change="getDataList">
-        <el-radio :label="0">未审核</el-radio>
+        <el-radio :label="9">提交审核</el-radio>
+        <el-radio :label="0">审核中</el-radio>
         <el-radio :label="1">已审核</el-radio>
         <el-radio :label="2">未通过</el-radio>
       </el-radio-group>
@@ -94,8 +95,11 @@
         align="center"
         label="审核状态">
         <template slot-scope="scope">
+          <el-tag type="info" v-if="scope.row.applyStatus === '9'"
+                  disable-transitions>待提交
+          </el-tag>
           <el-tag type="primary" v-if="scope.row.applyStatus === '0'"
-                  disable-transitions>未审核
+                  disable-transitions>审核中
           </el-tag>
           <el-tag type="success" v-if="scope.row.applyStatus === '1'"
                   disable-transitions>已通过
@@ -112,9 +116,10 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="applyStatus(scope.row.enterpProjId,0)">提交审核</el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpProjId)">查看</el-button>
-          <el-button type="text" size="small"  v-if="isAuth('enterprise:innovateenterpriseproject:update')" @click="addOrUpdateHandle(scope.row.enterpProjId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpProjId)">删除</el-button>
+          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="addOrUpdateHandle(scope.row.enterpProjId)">修改</el-button>
+          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="deleteHandle(scope.row.enterpProjId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -151,7 +156,7 @@ export default {
       dataListSelections: [],
       addOrUpdateVisible: false,
       detailInfoVisible: false,
-      apply_status: 1,
+      apply_status: 9,
       enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
       instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
     }
@@ -166,6 +171,7 @@ export default {
   methods: {
     // 获取数据列表
     getDataList() {
+      debugger
       this.dataListLoading = true;
       this.$http({
         url: this.$http.adornUrl("/enterprise/innovateenterpriseproject/list"),
@@ -173,9 +179,9 @@ export default {
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
+          apply_status: this.apply_status,
           project_name: this.dataForm.projectName,
           projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear.getFullYear(),
-          applyStatus: this.apply_status,
           enterpriseUserId: this.enterpriseUserId,
           instituteId: this.instituteId
         })
@@ -295,6 +301,36 @@ export default {
       }else {
         this.$message.error('无导出数据');
       }
+    },
+    // 状态审核
+    applyStatus(enterpProjId,status){
+      debugger
+      this.$http({
+        url: this.$http.adornUrl(
+          `/enterprise/innovateenterpriseproject/update`
+        ),
+        method: 'post',
+        data: this.$http.adornData({
+          projectEntity: {
+            enterpProjId: enterpProjId,
+            applyStatus: status
+          },
+          attachEntities: []
+        })
+      }).then(({data}) => {
+        if (data && data.code === 0) {
+          this.$message({
+            message: '操作成功',
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.getDataList()
+            }
+          })
+        } else {
+          this.$message.error(data.msg)
+        }
+      })
     }
   }
 };

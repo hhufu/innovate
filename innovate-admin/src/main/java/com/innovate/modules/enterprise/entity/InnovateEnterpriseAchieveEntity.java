@@ -75,6 +75,11 @@ public class InnovateEnterpriseAchieveEntity implements Serializable {
 	@ExcelIgnore
 	private String instituteId;
 	/**
+	 * 审核状态
+	 */
+	@ExcelIgnore
+	private String applyStatus;
+	/**
 	 * 是否删除
 	 */
 	@ExcelIgnore

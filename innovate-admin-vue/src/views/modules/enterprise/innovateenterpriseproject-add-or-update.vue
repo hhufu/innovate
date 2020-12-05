@@ -95,6 +95,7 @@
           projectUserId: "",
           applyStatus: 0,
           isDel: 0,
+          applyStatus: 9,
           attachLists: []
         },
         dataRule: {
@@ -207,7 +208,8 @@
                   projectYear: this.dataForm.projectYear,
                   projectDirector: this.dataForm.projectDirector,
                   projectUserId: this.dataForm.projectUserId,
-                  isDel: this.dataForm.isDel
+                  isDel: this.dataForm.isDel,
+                  applyStatus: this.dataForm.applyStatus
                 },
                 attachEntities: this.dataForm.attachLists
               })

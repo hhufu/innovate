@@ -89,7 +89,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpProjId)">查看</el-button>
-<!--          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.enterpProjId)">修改</el-button>-->
+          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpProjId,9)">驳回</el-button>
           <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpProjId,1)">通过</el-button>
           <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpProjId,2)">不通过</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpProjId)">删除</el-button>
@@ -128,7 +128,8 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false,
-      detailInfoVisible: false
+      detailInfoVisible: false,
+      apply_status: 0
     }
   },
   components: {
@@ -148,11 +149,11 @@ export default {
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
+          apply_status: this.apply_status,
           project_name: this.dataForm.projectName,
           projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear,
           enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
-          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null,
-          applyStatus: 0
+          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
@@ -186,13 +187,6 @@ export default {
       this.$nextTick(() => {
         this.$refs.detailInfo.init(id)
       })
-    },
-    // 新增 / 修改
-    addOrUpdateHandle(id) {
-      this.addOrUpdateVisible = true;
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id);
-      });
     },
     // 删除
     deleteHandle(id) {

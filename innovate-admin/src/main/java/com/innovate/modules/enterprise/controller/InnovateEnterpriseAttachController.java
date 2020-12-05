@@ -125,4 +125,14 @@ public class InnovateEnterpriseAttachController {
 
         return R.ok();
     }
+
+    /**
+     * 文件下载
+     */
+    @PostMapping(value = "/download")
+    @RequiresPermissions("enterprise:innovateenterpriseinfo:info")
+    public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
+        String filePath = request.getParameter("filePath");
+        FileUtils.download(response, filePath);
+    }
 }
