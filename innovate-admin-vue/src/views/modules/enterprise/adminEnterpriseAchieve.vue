@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.awardProjectName" placeholder="获奖名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -100,8 +100,7 @@
     data () {
       return {
         dataForm: {
-          key: '',
-          enterpriseName: ''
+          awardProjectName: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -135,7 +134,7 @@
             'limit': this.pageSize,
             'key': this.dataForm.key,
             apply_status: this.apply_status,
-            enterpriseName: this.dataForm.enterpriseName,
+            awardProjectName: this.dataForm.awardProjectName,
             enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
             instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
           })
