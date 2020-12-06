@@ -1,6 +1,6 @@
 version: '2'
 services:
-  innovate-admin:
+  innovate-admin-vue:
     image: hhufu/innovate-admin-vue:latest
     container_name: innovate-admin-vue-hhufu
     ports:

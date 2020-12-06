@@ -1,7 +1,7 @@
 version: '2'
 services:
   innovate-admin:
-    image: hhufu/innovate-admin-2:latest
+    image: hhufu/innovate-admin:latest
     privileged: true
     ports:
       - 8088:8080
