@@ -13,8 +13,13 @@
     </resultMap>
 
     <update id="deleteList" parameterType="List">
-        update innovate_training_base_info set is_del = 1
-        where training_base_id in
+        update innovate_training_base_info i, innovate_training_base_achieve a
+        set i.is_del = 1, a.is_del = 1
+        where i.training_base_id in
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and a.training_base_id in
         <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
             #{id}
         </foreach>
