@@ -10,23 +10,23 @@ matrix:
         - npm install
       script:
         - npm run build
-        - docker build . -t "mikeyboom/innovate-admin-vue:latest"
+        - docker build . -t "$DOCKER_NAME/innovate-admin-vue:latest"
       addons:
         ssh_known_hosts:
           - "$SERVER_IP"
       after_success:
         - docker login -u=$DOCKER_NAME -p="$DOCKER_PWD"
-        - docker push mikeyboom/innovate-admin-vue:latest
+        - docker push $DOCKER_NAME/innovate-admin-vue:latest
         - chmod 600 ~/.ssh/id_rsa
-        - rsync -az --delete ./docker-compose.yml root@$SERVER_IP:innovate-admin-vue/
-        - ssh -o "StrictHostKeyChecking no" -i id_rsa root@$SERVER_IP "cd innovate-admin-vue/;docker-compose
+        - rsync -az --delete ./docker-compose.yml root@$SERVER_IP:$DOCKER_NAME/innovate-admin-vue/
+        - ssh -o "StrictHostKeyChecking no" -i id_rsa root@$SERVER_IP "cd $DOCKER_NAME/innovate-admin-vue/;docker-compose
           -f docker-compose.yml pull;docker-compose -f docker-compose.yml up -d;exit"
       before_install:
         - openssl aes-256-cbc -K $encrypted_1687bb340939_key -iv $encrypted_1687bb340939_iv  -in
           id_rsa.enc -out ~/.ssh/id_rsa -d
         - chmod 600 ~/.ssh/id_rsa
         - echo -e "Host $SERVER_IP\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-        - cd innovate-admin-vue
+        - cd $DOCKER_NAME/innovate-admin-vue
     - language: java
       services:
         - docker
@@ -36,7 +36,7 @@ matrix:
           - master
       script:
         - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-        - docker build . -t "mikeyboom/innovate-admin:latest"
+        - docker build . -t "$DOCKER_NAME/innovate-admin:latest"
       before_install:
         - openssl aes-256-cbc -K $encrypted_1687bb340939_key -iv $encrypted_1687bb340939_iv
           -in id_rsa.enc -out ~/.ssh/id_rsa -d
@@ -45,10 +45,10 @@ matrix:
         - cd innovate-admin
       after_success:
         - docker login -u=$DOCKER_NAME -p="$DOCKER_PWD"
-        - docker push mikeyboom/innovate-admin:latest
+        - docker push $DOCKER_NAME/innovate-admin:latest
         - chmod 600 ~/.ssh/id_rsa
-        - rsync -az --delete ./docker-compose.yml root@$SERVER_IP:innovate-admin/
-        - ssh -o "StrictHostKeyChecking no" -i id_rsa root@$SERVER_IP "cd innovate-admin/;docker-compose
+        - rsync -az --delete ./docker-compose.yml root@$SERVER_IP:$DOCKER_NAME/innovate-admin/
+        - ssh -o "StrictHostKeyChecking no" -i id_rsa root@$SERVER_IP "cd $DOCKER_NAME/innovate-admin/;docker-compose
           -f docker-compose.yml pull;docker-compose -f docker-compose.yml up -d;exit"
 notifications:
   email:
