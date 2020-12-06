@@ -1,10 +1,11 @@
 version: '2'
 services:
   innovate-admin:
-    image: hhufu/innovate-admin:latest
+    image: hhufu/innovate-admin-2:latest
     privileged: true
     ports:
       - 8088:8080
+    container_name: innovate-admin-hhufu
     environment:
       - spring.profiles.active=prod
     restart: always

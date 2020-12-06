@@ -2,6 +2,7 @@ version: '2'
 services:
   innovate-admin:
     image: hhufu/innovate-admin-vue:latest
+    container_name: innovate-admin-vue-hhufu
     ports:
       - 8005:8001
     restart: always
