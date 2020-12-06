@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.awardProjectName" placeholder="获奖名称" clearable></el-input>
+        <el-input v-model="dataForm.enterpriseName" placeholder="请输入企业名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -20,6 +20,13 @@
         header-align="center"
         align="center"
         width="50">
+      </el-table-column>
+      <el-table-column
+        prop=""
+        type="index"
+        header-align="center"
+        align="center"
+        label="ID">
       </el-table-column>
       <el-table-column
         prop="enterpriseName"
@@ -100,7 +107,7 @@
     data () {
       return {
         dataForm: {
-          awardProjectName: ''
+          enterpriseName: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -134,7 +141,7 @@
             'limit': this.pageSize,
             'key': this.dataForm.key,
             apply_status: this.apply_status,
-            awardProjectName: this.dataForm.awardProjectName,
+            enterpriseName: this.dataForm.enterpriseName,
             enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
             instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
           })
@@ -231,6 +238,12 @@
           url: this.$http.adornUrl("/enterprise/innovateenterpriseachieve/export"),
           method: "post",
           data: this.$http.adornData(trainBaseIds, false),
+          params: this.$http.adornParams({
+            apply_status: this.apply_status,
+            enterpriseName: this.dataForm.enterpriseName,
+            enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          }),
           responseType: "blob"
         })
           .then(res => {

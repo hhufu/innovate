@@ -23,6 +23,6 @@ public interface InnovateEnterpriseProjectService extends IService<InnovateEnter
     void  delList(List<Long> list);
 
     //导出
-    List<InnovateEnterpriseProjectEntity> queryListByIds(List<Long> enterpProjIds);
+    List<InnovateEnterpriseProjectEntity> queryListByIds(List<Long> enterpProjIds,Map<String, Object> params);
 }
 

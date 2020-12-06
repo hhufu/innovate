@@ -238,6 +238,14 @@ export default {
         ),
         method: "post",
         data: this.$http.adornData(trainBaseIds, false),
+        params: this.$http.adornParams({
+          apply_status: this.apply_status,
+          enterpriseName: this.dataForm.enterpriseName,
+          project_name: this.dataForm.projectName,
+          projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear.getFullYear(),
+          enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+        }),
         responseType: "blob"
       })
         .then(res => {

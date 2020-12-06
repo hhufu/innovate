@@ -251,7 +251,6 @@
           url: this.$http.adornUrl(`/enterprise/innovateenterpriseinfo/nameList`),
           method: "get"
         }).then(({data}) => {
-          debugger;
           if (data && data.code === 0) {
             this.projectName = data.list;
           }

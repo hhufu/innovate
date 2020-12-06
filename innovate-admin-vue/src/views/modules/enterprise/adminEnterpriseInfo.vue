@@ -241,6 +241,12 @@
           url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/export"),
           method: "post",
           data: this.$http.adornData(trainBaseIds, false),
+          params: this.$http.adornParams({
+            apply_status: this.apply_status,
+            enterpriseName: this.dataForm.enterpriseName,
+            enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          }),
           responseType: "blob"
         })
           .then(res => {

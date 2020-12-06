@@ -22,7 +22,8 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="apply_status" @change="getDataList">
-        <el-radio :label="9">提交审核</el-radio>
+<!--        <el-radio :label="9"  v-if="!isAuth('enterprise:innovateenterpriseinfo:admin') && !isAuth('enterprise:innovateenterpriseinfo:SuperAdmin')">待提交</el-radio>-->
+        <el-radio :label="9">待提交</el-radio>
         <el-radio :label="0">审核中</el-radio>
         <el-radio :label="1">已审核</el-radio>
         <el-radio :label="2">未通过</el-radio>
@@ -156,7 +157,7 @@ export default {
       dataListSelections: [],
       addOrUpdateVisible: false,
       detailInfoVisible: false,
-      apply_status: 9,
+      apply_status: 1,
       enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
       instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
     }
@@ -171,7 +172,6 @@ export default {
   methods: {
     // 获取数据列表
     getDataList() {
-      debugger
       this.dataListLoading = true;
       this.$http({
         url: this.$http.adornUrl("/enterprise/innovateenterpriseproject/list"),
@@ -276,6 +276,14 @@ export default {
           ),
           method: "post",
           data: this.$http.adornData(trainBaseIds, false),
+          params: this.$http.adornParams({
+            apply_status: this.apply_status,
+            enterpriseName: this.dataForm.enterpriseName,
+            project_name: this.dataForm.projectName,
+            projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear.getFullYear(),
+            enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          }),
           responseType: "blob"
         })
           .then(res => {
@@ -304,7 +312,6 @@ export default {
     },
     // 状态审核
     applyStatus(enterpProjId,status){
-      debugger
       this.$http({
         url: this.$http.adornUrl(
           `/enterprise/innovateenterpriseproject/update`

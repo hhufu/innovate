@@ -65,9 +65,9 @@ public class InnovateEnterpriseAchieveController {
     @RequestMapping("/info/{enterpAchieveId}")
     @RequiresPermissions("enterprise:innovateenterpriseachieve:info")
     public R info(@PathVariable("enterpAchieveId") Long enterpAchieveId){
-
+        //查询信息
         InnovateEnterpriseAchieveEntity innovateEnterpriseAchieve = innovateEnterpriseAchieveService.selectListById(enterpAchieveId);
-
+        //查询文件
 		List<InnovateEnterpriseAttachEntity> list = innovateEnterpriseAttachService.selectList(
                 new EntityWrapper<InnovateEnterpriseAttachEntity>()
                         .eq("function_id", enterpAchieveId).eq("is_del", 0).eq("attach_type",3)
@@ -134,7 +134,7 @@ public class InnovateEnterpriseAchieveController {
      */
     @PostMapping("/export")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
-    public void export(@RequestBody List<Long> enterpAchieveIds, HttpServletResponse response){
+    public void export(@RequestParam Map<String, Object> params,HttpServletResponse response){
         List<InnovateEnterpriseAchieveEntity> projectEntities;
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -151,7 +151,8 @@ public class InnovateEnterpriseAchieveController {
                 excelWriter = EasyExcel.write(response.getOutputStream(), InnovateEnterpriseAchieveEntity.class).build();
                 WriteSheet writeSheet = EasyExcel.writerSheet(0, "企业成果信息").build();
 //                projectEntities = innovateEnterpriseAchieveService.queryListByIds(enterpAchieveIds);
-                projectEntities = innovateEnterpriseAchieveService.queryListByIds(userEntity.getUserId());
+                Object a = params.get("enterpriseName");
+                projectEntities = innovateEnterpriseAchieveService.queryListByIds(params);
                 excelWriter.write(projectEntities,writeSheet);
             }
         }catch (Exception e){

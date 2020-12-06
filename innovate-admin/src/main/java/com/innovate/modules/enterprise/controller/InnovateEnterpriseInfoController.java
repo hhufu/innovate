@@ -51,7 +51,7 @@ public class InnovateEnterpriseInfoController {
      */
     @PostMapping("/export")
     @RequiresPermissions("enterprise:innovateenterpriseinfo:list")
-    public void export(@RequestBody List<Long> settledEnterpIds, HttpServletResponse response) {
+    public void export(@RequestBody List<Long> settledEnterpIds,@RequestParam Map<String, Object> params, HttpServletResponse response) {
         List<InnovateEnterpriseInfoEntity> trainBaseInfoList;
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -67,7 +67,7 @@ public class InnovateEnterpriseInfoController {
             if ("wzxyGLY".equals(adminName) || true) {
                 excelWriter = EasyExcel.write(response.getOutputStream(), InnovateEnterpriseInfoEntity.class).build();
                 WriteSheet writeSheet = EasyExcel.writerSheet(0, "企业入驻信息").build();
-                trainBaseInfoList = innovateEnterpriseInfoService.queryListByIds(settledEnterpIds);
+                trainBaseInfoList = innovateEnterpriseInfoService.queryListByIds(settledEnterpIds,params);
                 excelWriter.write(trainBaseInfoList, writeSheet);
             }
         } catch (Exception e) {

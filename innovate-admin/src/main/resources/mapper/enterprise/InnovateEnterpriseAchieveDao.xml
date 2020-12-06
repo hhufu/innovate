@@ -29,13 +29,29 @@
         )
     </update>
 
-    <select id="queryListByIds" parameterType="java.util.List"
+    <select id="queryListByIds" parameterType="map"
             resultType="com.innovate.modules.enterprise.entity.InnovateEnterpriseAchieveEntity">
         SELECT a.*,b.award_project_type type_name,c.institute_name FROM
         (innovate_enterprise_achieve a LEFT JOIN innovate_award_project_type b
                 ON a.award_project_type = b.award_project_type_id)
                     LEFT JOIN innovate_sys_institute c ON a.institute_id = c.institute_id
-                        WHERE a.enterprise_id = 1
+            <where>
+                <if test="params != null">
+                    <if test="enterpriseUserId != null">
+                        <choose>
+                            <when test="instituteId != null">
+                                a.institute_id = #{instituteId} and
+                            </when>
+                            <otherwise>
+                                a.enterprise_user_id = #{enterpriseUserId} and
+                            </otherwise>
+                        </choose>
+                    </if>
+
+                </if>
+                a.enterprise_name like CONCAT('%',#{enterpriseName},'%') and  apply_status = #{apply_status} and is_del = 0
+            </where>
+
     </select>
 
     <select id="selectListById" parameterType="Long"

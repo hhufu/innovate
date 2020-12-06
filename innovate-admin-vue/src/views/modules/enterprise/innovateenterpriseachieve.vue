@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.awardProjectName" placeholder="获奖名称" clearable></el-input>
+        <el-input v-model="dataForm.enterpriseName" placeholder="请输入企业名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -13,7 +13,8 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="apply_status" @change="getDataList">
-        <el-radio :label="9">提交审核</el-radio>
+<!--        <el-radio :label="9"  v-if="!isAuth('enterprise:innovateenterpriseinfo:admin') && !isAuth('enterprise:innovateenterpriseinfo:SuperAdmin')">待提交</el-radio>-->
+        <el-radio :label="9">待提交</el-radio>
         <el-radio :label="0">审核中</el-radio>
         <el-radio :label="1">已审核</el-radio>
         <el-radio :label="2">未通过</el-radio>
@@ -137,7 +138,7 @@
     data () {
       return {
         dataForm: {
-          awardProjectName: ''
+          enterpriseName: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -147,7 +148,7 @@
         dataListSelections: [],
         addOrUpdateVisible: false,
         detailInfoVisible: false,
-        apply_status: 9
+        apply_status: 1
       }
     },
     components: {
@@ -171,7 +172,7 @@
             limit: this.pageSize,
             key: this.dataForm.key,
             apply_status: this.apply_status,
-            awardProjectName: this.dataForm.awardProjectName,
+            enterpriseName: this.dataForm.enterpriseName,
             enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
             instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
           })
@@ -275,6 +276,12 @@
           url: this.$http.adornUrl("/enterprise/innovateenterpriseachieve/export"),
           method: "post",
           data: this.$http.adornData(trainBaseIds, false),
+          params: this.$http.adornParams({
+            apply_status: this.apply_status,
+            enterpriseName: this.dataForm.enterpriseName,
+            enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          }),
           responseType: "blob"
         })
           .then(res => {

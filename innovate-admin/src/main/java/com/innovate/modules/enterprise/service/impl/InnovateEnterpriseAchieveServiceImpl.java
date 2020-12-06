@@ -1,5 +1,6 @@
 package com.innovate.modules.enterprise.service.impl;
 
+import com.innovate.modules.enterprise.utility.ExportShiro;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,33 +22,12 @@ public class InnovateEnterpriseAchieveServiceImpl extends ServiceImpl<InnovateEn
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        //获奖名称 搜索信息
-        Object awardProjectName = params.get("awardProjectName");
 
-        //用户id
-        Object userId = params.get("enterpriseUserId");
-
-        //学院id
-        Object instituteId = params.get("instituteId");
-
-        EntityWrapper<InnovateEnterpriseAchieveEntity> wrapper = new EntityWrapper<>();
-        wrapper.eq("is_del", 0)
-                .eq("apply_status",params.get("apply_status"));
-
-        if (userId!=null ){ //空为管理员 不执行
-            if (instituteId != null){   //非空 二级学院管理员
-                wrapper.eq("institute_id", instituteId.toString());
-            }else {  //无管理权限 只获取自己得信息
-                wrapper.eq("enterprise_user_id", userId.toString());
-            }
-        }
-
-        if (!"".equals(awardProjectName)){  //根据获奖名称搜索
-            wrapper.like("award_project_name" , awardProjectName.toString());
-        }
+        ExportShiro exportShiro = new ExportShiro<InnovateEnterpriseAchieveEntity>();
 
         Page<InnovateEnterpriseAchieveEntity> page = this.selectPage(
-                new Query<InnovateEnterpriseAchieveEntity>(params).getPage(), wrapper);
+                new Query<InnovateEnterpriseAchieveEntity>(params).getPage(),
+                exportShiro.queryExport(params, new EntityWrapper<InnovateEnterpriseAchieveEntity>()));
 
         return new PageUtils(page);
     }
@@ -58,10 +38,9 @@ public class InnovateEnterpriseAchieveServiceImpl extends ServiceImpl<InnovateEn
     }
 
     @Override
-    public List<InnovateEnterpriseAchieveEntity> queryListByIds(Long enterpAchieveIds) {
-
+    public List<InnovateEnterpriseAchieveEntity> queryListByIds(Map<String, Object> params) {
 //        return enterpAchieveIds.size()>0 ? this.selectBatchIds(enterpAchieveIds): this.selectList(null);
-        return baseMapper.queryListByIds(enterpAchieveIds);
+        return baseMapper.queryListByIds(params);
     }
 
     @Override

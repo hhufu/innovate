@@ -1,6 +1,7 @@
 package com.innovate.modules.enterprise.service.impl;
 
-import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoEntity;
+
+import com.innovate.modules.enterprise.utility.ExportShiro;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,19 +23,42 @@ public class InnovateEnterpriseProjectServiceImpl extends ServiceImpl<InnovateEn
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+
+        Page<InnovateEnterpriseProjectEntity> page = this.selectPage(
+                new Query<InnovateEnterpriseProjectEntity>(params).getPage(),
+                queryExport(params)
+        );
+
+        return new PageUtils(page);
+    }
+
+    @Override
+    public void delList(List<Long> list) {
+        baseMapper.delList(list);
+    }
+
+    @Override
+    public List<InnovateEnterpriseProjectEntity> queryListByIds(List<Long> enterpProjIds, Map<String, Object> params) {
+
+        return enterpProjIds.size() > 0 ? this.selectBatchIds(enterpProjIds)
+                : this.selectList(queryExport(params));
+    }
+
+    //权限判断
+    public EntityWrapper<InnovateEnterpriseProjectEntity> queryExport(Map<String, Object> params){
         // 用户id
         Object userId = params.get("enterpriseUserId");
-//        学院id
-        Object instituteId = params.get("instituteId");
-//        项目名称
+        //学院id
+//        Object instituteId = params.get("instituteId");
+        //项目名称
         Object projectName = params.get("project_name");
-//        项目年度
+        //项目年度
         Object projectYear = params.get("projectYear");
-//审核状态
+        //审核状态
         Object applyStatus = params.get("applyStatus");
         EntityWrapper<InnovateEnterpriseProjectEntity> wrapper = new EntityWrapper<>();
         wrapper.eq("is_del", 0)
-               .eq("apply_status",params.get("apply_status"));
+                .eq("apply_status", params.get("apply_status"));
 
         if (userId != null) { //非空无管理权限
 //            if (instituteId!=null){
@@ -55,22 +79,6 @@ public class InnovateEnterpriseProjectServiceImpl extends ServiceImpl<InnovateEn
         if (applyStatus != null) {
             wrapper.eq("apply_status", applyStatus.toString());
         }
-        Page<InnovateEnterpriseProjectEntity> page = this.selectPage(
-                new Query<InnovateEnterpriseProjectEntity>(params).getPage(),
-                wrapper
-        );
-
-        return new PageUtils(page);
+    return wrapper;
     }
-
-    @Override
-    public void delList(List<Long> list) {
-        baseMapper.delList(list);
-    }
-
-    @Override
-    public List<InnovateEnterpriseProjectEntity> queryListByIds(List<Long> enterpProjIds) {
-        return enterpProjIds.size() > 0 ? this.selectBatchIds(enterpProjIds) : this.selectList(new EntityWrapper<InnovateEnterpriseProjectEntity>().eq("is_del", 0));
-    }
-
 }

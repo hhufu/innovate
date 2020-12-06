@@ -18,8 +18,8 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="apply_status" @change="getDataList">
-        <el-radio :label="9">提交审核</el-radio>
-        <el-radio :label="0">未审核</el-radio>
+        <el-radio :label="9" v-if="isAuth('enterprise:innovateenterpriseinfo:superAdmin')">待提交</el-radio>
+        <el-radio :label="0">审核中</el-radio>
         <el-radio :label="1">已审核</el-radio>
         <el-radio :label="2">未通过</el-radio>
       </el-radio-group>
@@ -153,7 +153,7 @@
         dataListSelections: [],
         addOrUpdateVisible: false,
         detailInfoVisible: false,
-        apply_status: 9
+        apply_status: 1
       }
     },
     components: {
@@ -220,7 +220,6 @@
       },
       // 删除
       deleteHandle(id) {
-        debugger
         var ids = id
           ? [id]
           : this.dataListSelections.map(item => {
@@ -266,6 +265,12 @@
             url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/export"),
             method: "post",
             data: this.$http.adornData(trainBaseIds, false),
+            params: this.$http.adornParams({
+              apply_status: this.apply_status,
+              enterpriseName: this.dataForm.enterpriseName,
+              enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+              instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+            }),
             responseType: "blob"
           })
             .then(res => {

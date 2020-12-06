@@ -22,7 +22,7 @@ public interface InnovateEnterpriseAchieveService extends IService<InnovateEnter
 
     //导出
 //    List<InnovateEnterpriseAchieveEntity> queryListByIds(List<Long> enterpAchieveIds);
-    List<InnovateEnterpriseAchieveEntity> queryListByIds(Long enterpAchieveIds);
+    List<InnovateEnterpriseAchieveEntity> queryListByIds(Map<String, Object> params);
 
     InnovateEnterpriseAchieveEntity selectListById(Long enterpAchieveId);
 
