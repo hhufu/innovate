@@ -27,7 +27,7 @@
         <td colspan="8">{{dataForm.materialYear}}年</td>
       </tr>
       <tr align='center'>
-        <th colspan="2">材料类型</th>
+        <th colspan="2">成果类型</th>
         <td colspan="8">{{dataForm.materialType}}</td>
       </tr>
       <!--附件开始-->

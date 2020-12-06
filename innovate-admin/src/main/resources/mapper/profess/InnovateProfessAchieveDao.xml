@@ -26,7 +26,7 @@
             <if test="professAchieDirector != null">profess_achie_director,</if>
             <if test="teamMenber != null">team_menber,</if>
             <if test="awardTime != null">award_time,</if>
-            <if test="professAchieveType != null">profess_achieve_type</if>
+            <if test="professAchieveType != null">profess_achieve_type,</if>
             <if test="professAchieveTypeId != null">profess_achieve_type_id</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -37,7 +37,7 @@
             <if test="teamMenber != null">#{teamMenber},</if>
             <if test="awardTime != null">#{awardTime},</if>
             <if test="professAchieveType != null">#{professAchieveType},</if>
-            <if test="professAchieveTypeId != null">#{professAchieveTypeId},</if>
+            <if test="professAchieveTypeId != null">#{professAchieveTypeId}</if>
 
         </trim>
     </insert>

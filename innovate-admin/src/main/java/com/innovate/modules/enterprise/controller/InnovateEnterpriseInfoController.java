@@ -102,6 +102,7 @@ public class InnovateEnterpriseInfoController {
         //apply_status 1：审核通过的企业
         Wrapper<InnovateEnterpriseInfoEntity> wrapper = new EntityWrapper<InnovateEnterpriseInfoEntity>()
                 .eq("apply_status", 1);
+        wrapper.eq("is_del", 0);
         if (!"SuperAdmin".equals(loginUser.getUsername())) {
             Long userId = loginUser.getUserId();
             wrapper.eq("enterprise_user_id", userId);

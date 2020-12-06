@@ -52,8 +52,8 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.activityId = data.innovatestudentsignin.activityId
-                this.dataForm.studentId = data.innovatestudentsignin.studentId
+                this.dataForm.activityId = data.innovateStudentSignIn.activityId
+                this.dataForm.studentId = data.innovateStudentSignIn.studentId
               }
             })
           }

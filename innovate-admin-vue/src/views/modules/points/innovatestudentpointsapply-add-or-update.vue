@@ -74,7 +74,7 @@
         <el-upload
           class="upload-demo"
           :action="url"
-          :data="{textType: textType}"
+          :data="{stuNum: $store.state.user.username}"
           :on-success="successHandle1"
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
@@ -214,7 +214,8 @@
           participateType: '',
           sysPointsId: 0,
           applyUserId: 0,
-          instituteId: 0
+          instituteId: 0,
+          stuNum: ''
         }
         this.attachLists = []
         this.fileList = []

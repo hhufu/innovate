@@ -14,7 +14,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="企业名称" prop="enterpriseName">
-      <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" >
+      <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" @change="changeenter">
         <el-option
           v-for="item in nameList"
           :key="item.authenticationId"
@@ -76,7 +76,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="loading" :disabled="loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -93,6 +93,7 @@
   export default {
     data () {
       return {
+        loading: false,
         visible: false,
         url: '',
         fileAskContent: '无',
@@ -140,13 +141,17 @@
     },
     methods: {
       init (id) {
+        this.loading = false
         this.url = this.$http.adornUrl(`/cooperation/innovatecooperationmaterials/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.cooperationId = id || 0
         this.visible = true
         this.getInstituteList()
         this.$http({
           url: this.$http.adornUrl(`/cooperation/innovateregisterauthentication/list`),
-          method: 'get'
+          method: 'get',
+          params: this.$http.adornParams({
+            isDel: 0
+          })
         }).then(({data}) => {
           this.nameList = data.page.list
         })
@@ -168,6 +173,7 @@
                 this.dataForm.startTime = data.innovateCooperationProjectsEntity.startTime
                 this.dataForm.endTime = data.innovateCooperationProjectsEntity.endTime
                 this.dataForm.userId = data.innovateCooperationProjectsEntity.userId
+                this.dataForm.authenticationId = data.innovateCooperationProjectsEntity.authenticationId
                 this.attachLists = data.materialsEntityList
                 // 附件回显
                 let tempFinishAtta = []
@@ -206,6 +212,7 @@
       },
       // 表单提交
       dataFormSubmit () {
+        this.loading = true
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.dataForm.userId = this.$store.state.user.id
@@ -230,6 +237,7 @@
                 })
               } else {
                 this.$message.error(data.msg)
+                this.loading = false
               }
             })
           }
@@ -265,6 +273,12 @@
           }
         }
         this.attachLists = tempFileList
+      },
+      changeenter(val){
+        let List = this.nameList.filter(item => {
+          return item.enterpriseName.indexOf(val) > -1
+        })
+        this.dataForm.authenticationId = List[0].authenticationId
       }
     }
   }

@@ -5,7 +5,7 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
     <el-form-item label="企业名称" prop="enterpriseName">
-      <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" >
+      <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" @change="changeenter">
         <el-option
           v-for="item in nameList"
           :key="item.authenticationId"
@@ -38,15 +38,9 @@
         placeholder="选择日期">
       </el-date-picker>
     </el-form-item>
-<!--    <el-form-item label="协议材料" prop="agreementMaterials">-->
-<!--      <el-input v-model="dataForm.agreementMaterials" placeholder="协议材料"></el-input>-->
-<!--    </el-form-item>-->
-    <el-form-item label="企业记录" prop="enterpriseRecords">
-      <el-input v-model="dataForm.enterpriseRecords" placeholder="企业记录"></el-input>
+    <el-form-item label="备注" prop="enterpriseRecords">
+      <el-input v-model="dataForm.enterpriseRecords" placeholder="备注"></el-input>
     </el-form-item>
-<!--    <el-form-item label="创建者" prop="userId">-->
-<!--      <el-input v-model="dataForm.userId" placeholder="创建者"></el-input>-->
-<!--    </el-form-item>-->
       <el-form-item label="附件要求">
         <template>
           <el-alert
@@ -67,13 +61,13 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileList.length === 0" style="color: crimson">*请上传相关附件</span>
+          <span v-if="this.attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="loading" :disabled="loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -90,6 +84,7 @@
   export default {
     data () {
       return {
+        loading: false,
         visible: false,
         instituteList: [],
         url: '',
@@ -137,13 +132,17 @@
     },
     methods: {
       init (id) {
+        this.loading = false
         this.url = this.$http.adornUrl(`/cooperation/innovatecooperationmaterials/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.enterpriseId = id || 0
         this.visible = true
         this.getInstituteList()
         this.$http({
           url: this.$http.adornUrl(`/cooperation/innovateregisterauthentication/list`),
-          method: 'get'
+          method: 'get',
+          params: this.$http.adornParams({
+            isDel: 0
+          })
         }).then(({data}) => {
           this.nameList = data.page.list
         })
@@ -163,6 +162,7 @@
                 this.dataForm.agreementTime = data.innovateCooperationAgreement.agreementTime
                 this.dataForm.agreementMaterials = data.innovateCooperationAgreement.agreementMaterials
                 this.dataForm.enterpriseRecords = data.innovateCooperationAgreement.enterpriseRecords
+                this.dataForm.authenticationId = data.innovateCooperationAgreement.authenticationId
                 this.dataForm.userId = data.innovateCooperationAgreement.userId
                 this.attachLists = data.materialsEntityList
                 // 附件回显
@@ -201,6 +201,7 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.loading = true
             this.dataForm.userId = this.$store.state.user.id
             console.log(this.attachLists)
             this.$http({
@@ -224,6 +225,7 @@
                 })
               } else {
                 this.$message.error(data.msg)
+                this.loading = false
               }
             })
           }
@@ -259,6 +261,12 @@
           }
         }
         this.attachLists = tempFileList
+      },
+      changeenter(val){
+        let List = this.nameList.filter(item => {
+          return item.enterpriseName.indexOf(val) > -1
+        })
+        this.dataForm.authenticationId = List[0].authenticationId
       }
     }
   }

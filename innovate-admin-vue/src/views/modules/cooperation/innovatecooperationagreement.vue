@@ -8,6 +8,7 @@
           align="right"
           clearable
           type="year"
+          value-format="yyyy"
           placeholder="请选择年度">
         </el-date-picker>
       </el-form-item>
@@ -74,7 +75,7 @@
         prop="enterpriseRecords"
         header-align="center"
         align="center"
-        label="企业记录">
+        label="备注">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -144,7 +145,7 @@
             'limit': this.pageSize,
             'enterpriseName': this.dataForm.enterpriseName,
             isDel: 0,
-            'agreementYear':this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear.getFullYear(),
+            'agreementYear':this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear,
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -248,7 +249,7 @@
         let dataForm = {
           ids: ids,
           instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.dataForm.instituteId,
-          agreementYear: (this.isAuth("cooperation:export:erAdmin") === true || this.isAuth("cooperation:export:admin") === true) ? null : this.dataForm.agreementYear.getFullYear()
+          agreementYear: (this.isAuth("cooperation:export:erAdmin") === true || this.isAuth("cooperation:export:admin") === true) ? null : this.dataForm.agreementYear
         }
         this.$http({
           url: this.$http.adornUrl('/cooperation/innovatecooperationagreement/export'),
