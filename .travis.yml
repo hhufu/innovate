@@ -26,7 +26,7 @@ matrix:
           id_rsa.enc -out ~/.ssh/id_rsa -d
         - chmod 600 ~/.ssh/id_rsa
         - echo -e "Host $SERVER_IP\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-        - cd $DOCKER_NAME/innovate-admin-vue
+        - cd hhufu/innovate-admin-vue
     - language: java
       services:
         - docker
