@@ -112,7 +112,8 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'trainingBaseName': this.dataForm.trainingBaseName
+            'trainingBaseName': this.dataForm.trainingBaseName,
+            isDel: 0
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

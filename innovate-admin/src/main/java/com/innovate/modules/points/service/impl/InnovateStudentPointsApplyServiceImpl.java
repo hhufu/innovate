@@ -54,7 +54,8 @@ public class InnovateStudentPointsApplyServiceImpl extends ServiceImpl<InnovateS
             entityWrapper.eq("apply_user_id", Long.parseLong(params.get("apply_user_id").toString()));
         } else { // 管理员
             if (params.get("noPass") != null) entityWrapper.lt("apply_status", 1);
-            entityWrapper.or("adminUserId", Long.parseLong(params.get("apply_user_id").toString()));
+            if (params.get("adminUserId") != null)
+            entityWrapper.or("apply_user_id = " + Long.parseLong(params.get("adminUserId").toString()));
         }
         // 根据学号查询
         if (params.get("stuNum") != null) entityWrapper.like("stu_num", params.get("stuNum").toString());

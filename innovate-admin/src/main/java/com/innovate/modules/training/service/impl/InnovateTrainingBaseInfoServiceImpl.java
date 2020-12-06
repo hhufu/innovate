@@ -29,11 +29,12 @@ public class InnovateTrainingBaseInfoServiceImpl extends ServiceImpl<InnovateTra
     private InnovateInstituteService innovateInstituteService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        EntityWrapper<InnovateTrainingBaseInfoEntity> entityEntityWrapper = new EntityWrapper<>();
-        if (params.get("trainingBaseName") != null) entityEntityWrapper.like("training_base_name", params.get("trainingBaseName").toString());
+        EntityWrapper<InnovateTrainingBaseInfoEntity> entityWrapper = new EntityWrapper<>();
+        if (params.get("trainingBaseName") != null) entityWrapper.like("training_base_name", params.get("trainingBaseName").toString());
+        if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
         Page<InnovateTrainingBaseInfoEntity> page = this.selectPage(
                 new Query<InnovateTrainingBaseInfoEntity>(params).getPage(),
-                entityEntityWrapper
+                entityWrapper
         );
 
         return new PageUtils(page);

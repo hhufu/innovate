@@ -91,7 +91,7 @@
           instituteId: '',
           materialTypeId: '',
           trainingBaseId: '',
-          isDel: ''
+          isDel: 0
         },
         textType: '',
         dataRule: {
