@@ -21,8 +21,8 @@ public class InnovateEnterpriseAchieveServiceImpl extends ServiceImpl<InnovateEn
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        //企业名称 搜索信息
-        Object enterpriseName = params.get("enterpriseName");
+        //获奖名称 搜索信息
+        Object awardProjectName = params.get("awardProjectName");
 
         //用户id
         Object userId = params.get("enterpriseUserId");
@@ -42,8 +42,8 @@ public class InnovateEnterpriseAchieveServiceImpl extends ServiceImpl<InnovateEn
             }
         }
 
-        if (!"".equals(enterpriseName)){  //根据企业名称搜索
-            wrapper.like("enterprise_name" , enterpriseName.toString());
+        if (!"".equals(awardProjectName)){  //根据获奖名称搜索
+            wrapper.like("award_project_name" , awardProjectName.toString());
         }
 
         Page<InnovateEnterpriseAchieveEntity> page = this.selectPage(
