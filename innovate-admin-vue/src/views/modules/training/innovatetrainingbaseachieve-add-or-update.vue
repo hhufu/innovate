@@ -23,8 +23,8 @@
         placeholder="材料年度">
       </el-date-picker>
     </el-form-item>
-    <el-form-item label="材料类型" prop="materialType">
-      <el-select v-model="dataForm.materialType" placeholder="材料类型" @change="changeelevel">
+    <el-form-item label="成果类型" prop="materialType">
+      <el-select v-model="dataForm.materialType" placeholder="成果类型" @change="changeelevel">
         <el-option
           v-for="item in trainingTypes"
           :key="item.materialTypeId"
@@ -59,7 +59,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="loading" :disabled="loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -76,6 +76,7 @@
   export default {
     data () {
       return {
+        loading: false,
         visible: false,
         url: '',
         fileAskContent: '无',
@@ -111,13 +112,17 @@
     },
     methods: {
       init (index, id) {
+        this.loading = false
         this.url = this.$http.adornUrl(`/training/innovatetrainingbaseattach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.trainingAchieveId = id || 0
         this.visible = true
         this.getInstituteName()
         this.$http({
           url: this.$http.adornUrl(`/training/innovatetrainingbaseinfo/list`),
-          method: 'get'
+          method: 'get',
+          params: this.$http.adornParams({
+            isDel: 0
+          })
         }).then(({data}) => {
           this.trainingnameList = data.page.list
           this.dataForm.instituteId = data.page.list[0]
@@ -180,6 +185,7 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid && this.attachLists.length > 0) {
+            this.loading = true
             this.$http({
               url: this.$http.adornUrl(`/training/innovatetrainingbaseachieve/${!this.dataForm.trainingAchieveId ? 'save' : 'update'}`),
               method: 'post',
@@ -201,6 +207,7 @@
                 })
               } else {
                 this.$message.error(data.msg)
+                this.loading = flase
               }
             })
           }
@@ -249,7 +256,6 @@
         })
         this.dataForm.instituteId = List[0].instituteId
         this.dataForm.trainingBaseId = List[0].trainingBaseId
-        alert(this.dataForm.instituteId)
       }
     }
   }

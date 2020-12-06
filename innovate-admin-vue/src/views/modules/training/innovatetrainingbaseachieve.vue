@@ -7,6 +7,7 @@
           v-model="dataForm.materialYear"
           align="right"
           type="year"
+          value-format="yyyy"
           placeholder="请选择年度">
         </el-date-picker>
       </el-form-item>
@@ -56,7 +57,7 @@
         prop="materialType"
         header-align="center"
         align="center"
-        label="材料类型">
+        label="成果类型">
       </el-table-column>
       <el-table-column
         prop="instituteId"
@@ -237,7 +238,7 @@
         let dataForm = {
           ids: ids,
           instituteId: this.isAuth("training:export:admin") === true ? null : this.dataForm.instituteId,
-          materialYear: (this.isAuth("training:export:erAdmin") === true || this.isAuth("training:export:admin") === true) ? null : this.dataForm.materialYear.getFullYear()
+          materialYear: (this.isAuth("training:export:erAdmin") === true || this.isAuth("training:export:admin") === true) ? null : this.dataForm.materialYear
         }
         this.$http({
           url: this.$http.adornUrl('/training/innovatetrainingbaseachieve/export'),

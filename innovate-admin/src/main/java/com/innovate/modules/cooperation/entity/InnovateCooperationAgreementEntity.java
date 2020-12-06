@@ -38,8 +38,15 @@ public class InnovateCooperationAgreementEntity implements Serializable {
 	@ExcelProperty(value = {"企业名称"})
 	private String enterpriseName;
 	/**
+	 * 所属二级学院名称
+	 */
+	@TableField(exist = false)
+	@ExcelProperty(value = "所属二级学院名称")
+	private String instituteName;
+	/**
 	 * 二级学院 innovate_sys_institute主键
 	 */
+	@ExcelIgnore
 	@ExcelProperty(value = {"二级学院"})
 	private Long instituteId;
 	/**
@@ -57,12 +64,13 @@ public class InnovateCooperationAgreementEntity implements Serializable {
 	/**
 	 * 协议材料
 	 */
+	@ExcelIgnore
 	@ExcelProperty(value = {"协议材料"})
 	private String agreementMaterials;
 	/**
 	 * 企业记录
 	 */
-	@ExcelProperty(value = {"企业记录"})
+	@ExcelProperty(value = {"备注"})
 	private String enterpriseRecords;
 	/**
 	 * 创建者
@@ -80,5 +88,10 @@ public class InnovateCooperationAgreementEntity implements Serializable {
 	@TableField(exist = false)
 	@ExcelIgnore
 	private SysUserEntity userEntity;
+	/**
+	 * 企业登记表主键
+	 */
+	@ExcelIgnore
+	private Long authenticationId;
 
 }

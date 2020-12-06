@@ -1,6 +1,10 @@
 package com.innovate.modules.cooperation.service.impl;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.innovate.modules.cooperation.entity.InnovateCooperationAgreementEntity;
+import com.innovate.modules.cooperation.service.InnovateCooperationAgreementService;
 import com.innovate.modules.innovate.entity.ProjectInfoEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +23,8 @@ import com.innovate.modules.cooperation.service.InnovateRegisterAuthenticationSe
 @Service("innovateRegisterAuthenticationService")
 public class InnovateRegisterAuthenticationServiceImpl extends ServiceImpl<InnovateRegisterAuthenticationDao, InnovateRegisterAuthenticationEntity> implements InnovateRegisterAuthenticationService {
 
+    @Autowired
+    InnovateCooperationAgreementService agreementService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateRegisterAuthenticationEntity> entityWrapper = new EntityWrapper<>();

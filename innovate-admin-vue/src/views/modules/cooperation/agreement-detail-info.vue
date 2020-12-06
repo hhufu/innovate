@@ -35,7 +35,7 @@
         <td colspan="8">{{parseTime(dataForm.agreementTime, '{y}年{m}月{d}日')}}</td>
       </tr>
       <tr align='center'>
-        <th colspan="2">企业材料</th>
+        <th colspan="2">备注</th>
         <td colspan="8">{{dataForm.enterpriseRecords}}</td>
       </tr>
       <!--附件开始-->

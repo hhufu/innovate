@@ -33,6 +33,11 @@ public class InnovateCooperationProjectsEntity implements Serializable {
 	@ExcelIgnore
 	private Long cooperationId;
 	/**
+	 * 企业名称
+	 */
+	@ExcelProperty(value = {"企业名称"})
+	private String enterpriseName;
+	/**
 	 * 项目名称
 	 */
 	@ExcelProperty(value = {"项目名称"})
@@ -42,11 +47,6 @@ public class InnovateCooperationProjectsEntity implements Serializable {
 	 */
 	@ExcelProperty(value = {"二级学院ID"})
 	private Long instituteId;
-	/**
-	 * 企业名称
-	 */
-	@ExcelProperty(value = {"企业名称"})
-	private String enterpriseName;
 	/**
 	 * 年度
 	 */
@@ -82,5 +82,9 @@ public class InnovateCooperationProjectsEntity implements Serializable {
 	@TableField(exist = false)
 	@ExcelIgnore
 	private SysUserEntity userEntity;
-
+	/**
+	 * 企业登记表主键
+	 */
+	@ExcelIgnore
+	private Long authenticationId;
 }

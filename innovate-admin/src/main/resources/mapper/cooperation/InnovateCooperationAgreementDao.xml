@@ -13,6 +13,7 @@
         <result property="agreementMaterials" column="agreement_materials"/>
         <result property="enterpriseRecords" column="enterprise_records"/>
         <result property="userId" column="user_id"/>
+        <result property="authenticationId" column="authentication_id"/>
     </resultMap>
 
     <update id="deleteList"  parameterType="java.util.List">
@@ -34,7 +35,8 @@
             <if test="agreementTime != null">agreement_time,</if>
             <if test="agreementMaterials != null">agreement_materials,</if>
             <if test="enterpriseRecords != null">enterprise_records,</if>
-            <if test="userId != null">user_id</if>
+            <if test="userId != null">user_id,</if>
+            <if test="authenticationId != null">authentication_id</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="enterpriseName != null">#{enterpriseName},</if>
@@ -43,7 +45,8 @@
             <if test="agreementTime != null">#{agreementTime},</if>
             <if test="agreementMaterials != null">#{agreementMaterials},</if>
             <if test="enterpriseRecords != null">#{enterpriseRecords},</if>
-            <if test="userId != null">#{userId}</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="authenticationId != null">#{authenticationId}</if>
         </trim>
     </insert>
 

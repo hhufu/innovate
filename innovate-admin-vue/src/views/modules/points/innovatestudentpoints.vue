@@ -81,6 +81,9 @@
           header-align="center"
           align="center"
           label="操作时间">
+          <template slot-scope="scope">
+            {{parseTime(scope.row.operationTime, '{y}-{m}-{d}')}}
+          </template>
         </el-table-column>
         <el-table-column
           fixed="right"

@@ -68,7 +68,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="loading" :disabled="loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -86,6 +86,7 @@
   export default {
     data() {
       return {
+        loading: false,
         visible: false,
         url: '',
         fileList: [], // 文件列表
@@ -131,6 +132,7 @@
     },
     methods: {
       init(id) {
+        this.loading = false
         this.url = this.$http.adornUrl(`/profess/attach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.professAchieveId = id || 0
         this.visible = true
@@ -197,6 +199,7 @@
       dataFormSubmit() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid && this.attachLists.length > 0) {
+            this.loading =true
             this.$http({
               url: this.$http.adornUrl(`/profess/innovateprofessachieve/${!this.dataForm.professAchieveId ? 'save' : 'update'}`),
               method: 'post',
@@ -218,6 +221,7 @@
                 })
               } else {
                 this.$message.error(data.msg)
+                this.loading = false
               }
             })
           }

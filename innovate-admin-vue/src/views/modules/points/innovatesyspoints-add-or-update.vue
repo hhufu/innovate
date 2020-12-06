@@ -61,7 +61,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="loading" :disabled="loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -70,6 +70,7 @@
   export default {
     data () {
       return {
+        loading: false,
         visible: false,
         textType: '1',
         participateList: [],
@@ -103,6 +104,7 @@
     },
     methods: {
       init (id) {
+        this.loading = false
         this.getTypeList()
         this.dataForm.integralId = id || 0
         this.visible = true
@@ -162,6 +164,7 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.loading = true
             // 如果父级id和该记录的id相同，则把父级id设置为0
             // eslint-disable-next-line eqeqeq
             if (this.dataForm.parentId == this.dataForm.integralId) {
@@ -206,6 +209,7 @@
                 })
               } else {
                 this.$message.error(data.msg)
+                this.loading = false
               }
             })
           }

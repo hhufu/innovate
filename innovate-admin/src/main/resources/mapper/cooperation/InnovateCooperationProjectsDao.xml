@@ -13,6 +13,7 @@
         <result property="userId" column="user_id"/>
         <result property="startTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
+        <result property="authenticationId" column="authentication_id"/>
     </resultMap>
 
     <update id="deleteList"  parameterType="java.util.List">
@@ -34,8 +35,9 @@
             <if test="cooperationYear != null">cooperation_year,</if>
             <if test="userId != null">user_id,</if>
             <if test="startTime != null">start_time,</if>
-            <if test="endTime != null">end_time</if>
+            <if test="endTime != null">end_time,</if>
             <if test="isDel != null">is_del,</if>
+            <if test="authenticationId != null">authentication_id</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="projectName != null">#{projectName},</if>
@@ -44,8 +46,9 @@
             <if test="cooperationYear != null">#{cooperationYear},</if>
             <if test="userId != null">#{userId},</if>
             <if test="startTime != null">#{startTime},</if>
-            <if test="endTime != null">#{endTime}</if>
+            <if test="endTime != null">#{endTime},</if>
             <if test="isDel != null">#{isDel},</if>
+            <if test="authenticationId != null">#{authenticationId}</if>
         </trim>
     </insert>
     <select id="selectCooperationYear" parameterType="map" resultType="InnovateCooperationProjectsEntity">

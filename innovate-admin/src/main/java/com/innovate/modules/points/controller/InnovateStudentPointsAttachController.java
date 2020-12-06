@@ -102,9 +102,9 @@ public class InnovateStudentPointsAttachController {
     @PostMapping(value = "/upload")
     @RequiresPermissions("points:innovatestudentpointsapply:save")
     public Object uploadFile(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
-        String finishName = request.getParameter("fileName");
+        String stuNum = request.getParameter("stuNum");
 //        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + finishName + "/"+ RandomUtils.getRandomNums()+"/";
-        String UPLOAD_FILES_PATH = "pointsApply"+ File.separator + Calendar.getInstance().get(Calendar.YEAR) + File.separator+finishName + "/"+ RandomUtils.getRandomNums()+"/";
+        String UPLOAD_FILES_PATH = "pointsApply"+ File.separator + Calendar.getInstance().get(Calendar.YEAR) + File.separator+stuNum + "/"+ RandomUtils.getRandomNums()+"/";
         if (Objects.isNull(files) || files.isEmpty()) {
             return R.error("文件为空，请重新上传");
         }

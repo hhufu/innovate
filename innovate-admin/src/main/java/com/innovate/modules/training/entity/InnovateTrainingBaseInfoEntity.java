@@ -39,6 +39,7 @@ public class InnovateTrainingBaseInfoEntity implements Serializable {
 	/**
 	 * 所属二级学院id
 	 */
+	@ExcelIgnore
 	private Long instituteId;
 	/**
 	 * 所属二级学院名称
@@ -49,6 +50,7 @@ public class InnovateTrainingBaseInfoEntity implements Serializable {
 	/**
 	 * 建立时间
 	 */
+	@ExcelProperty(value = "建立时间")
 	@DateTimeFormat("yyyy-MM-dd")
 	@JsonFormat(locale="zh", timezone="GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date baseCreateTime;

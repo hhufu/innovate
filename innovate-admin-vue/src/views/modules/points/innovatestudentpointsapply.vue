@@ -105,6 +105,9 @@
         header-align="center"
         align="center"
         label="申请时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.applyTime, '{y}-{m}-{d}')}}
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -183,7 +186,8 @@
             'limit': this.pageSize,
             'stuNum': this.dataForm.stuNum,
             'isDel': 0,
-            'noPass': 'false',
+            'noApply': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? "true" : null,
+            'noPass': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : "true",
             'adminUserId': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? this.$store.state.user.id : null,
             'applyStatus': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? 1 : null,
             'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id,
