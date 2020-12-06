@@ -53,7 +53,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="this.attachLists.length == 0" style="color: crimson">*请上传相关附件</span>
+          <span v-if="this.attachLists.length == 0" style="color: #dc143c">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -129,7 +129,10 @@
         })
         this.$http({
           url: this.$http.adornUrl(`/training/innovatetrainingachievetype/list`),
-          method: 'get'
+          method: 'get',
+          params: this.$http.adornParams({
+            isDel: 0
+          })
         }).then(({data}) => {
           this.trainingTypes = data.page.list
         })
