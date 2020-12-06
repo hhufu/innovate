@@ -42,7 +42,7 @@ matrix:
           -in id_rsa.enc -out ~/.ssh/id_rsa -d
         - chmod 600 ~/.ssh/id_rsa
         - echo -e "Host $SERVER_IP\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-        - cd innovate-admin
+        - cd $DOCKER_NAME/innovate-admin
       after_success:
         - docker login -u=$DOCKER_NAME -p="$DOCKER_PWD"
         - docker push $DOCKER_NAME/innovate-admin:latest
