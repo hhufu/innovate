@@ -77,6 +77,7 @@
                 this.dataForm.trainingBaseName = data.innovateTrainingBaseInfo.trainingBaseName
                 this.dataForm.instituteId = data.innovateTrainingBaseInfo.instituteId
                 this.dataForm.baseCreateTime = data.innovateTrainingBaseInfo.baseCreateTime
+                this.dataForm.isDel = data.innovateTrainingBaseInfo.isDel
               }
             })
           }
@@ -100,7 +101,7 @@
                 'trainingBaseName': this.dataForm.trainingBaseName,
                 'instituteId': this.dataForm.instituteId,
                 'baseCreateTime': this.dataForm.baseCreateTime,
-                'isDel': this.dataForm.isDel
+                // 'isDel': this.dataForm.isDel
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
