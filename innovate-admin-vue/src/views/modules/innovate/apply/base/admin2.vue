@@ -2,6 +2,12 @@
   <div class="mod-user">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-select v-model="enterpriseType" @change="getDataList">
+          <el-option label="校内企业" :value="1">校内企业</el-option>
+          <el-option label="校外企业" :value="2">校外企业</el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
         <el-input v-model="dataForm.userName" placeholder="项目名" clearable></el-input>
       </el-form-item>
       <el-form-item>
@@ -58,11 +64,11 @@
                   :active="props.row.projectInfoEntity.projectBaseApplyStatus"
                   finish-status="success">
                   <el-step title="项目负责人提交"></el-step>
-                  <el-step title="指导老师审批"></el-step>
+                  <el-step :title="props.row.projectInfoEntity.enterpriseType == 1? '指导老师审批': ''"></el-step>
+                  <el-step :title="props.row.projectInfoEntity.enterpriseType == 1? '管理员审批' : ''"></el-step>
+                  <el-step :title="props.row.projectInfoEntity.enterpriseType == 1? '评委审批': ''"></el-step>
                   <el-step title="管理员审批"></el-step>
-                  <el-step title="评委审批"></el-step>
-                  <el-step title="管理员审批"></el-step>
-                  <!--<el-step title="超级管理员审批"></el-step>-->
+                  <el-step title="超级管理员审批"></el-step>
                 </el-steps>
               </el-col>
             </el-card>
@@ -181,6 +187,7 @@
         projectList: [],
         sysTeacherEntities: [],
         hasApply: '1',
+        enterpriseType: 1,
         dataForm: {
           baseId: ''
         },
@@ -246,6 +253,7 @@
             'pageSize': this.pageSize,
             'userId': this.$store.state.user.id,
             'hasApply': this.hasApply,
+            'enterpriseType': this.enterpriseType,
             'noPass': 'base_no_pass',
             'noPassStatus': 0,
             // 'isTeacher': true

@@ -77,42 +77,42 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="创办企业初始投资资金（万元）" prop="projectInitMoney">
-            <el-input v-model="dataForm.projectInitMoney" placeholder="请输入"></el-input>
+            <el-input v-model="dataForm.projectInitMoney" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="提供勤工助学岗位数" prop="projectStudyNum">
-            <el-input v-model="dataForm.projectStudyNum" placeholder="请输入"></el-input>
+            <el-input v-model="dataForm.projectStudyNum" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业成员中的应届毕业生人数" prop="perNumFresh">
-            <el-input v-model="dataForm.perNumFresh" placeholder="请输入"></el-input>
+            <el-input v-model="dataForm.perNumFresh" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业成员中的历届毕业生人数" prop="perNumPast">
-            <el-input v-model="dataForm.perNumPast" placeholder="请输入"></el-input>
+            <el-input v-model="dataForm.perNumPast" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="本年度吸纳就业人数" prop="perNumAbsorbEm">
-            <el-input v-model="dataForm.perNumAbsorbEm" placeholder="请输入"></el-input>
+            <el-input v-model="dataForm.perNumAbsorbEm" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业成立以来累计带动就业人数" prop="perNumDriveEmNum">
-            <el-input v-model="dataForm.perNumDriveEmNum" placeholder="请输入"></el-input>
+            <el-input v-model="dataForm.perNumDriveEmNum" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="本年度吸纳实习见习人数" prop="perNumAbsorbPt">
-            <el-input v-model="dataForm.perNumAbsorbPt" placeholder="请输入"></el-input>
+            <el-input v-model="dataForm.perNumAbsorbPt" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业成立以来累计带动实习见习人数" prop="perNumDrivePtNum">
-            <el-input v-model="dataForm.perNumDrivePtNum" placeholder="请输入"></el-input>
+            <el-input v-model="dataForm.perNumDrivePtNum" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -155,7 +155,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="企业注册资金（万元）" prop="projectRegMoney">
-              <el-input v-model="dataForm.projectRegMoney" placeholder="请输入"></el-input>
+              <el-input v-model="dataForm.projectRegMoney" type="number" placeholder="请输入"></el-input>
             </el-form-item>
           </el-col>
         </template>
@@ -550,6 +550,7 @@
           projectBaseApplyStatus: 0,
           projectFinishApplyStatus: 0,
           projectMatchApplyStatus: 0,
+          enterpriseType: 1,
           stationId: '',
           isUpdate: 0
         },

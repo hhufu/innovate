@@ -45,6 +45,7 @@ export default {
       visible: false,
       baseList: [],
       dataForm: {
+        baseId: null,
         id: 0,
         entName: '',
         entCorporate: '',

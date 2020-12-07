@@ -12,8 +12,8 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="dataForm.enterpriseType" @change="getDataList">
-        <el-radio :label="1">校内</el-radio>
-        <el-radio :label="2">校外</el-radio>
+        <el-radio :label="1">校内企业</el-radio>
+        <el-radio :label="2">校外企业</el-radio>
       </el-radio-group>
     </el-card>
     <el-table
@@ -59,11 +59,11 @@
                   :active="props.row.projectInfoEntity.projectBaseApplyStatus"
                   finish-status="success">
                   <el-step title="项目负责人提交"></el-step>
-                  <el-step v-if="props.row.projectInfoEntity.enterpriseType == 1" title="指导老师审批"></el-step>
+                  <el-step :title="props.row.projectInfoEntity.enterpriseType == 1? '指导老师审批': ''"></el-step>
+                  <el-step :title="props.row.projectInfoEntity.enterpriseType == 1? '管理员审批' : ''"></el-step>
+                  <el-step :title="props.row.projectInfoEntity.enterpriseType == 1? '评委审批': ''"></el-step>
                   <el-step title="管理员审批"></el-step>
-                  <el-step v-if="props.row.projectInfoEntity.enterpriseType == 1" title="评委审批"></el-step>
-                  <el-step title="管理员审批"></el-step>
-                  <!--<el-step title="超级管理员审批"></el-step>-->
+                  <el-step title="超级管理员审批"></el-step>
                 </el-steps>
               </el-col>
             </el-card>
@@ -153,7 +153,7 @@
           <el-button v-if="addOrUpadate(scope.row.projectInfoEntity)" type="text" size="small" @click="addOrUpdateHandle(scope.row.projectInfoEntity.projectId)">修改</el-button>
           <el-button v-if="isDelete(scope.row.projectInfoEntity)" type="text" size="small" @click="deleteHandle(scope.row.projectInfoEntity.projectId)">删除</el-button>
           <br v-if="applyBaseIsVisible(scope.row.projectInfoEntity)">
-          <el-button v-if="applyBaseIsVisible(scope.row.projectInfoEntity)" type="text" size="small" @click="applyBaseHandle(scope.row.projectInfoEntity.projectId)">提交中心申请</el-button>
+          <el-button v-if="applyBaseIsVisible(scope.row.projectInfoEntity)" type="text" size="small" @click="applyBaseHandle(scope.row.projectInfoEntity)">提交中心申请</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -331,66 +331,46 @@
         })
       },
       // 审批
-      applyBaseHandle (id) {
+      applyBaseHandle (row) {
         this.$confirm('此操作将使该项目进入不可修改状态，并进入中心审批流程，是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          let projectBaseApplyStatus = 0
           if (this.dataForm.enterpriseType == 1) {
-            this.$http({
-              url: this.$http.adornUrl('/innovate/project/apply/apply'),
-              method: 'post',
-              params: this.$http.adornParams({
-                'projectId': id,
-                'apply': 'project_base_apply_status',
-                'roleId': 2
-              }, false)
-            }).then(({data}) => {
-              this.$message({
-                type: 'success',
-                message: '提交成功!'
-              })
-              this.getDataList()
-            })
+            projectBaseApplyStatus = 1
           } else {
-
-            this.$http({
-              url: this.$http.adornUrl('/innovate/project/apply/apply'),
-              method: 'post',
-              params: this.$http.adornParams({
-                'projectId': id,
-                'apply': 'project_base_apply_status',
-                'roleId': 2
-              }, false)
-            }).then(({data}) => {
-              this.$http({
-                url: this.$http.adornUrl('/innovate/project/apply/apply'),
-                method: 'post',
-                params: this.$http.adornParams({
-                  'projectId': id,
-                  'apply': 'project_base_apply_status',
-                  'roleId': 3
-                }, false)
-              }).then(({data}) => {
-                this.$http({
-                  url: this.$http.adornUrl('/innovate/project/apply/apply'),
-                  method: 'post',
-                  params: this.$http.adornParams({
-                    'projectId': id,
-                    'apply': 'project_base_apply_status',
-                    'roleId': 4
-                  }, false)
-                }).then(({data}) => {
-                  this.$message({
-                    type: 'success',
-                    message: '提交成功!'
-                  })
-                  this.getDataList()
-                })
-              })
-            })
+            projectBaseApplyStatus = 4
           }
+            this.$http({
+              url: this.$http.adornUrl(`/innovate/project/info/update`),
+              method: 'post',
+              data: this.$http.adornData({
+                'projectInfoEntity': {
+                  projectId: row.projectId,
+                  projectBaseApplyStatus: projectBaseApplyStatus
+                },
+                'projectLegalInfoEntities': [],
+                'projectPersonInfoEntitys': [],
+                'projectTeacherEntities': [],
+                'projectAttachEntities': [],
+                'projectAwardEntities': [],
+                'projectStaffInfoEntities': [],
+                'projectSubMoneyEntities': []
+              })
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$message({
+                  message: '提交成功',
+                  type: 'success',
+                  duration: 1500
+                })
+                this.getDataList()
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
 
         }).catch(() => {
           this.$message({

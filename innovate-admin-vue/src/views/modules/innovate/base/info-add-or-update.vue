@@ -81,7 +81,7 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="textarea">
+            v-model="dataForm.baseMessage">
           </el-input>
         </el-col>
       </el-row>
@@ -175,6 +175,18 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.baseName = data.baseInfo.baseName
+                this.dataForm.baseArea = data.baseInfo.baseArea
+                this.dataForm.baseStationType = data.baseInfo.baseStationType
+                this.dataForm.baseServiceNum = data.baseInfo.baseServiceNum
+                this.dataForm.baseOutRate = data.baseInfo.baseOutRate
+                this.dataForm.baseServiceArea = data.baseInfo.baseServiceArea
+                this.dataForm.baseDirectNum = data.baseInfo.baseDirectNum
+                this.dataForm.baseDirectNum = data.baseInfo.baseDirectNum
+                this.dataForm.baseOutNum = data.baseInfo.baseOutNum
+                this.dataForm.baseEntityNum = data.baseInfo.baseEntityNum
+                this.dataForm.baseEntityNum = data.baseInfo.baseEntityNum
+                this.dataForm.baseScienceNum = data.baseInfo.baseScienceNum
+                this.dataForm.baseSeriesNum = data.baseInfo.baseSeriesNum
                 this.dataForm.baseMessage = data.baseInfo.baseMessage
               }
             })
@@ -191,6 +203,16 @@
               data: this.$http.adornData({
                 'baseId': this.dataForm.id || undefined,
                 'baseName': this.dataForm.baseName,
+                'baseArea': this.dataForm.baseArea,
+                'baseStationType': this.dataForm.baseStationType,
+                'baseServiceNum': this.dataForm.baseServiceNum,
+                'baseOutRate': this.dataForm.baseOutRate,
+                'baseServiceArea': this.dataForm.baseServiceArea,
+                'baseDirectNum': this.dataForm.baseDirectNum,
+                'baseOutNum': this.dataForm.baseOutNum,
+                'baseEntityNum': this.dataForm.baseEntityNum,
+                'baseScienceNum': this.dataForm.baseScienceNum,
+                'baseSeriesNum': this.dataForm.baseSeriesNum,
                 'baseMessage': this.dataForm.baseMessage
               })
             }).then(({data}) => {

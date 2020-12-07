@@ -2,6 +2,12 @@
   <div class="mod-user">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-select v-model="enterpriseType" @change="getDataList">
+          <el-option label="校内企业" :value="1">校内企业</el-option>
+          <el-option label="校外企业" :value="2">校外企业</el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
         <el-input v-model="dataForm.userName" placeholder="项目名" clearable></el-input>
       </el-form-item>
       <el-form-item>
@@ -176,6 +182,7 @@
     data () {
       return {
         projectList: [],
+        enterpriseType: 1,
         noPass: 'audit_no_pass',
         sysTeacherEntities: [],
         dataForm: {
@@ -241,6 +248,7 @@
             'userId': this.$store.state.user.id,
             'noPass': 'base_no_pass',
             'noPassStatus': 1,
+            'enterpriseType': this.enterpriseType,
             // 'isTeacher': true,
             'isStudent': true,
             // 'apply': 'project_audit_apply_status',

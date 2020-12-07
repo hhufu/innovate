@@ -24,4 +24,7 @@ public class ProjectStaffInfoEntity implements Serializable {
     private String staffTel;
     private Long staffType;
     private Long isDel;
+    private String staffIdentify;
+    private String staffStuCard;
+    private String staffCompact;
 }

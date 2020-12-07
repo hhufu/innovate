@@ -62,7 +62,7 @@
                   <el-step title="管理员审批"></el-step>
                   <el-step title="评委审批"></el-step>
                   <el-step title="管理员审批"></el-step>
-                  <!--<el-step title="超级管理员审批"></el-step>-->
+                  <el-step title="超级管理员审批"></el-step>
                 </el-steps>
               </el-col>
             </el-card>
