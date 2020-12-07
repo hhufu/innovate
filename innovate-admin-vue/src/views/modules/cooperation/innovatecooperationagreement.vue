@@ -8,7 +8,6 @@
           align="right"
           clearable
           type="year"
-          value-format="yyyy"
           placeholder="请选择年度">
         </el-date-picker>
       </el-form-item>
@@ -86,7 +85,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpriseId)">查看</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.enterpriseId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpriseId)">删除</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -145,7 +144,7 @@
             'limit': this.pageSize,
             'enterpriseName': this.dataForm.enterpriseName,
             isDel: 0,
-            'agreementYear':this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear,
+            'agreementYear':this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear.getFullYear(),
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -211,11 +210,15 @@
         return actions.join('')
       },
       // 删除
-      deleteHandle (id) {
-        var ids = id ? [id] : this.dataListSelections.map(item => {
+      deleteHandle (row) {
+        var ids = (row ? true : false)  ? [row.enterpriseId] : this.dataListSelections.map(item => {
           return item.enterpriseId
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+
+        var name = (row ? true : false)  ? [row.enterpriseName] : this.dataListSelections.map(item => {
+          return item.enterpriseName
+        })
+        this.$confirm(`确定对[企业名称=${name.join(',')}]进行[${(row ?row.enterpriseId : false) ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

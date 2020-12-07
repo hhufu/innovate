@@ -51,9 +51,9 @@
     </insert>
 
     <select id="selectAgreementYear" parameterType="map" resultType="InnovateCooperationAgreementEntity">
-        select a.*, u.name
-        from innovate_cooperation_agreement a LEFT JOIN sys_user u ON a.user_id = u.user_id
-        where 1 = 1
+        select a.*, u.name, i.institute_name
+        from innovate_cooperation_agreement a LEFT JOIN sys_user u ON a.user_id = u.user_id left join innovate_sys_institute i on a.institute_id = i.institute_id
+        where a.is_del = 0
         <if test="ids != null">
             and a.enterprise_id in
             <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">

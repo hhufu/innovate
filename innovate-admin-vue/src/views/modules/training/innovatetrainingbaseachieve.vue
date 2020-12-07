@@ -74,7 +74,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailInfo(scope.row.trainingAchieveId)">查看</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(2, scope.row.trainingAchieveId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.trainingAchieveId)">删除</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -132,7 +132,7 @@
             'page': this.pageIndex,
             'limit': this.pageSize,
             isDel: 0,
-            'materialYear': this.dataForm.materialYear == null ? null : this.dataForm.materialYear.getFullYear(),
+            'materialYear': this.dataForm.materialYear == null ? null : this.dataForm.materialYear,
             'trainingBaseName': this.dataForm.trainingBaseName
           })
         }).then(({data}) => {
@@ -200,11 +200,14 @@
         })
       },
       // 删除
-      deleteHandle (id) {
-        var ids = id ? [id] : this.dataListSelections.map(item => {
+      deleteHandle (row) {
+        var ids = (row ?true : false) ? [row.trainingAchieveId] : this.dataListSelections.map(item => {
           return item.trainingAchieveId
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        var name = (row ?true : false) ? [row.trainingBaseName] : this.dataListSelections.map(item => {
+          return item.trainingBaseName
+        })
+        this.$confirm(`确定对[实训基地名称=${name.join(',')}]进行[${(row ? row.trainingAchieveId : false) ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

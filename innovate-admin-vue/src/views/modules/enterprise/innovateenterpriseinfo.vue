@@ -18,7 +18,7 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="apply_status" @change="getDataList">
-        <el-radio :label="9" v-if="isAuth('enterprise:innovateenterpriseinfo:superAdmin')">待提交</el-radio>
+        <el-radio :label="9" v-if="isAuth('enterprise:innovateenterpriseinfo:toSubmit')">待提交</el-radio>
         <el-radio :label="0">审核中</el-radio>
         <el-radio :label="1">已审核</el-radio>
         <el-radio :label="2">未通过</el-radio>
