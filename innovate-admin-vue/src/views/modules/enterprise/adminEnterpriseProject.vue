@@ -89,9 +89,9 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpProjId)">查看</el-button>
-          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpProjId,9)">驳回</el-button>
-          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpProjId,1)">通过</el-button>
-          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpProjId,2)">不通过</el-button>
+          <el-button type="text" size="small"  @click="dialog(scope.row.enterpProjId,9)">驳回</el-button>
+          <el-button type="text" size="small"  @click="hintVisible(scope.row.enterpProjId,1)">通过</el-button>
+          <el-button type="text" size="small"  @click="dialog(scope.row.enterpProjId,2)">不通过</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpProjId)">删除</el-button>
         </template>
       </el-table-column>
@@ -105,6 +105,22 @@
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
+    <el-dialog
+      :title="remarkFrom.applyStatus == 9 ? '驳回':'不通过'"
+      :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
+      width="800px">
+      <el-form ref="remarkFrom" :model="remarkFrom" :rules="dataRule" @keyup.enter.native="dataFormSubmit()"
+               label-width="120px">
+        <el-form-item :label="remarkFrom.applyStatus == 9 ? '驳回原因':'不通过原因'" prop="remark">
+          <el-input type="textarea" v-model="remarkFrom.remark"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" :loading="loading" :disabled="loading" @click="dataFormSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
     <detail-info v-if="detailInfoVisible" ref="detailInfo"></detail-info>
@@ -129,7 +145,19 @@ export default {
       dataListSelections: [],
       addOrUpdateVisible: false,
       detailInfoVisible: false,
-      apply_status: 0
+      apply_status: 0,
+      dialogVisible: false,
+      loading: false,
+      remarkFrom: {
+        remark: '',
+        id: '',
+        applyStatus: ''
+      },
+      dataRule: {
+        remark: [
+          {required: true, message: '原因不可为空', trigger: 'blur'}
+        ]
+      }
     }
   },
   components: {
@@ -297,6 +325,66 @@ export default {
           this.$message.error(data.msg)
         }
       })
+    },
+    //提示确认框
+    hintVisible(id, status) {
+      this.$confirm(
+        `确认后不可回退，确认提交吗？`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).then(() => {
+        this.applyStatus(id, status)
+      })
+    },
+    // 表单提交
+    dataFormSubmit() {
+      this.$refs['remarkFrom'].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          this.$http({
+            url: this.$http.adornUrl(
+              `/enterprise/innovateenterpriseproject/update`
+            ),
+            method: 'post',
+            data: this.$http.adornData({
+              projectEntity: {
+                enterpProjId: this.remarkFrom.id,
+                applyStatus: this.remarkFrom.applyStatus,
+                remark: this.remarkFrom.remark
+              },
+              attachEntities: []
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.loading = false
+                  this.dialogVisible = false
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.loading = false
+              this.$message.error(data.msg)
+            }
+          })
+        }
+      })
+    },
+    dialog(id, status) {
+      if (this.remarkFrom.remark){
+        this.$refs['remarkFrom'].resetFields()
+      }
+      this.dialogVisible = true
+      this.remarkFrom.id = id
+      this.remarkFrom.applyStatus = status
     }
   }
 };

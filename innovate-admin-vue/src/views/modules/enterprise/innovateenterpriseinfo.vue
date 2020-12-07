@@ -84,6 +84,17 @@
       </el-table-column>
 
       <el-table-column
+        prop="remark"
+        header-align="center"
+        align="center"
+        label="备注"
+        v-if="apply_status=== 9 || apply_status=== 2">
+        <template slot-scope="scope">
+          {{scope.row.remark || '无'}}
+        </template>
+      </el-table-column>
+
+      <el-table-column
         prop="applyStatus"
         header-align="center"
         align="center"
@@ -111,9 +122,11 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="applyStatus(scope.row.settledEnterpId,0)">提交审核</el-button>
+          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'"
+                     @click="hintVisible(scope.row.settledEnterpId)">提交审核
+          </el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.settledEnterpId)">查看</el-button>
-          <el-button type="text" v-if="isAuth('enterprise:innovateenterpriseinfo:update')" size="small"
+          <el-button type="text" v-if="apply_status ===0 ||apply_status ===9  " size="small"
                      @click="addOrUpdateHandle(scope.row.settledEnterpId)">修改
           </el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.settledEnterpId)">删除</el-button>
@@ -298,7 +311,7 @@
         }
       },
       // 状态审核
-      applyStatus(settledEnterpId,status){
+      applyStatus(settledEnterpId, status) {
         this.$http({
           url: this.$http.adornUrl(
             `/enterprise/innovateenterpriseinfo/update`
@@ -325,7 +338,20 @@
             this.$message.error(data.msg)
           }
         })
+      },
+      hintVisible(settledEnterpId) {
+        this.$confirm(
+          `确认后不可回退，确认提交吗？`,
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }
+        ).then(() => {
+          this.applyStatus(settledEnterpId, 0)
+        })
       }
-    },
-  };
+    }
+  }
 </script>

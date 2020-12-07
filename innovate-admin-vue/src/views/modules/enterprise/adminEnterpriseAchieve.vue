@@ -6,7 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:save')" type="primary" @click="exportLists()">导出</el-button>
+        <el-button v-if="isAuth('enterprise:innovateenterpriseachieve:save')" type="primary" @click="exportLists()">导出
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -78,9 +79,9 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpAchieveId)">查看</el-button>
-          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpAchieveId,9)">驳回</el-button>
-          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpAchieveId,1)">通过</el-button>
-          <el-button type="text" size="small"  @click="applyStatus(scope.row.enterpAchieveId,2)">不通过</el-button>
+          <el-button type="text" size="small" @click="dialog(scope.row.enterpAchieveId,9)">驳回</el-button>
+          <el-button type="text" size="small" @click="hintVisible(scope.row.enterpAchieveId,1)">通过</el-button>
+          <el-button type="text" size="small" @click="dialog(scope.row.enterpAchieveId,2)">不通过</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.enterpAchieveId)">删除</el-button>
         </template>
       </el-table-column>
@@ -94,6 +95,22 @@
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
+    <el-dialog
+      :title="remarkFrom.applyStatus == 9 ? '驳回':'不通过'"
+      :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
+      width="800px">
+      <el-form ref="remarkFrom" :model="remarkFrom" :rules="dataRule" @keyup.enter.native="dataFormSubmit()"
+               label-width="120px">
+        <el-form-item :label="remarkFrom.applyStatus == 9 ? '驳回原因':'不通过原因'" prop="remark">
+          <el-input type="textarea" v-model="remarkFrom.remark"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" :loading="loading" :disabled="loading" @click="dataFormSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
     <detail-info v-if="detailInfoVisible" ref="detailInfo"></detail-info>
@@ -103,8 +120,9 @@
 <script>
   import AddOrUpdate from './innovateenterpriseachieve-add-or-update'
   import DetailInfo from './enterpriseachieve-dateil'
+
   export default {
-    data () {
+    data() {
       return {
         dataForm: {
           enterpriseName: ''
@@ -117,21 +135,33 @@
         dataListSelections: [],
         addOrUpdateVisible: false,
         detailInfoVisible: false,
-        apply_status: 0
+        apply_status: 0,
+        dialogVisible: false,
+        loading: false,
+        remarkFrom: {
+          remark: '',
+          id: '',
+          applyStatus: ''
+        },
+        dataRule: {
+          remark: [
+            {required: true, message: '原因不可为空', trigger: 'blur'}
+          ]
+        }
       }
     },
     components: {
       AddOrUpdate,
       DetailInfo
     },
-    activated () {
+    activated() {
       this.getDataList()
       this.getInstituteName()
       this.getTypeName()
     },
     methods: {
       // 获取数据列表
-      getDataList () {
+      getDataList() {
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl('/enterprise/innovateenterpriseachieve/list'),
@@ -156,7 +186,7 @@
           this.dataListLoading = false
         })
       },
-      formatInstituteName (e) {
+      formatInstituteName(e) {
         var actions = [];
         Object.keys(this.instituteName).some((key) => {
           if ((this.instituteName[key].instituteId + '') == e.instituteId) {
@@ -166,7 +196,7 @@
         })
         return actions.join('');
       },
-      formatAwardType (e) {
+      formatAwardType(e) {
         var actions = [];
         Object.keys(this.awardProjectType).some((key) => {
           if ((this.awardProjectType[key].awardProjectTypeId + '') == e.awardProjectType) {
@@ -177,29 +207,29 @@
         return actions.join('');
       },
       // 每页数
-      sizeChangeHandle (val) {
+      sizeChangeHandle(val) {
         this.pageSize = val
         this.pageIndex = 1
         this.getDataList()
       },
       // 当前页
-      currentChangeHandle (val) {
+      currentChangeHandle(val) {
         this.pageIndex = val
         this.getDataList()
       },
       // 多选
-      selectionChangeHandle (val) {
+      selectionChangeHandle(val) {
         this.dataListSelections = val
       },
       // 查看
-      detailInfo (id) {
+      detailInfo(id) {
         this.detailInfoVisible = true
         this.$nextTick(() => {
           this.$refs.detailInfo.init(id)
         })
       },
       // 删除
-      deleteHandle (id) {
+      deleteHandle(id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.enterpAchieveId
         })
@@ -232,8 +262,8 @@
       exportLists() {
         this.dataListLoading = true;
         var trainBaseIds = this.dataListSelections.map(item => {
-            return item.awardProjectTypeId;
-          })
+          return item.awardProjectTypeId;
+        })
         this.$http({
           url: this.$http.adornUrl("/enterprise/innovateenterpriseachieve/export"),
           method: "post",
@@ -268,7 +298,7 @@
           });
       },
       // 状态审核
-      applyStatus(enterpAchieveId,status){
+      applyStatus(enterpAchieveId, status) {
         this.$http({
           url: this.$http.adornUrl(
             `/enterprise/innovateenterpriseachieve/update`
@@ -296,7 +326,7 @@
           }
         })
       },
-      getInstituteName () {
+      getInstituteName() {
         this.$http({
           url: this.$http.adornUrl(`/innovate/sys/institute/all`),
           method: 'get'
@@ -307,7 +337,7 @@
         })
       },
       //企业成果list
-      getTypeName () {
+      getTypeName() {
         this.$http({
           url: this.$http.adornUrl(`/enterprise/innovateawardprojecttype/typeNameList`),
           method: 'get'
@@ -316,6 +346,66 @@
             this.awardProjectType = data.list
           }
         })
+      },
+      //提示确认框
+      hintVisible(id, status) {
+        this.$confirm(
+          `确认后不可回退，确认提交吗？`,
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }
+        ).then(() => {
+          this.applyStatus(id, status)
+        })
+      },
+      // 表单提交
+      dataFormSubmit() {
+        this.$refs['remarkFrom'].validate((valid) => {
+          if (valid) {
+            this.loading = true
+            this.$http({
+              url: this.$http.adornUrl(
+                `/enterprise/innovateenterpriseachieve/update`
+              ),
+              method: 'post',
+              data: this.$http.adornData({
+                achieveEntity: {
+                  enterpAchieveId: this.remarkFrom.id,
+                  applyStatus: this.remarkFrom.applyStatus,
+                  remark: this.remarkFrom.remark
+                },
+                attachEntities: []
+              })
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.loading = false
+                    this.dialogVisible = false
+                    this.getDataList()
+                  }
+                })
+              } else {
+                this.loading = false
+                this.$message.error(data.msg)
+              }
+            })
+          }
+        })
+      },
+      dialog(id, status) {
+        if (this.remarkFrom.remark){
+          this.$refs['remarkFrom'].resetFields()
+        }
+        this.dialogVisible = true
+        this.remarkFrom.id = id
+        this.remarkFrom.applyStatus = status
       }
     }
   }

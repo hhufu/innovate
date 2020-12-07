@@ -93,4 +93,8 @@ public class InnovateEnterpriseAchieveEntity implements Serializable {
 	@TableField(exist = false)
 	private String instituteName;
 
+	//备注
+	@ExcelProperty(value = "备注信息")
+	private String remark;
+
 }

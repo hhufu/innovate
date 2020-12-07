@@ -90,6 +90,16 @@
         label="项目负责人">
       </el-table-column>
       <el-table-column
+        prop="remark"
+        header-align="center"
+        align="center"
+        label="备注"
+        v-if="apply_status=== 9 || apply_status=== 2">
+        <template slot-scope="scope">
+          {{scope.row.remark || '无'}}
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="applyStatus"
         header-align="center"
         align="center"
@@ -116,10 +126,10 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="applyStatus(scope.row.enterpProjId,0)">提交审核</el-button>
+          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="hintVisible(scope.row.enterpProjId)">提交审核</el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpProjId)">查看</el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="addOrUpdateHandle(scope.row.enterpProjId)">修改</el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="deleteHandle(scope.row.enterpProjId)">删除</el-button>
+          <el-button type="text" size="small" v-if="apply_status ===0 ||apply_status ===9  " @click="addOrUpdateHandle(scope.row.enterpProjId)">修改</el-button>
+          <el-button type="text" size="small"  @click="deleteHandle(scope.row.enterpProjId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -336,6 +346,19 @@ export default {
         } else {
           this.$message.error(data.msg)
         }
+      })
+    },
+    hintVisible(id) {
+      this.$confirm(
+        `确认后不可回退，确认提交吗？`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).then(() => {
+        this.applyStatus(id, 0)
       })
     }
   }

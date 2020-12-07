@@ -78,6 +78,10 @@ public class InnovateEnterpriseInfoEntity implements Serializable {
 	 */
 	@ExcelIgnore
 	private String applyStatus;
+
+	//备注
+	@ExcelProperty(value = "备注信息")
+	private String remark;
 	/**
 	 * 是否删除
 	 */
