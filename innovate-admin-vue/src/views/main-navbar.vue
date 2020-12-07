@@ -256,17 +256,19 @@
         // 调取科创接口，将当前教师用户token存入其redis中
         axios.post('http://47.112.103.217:8003/innovate/setUserTokenToRedis', {'username': this.$store.state.user.username}).then(({data}) => {
           if (data && data.code === 0) {
+            // 然后跳转到登录页
+            window.open("http://47.112.103.217:8004/",'top');
             // 先退出当前系统
-            this.$http({
-              url: this.$http.adornUrl('/sys/logout'),
-              method: 'post',
-              data: this.$http.adornData()
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                // 然后跳转到登录页
-                window.location.href = 'http://47.112.103.217:8004/'
-              }
-            })
+            // this.$http({
+            //   url: this.$http.adornUrl('/sys/logout'),
+            //   method: 'post',
+            //   data: this.$http.adornData()
+            // }).then(({data}) => {
+            //   if (data && data.code === 0) {
+            //     // 然后跳转到登录页
+            //     window.location.href = 'http://47.112.103.217:8004/'
+            //   }
+            // })
           } else {
             this.$alert(data.msg, '提示', {
               confirmButtonText: '确定',
