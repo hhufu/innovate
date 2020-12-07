@@ -62,7 +62,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.authenticationId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.authenticationId)">删除</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -150,11 +150,14 @@
         })
       },
       // 删除
-      deleteHandle (id) {
-        var ids = id ? [id] : this.dataListSelections.map(item => {
+      deleteHandle (row) {
+        var ids = (row ? true : false) ? [row.authenticationId] : this.dataListSelections.map(item => {
           return item.authenticationId
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        var name = (row ? true : false) ? [row.enterpriseName] : this.dataListSelections.map(item => {
+          return item.enterpriseName
+        })
+        this.$confirm(`确定对[企业名称=${name.join(',')}]进行[${(row ? row.enterpriseName : false) ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

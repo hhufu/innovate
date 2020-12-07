@@ -52,9 +52,9 @@
         </trim>
     </insert>
     <select id="selectCooperationYear" parameterType="map" resultType="InnovateCooperationProjectsEntity">
-            select p.*, u.name
-            from innovate_cooperation_projects p LEFT JOIN sys_user u ON p.user_id = u.user_id
-            where 1 = 1
+            select p.*, u.name, i.institute_name
+            from innovate_cooperation_projects p LEFT JOIN sys_user u ON p.user_id = u.user_id left join innovate_sys_institute i on p.institute_id = i.institute_id
+            where p.is_del = 0
             <if test="ids != null">
             and p.cooperation_id in
             <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
@@ -67,6 +67,7 @@
             <if test="instituteId != null">
                 and p.institute_id = #{instituteId}
             </if>
+
     </select>
 
 </mapper>

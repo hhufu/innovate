@@ -45,8 +45,15 @@ public class InnovateCooperationProjectsEntity implements Serializable {
 	/**
 	 * 二级学院  学院表主键
 	 */
+	@ExcelIgnore
 	@ExcelProperty(value = {"二级学院ID"})
 	private Long instituteId;
+	/**
+	 * 所属二级学院
+	 */
+	@ExcelProperty(value = "所属二级学院")
+	@TableField(exist = false)
+	private String instituteName;
 	/**
 	 * 年度
 	 */
