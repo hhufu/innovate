@@ -23,10 +23,10 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="id"
+        type="index"
         header-align="center"
         align="center"
-        label="">
+        label="ID">
       </el-table-column>
       <el-table-column
         prop="activityId"

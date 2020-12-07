@@ -136,7 +136,9 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'professAchieDirector': this.dataForm.professAchieDirector
+            'isDel': 0,
+            'professAchieDirector': this.dataForm.professAchieDirector,
+            'instituteId': this.isAuth("training:export:admin") === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

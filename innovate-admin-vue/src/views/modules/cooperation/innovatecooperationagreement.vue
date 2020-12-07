@@ -143,7 +143,8 @@
             'page': this.pageIndex,
             'limit': this.pageSize,
             'enterpriseName': this.dataForm.enterpriseName,
-            isDel: 0,
+            'isDel': 0,
+            'instituteId': this.isAuth("cooperation:export:admin") === true ? null : this.$store.state.user.instituteId,
             'agreementYear':this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear.getFullYear(),
           })
         }).then(({data}) => {
@@ -251,8 +252,8 @@
         })
         let dataForm = {
           ids: ids,
-          instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.dataForm.instituteId,
-          agreementYear: (this.isAuth("cooperation:export:erAdmin") === true || this.isAuth("cooperation:export:admin") === true) ? null : this.dataForm.agreementYear
+          instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.$store.state.user.instituteId,
+          agreementYear:this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear.getFullYear()
         }
         this.$http({
           url: this.$http.adornUrl('/cooperation/innovatecooperationagreement/export'),

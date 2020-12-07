@@ -36,6 +36,7 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
         if (params.get("enterpriseName") != null) entityWrapper.like("enterprise_name", params.get("enterpriseName").toString());
         if (params.get("agreementYear") != null) entityWrapper.eq("agreement_year", params.get("agreementYear").toString());
         if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
+        if (params.get("instituteId") != null) entityWrapper.eq("institute_id", Integer.parseInt(params.get("instituteId").toString()));
         // 按时间倒序
         entityWrapper.orderBy("enterprise_id", false);
         Page<InnovateCooperationAgreementEntity> page = this.selectPage(

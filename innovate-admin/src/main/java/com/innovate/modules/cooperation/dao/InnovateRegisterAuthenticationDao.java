@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 企业登记认证表
@@ -23,4 +24,6 @@ public interface InnovateRegisterAuthenticationDao extends BaseMapper<InnovateRe
      * 删除企业登记信息
      */
     void deleteList(List<Long> list);
+
+    List<InnovateRegisterAuthenticationEntity> selectMap(Map<String, Object> map);
 }

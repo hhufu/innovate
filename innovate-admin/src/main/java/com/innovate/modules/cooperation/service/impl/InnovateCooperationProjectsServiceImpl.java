@@ -37,6 +37,7 @@ public class InnovateCooperationProjectsServiceImpl extends ServiceImpl<Innovate
         if (params.get("projectName") != null) entityWrapper.like("project_name", params.get("projectName").toString());
         if (params.get("cooperationYear") != null) entityWrapper.eq("cooperation_year", params.get("cooperationYear").toString());
         if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
+        if (params.get("instituteId") != null) entityWrapper.eq("institute_id", Integer.parseInt(params.get("instituteId").toString()));
         // 按时间倒序
         entityWrapper.orderBy("cooperation_id", false);
         Page<InnovateCooperationProjectsEntity> page = this.selectPage(

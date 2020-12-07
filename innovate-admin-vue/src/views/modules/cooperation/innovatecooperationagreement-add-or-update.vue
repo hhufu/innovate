@@ -120,9 +120,6 @@
           agreementMaterials: [
             { required: true, message: '协议材料不能为空', trigger: 'blur' }
           ],
-          enterpriseRecords: [
-            { required: true, message: '企业记录不能为空', trigger: 'blur' }
-          ],
           userId: [
             { required: true, message: '创建者不能为空', trigger: 'blur' }
           ]

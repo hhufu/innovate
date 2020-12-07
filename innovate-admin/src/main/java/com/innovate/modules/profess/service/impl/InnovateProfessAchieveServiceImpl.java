@@ -34,6 +34,8 @@ public class InnovateProfessAchieveServiceImpl extends ServiceImpl<InnovateProfe
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateProfessAchieveEntity> entityWrapper = new EntityWrapper<>();
         if (params.get("professAchieDirector") != null) entityWrapper.like("profess_achie_director", params.get("professAchieDirector").toString());
+        if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
+        if (params.get("instituteId") != null) entityWrapper.eq("institute_id", Integer.parseInt(params.get("instituteId").toString()));
         Page<InnovateProfessAchieveEntity> page = this.selectPage(
                 new Query<InnovateProfessAchieveEntity>(params).getPage(),
                 entityWrapper

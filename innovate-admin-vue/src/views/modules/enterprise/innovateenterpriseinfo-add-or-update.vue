@@ -60,7 +60,7 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="loading" :disabled="loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -78,6 +78,7 @@
   export default {
     data() {
       return {
+        loading: false,
         visible: false,
         dataForm: {
           settledEnterpId: 0,
@@ -130,6 +131,7 @@
     },
     methods: {
       init(id) {
+        this.loading = false
         this.url = this.$http.adornUrl(
           `/enterprise/innovateenterpriseattach/upload?token=${this.$cookie.get(
             'token'
@@ -192,6 +194,7 @@
       dataFormSubmit() {
         this.$refs['dataForm'].validate(valid => {
           if (valid) {
+            this.loading = true
             this.$http({
               url: this.$http.adornUrl(
                 `/enterprise/innovateenterpriseinfo/${
@@ -227,6 +230,7 @@
                 })
               } else {
                 this.$message.error(data.msg)
+                this.loading = false
               }
             })
             if (this.delAttachEntityList) {

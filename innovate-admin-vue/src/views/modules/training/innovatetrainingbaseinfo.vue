@@ -113,7 +113,8 @@
             'page': this.pageIndex,
             'limit': this.pageSize,
             'trainingBaseName': this.dataForm.trainingBaseName,
-            isDel: 0
+            'isDel': 0,
+            'instituteId': this.isAuth("training:export:admin") === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -208,13 +209,18 @@
       // 导出
       exportLists () {
         this.dataListLoading = true
-        var trainBaseIds = this.dataListSelections.map(item => {
+        var ids = this.dataListSelections.map(item => {
           return item.trainingBaseId
         })
+        let dataForm = {
+          ids: ids,
+          instituteId: this.isAuth("training:export:admin") === true ? null : this.$store.state.user.instituteId,
+          trainingBaseName: this.dataForm.trainingBaseName
+        }
         this.$http({
           url: this.$http.adornUrl('/training/innovatetrainingbaseinfo/export'),
           method: 'post',
-          data: this.$http.adornData(trainBaseIds, false),
+          data: this.$http.adornData(dataForm, false),
           responseType: 'blob'
         }).then((res) => {
           this.dataListLoading = false

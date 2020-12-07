@@ -19,7 +19,7 @@ public interface InnovateTrainingBaseInfoService extends IService<InnovateTraini
 
     PageUtils queryPage(Map<String, Object> params);
 
-    List<InnovateTrainingBaseInfoEntity> queryListByDeptAndIds(Long[] trainBaseIds);
+    List<InnovateTrainingBaseInfoEntity> queryListByDeptAndIds(Map<String, Object> params);
 
     /**
      * 删除

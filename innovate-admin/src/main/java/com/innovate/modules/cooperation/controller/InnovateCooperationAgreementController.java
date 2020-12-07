@@ -8,7 +8,6 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.cooperation.entity.InnovateCooperationAttachModel;
-import com.innovate.modules.cooperation.entity.InnovateCooperationProjectsEntity;
 import com.innovate.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import com.innovate.modules.cooperation.entity.InnovateCooperationAgreementEntit
 import com.innovate.modules.cooperation.service.InnovateCooperationAgreementService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 

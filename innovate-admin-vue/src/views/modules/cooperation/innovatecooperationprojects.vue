@@ -7,7 +7,6 @@
           v-model="dataForm.cooperationYear"
           align="right"
           type="year"
-          value-format="yyyy"
           placeholder="请选择年度">
         </el-date-picker>
       </el-form-item>
@@ -151,8 +150,9 @@
             'page': this.pageIndex,
             'limit': this.pageSize,
             'projectName': this.dataForm.projectName,
-            isDel: 0,
-            'cooperationYear':this.dataForm.cooperationYear == null ? null : this.dataForm.cooperationYear,
+            'isDel': 0,
+            'cooperationYear':this.dataForm.cooperationYear == null ? null : this.dataForm.cooperationYear.getFullYear(),
+            'instituteId': this.isAuth("cooperation:export:admin") === true ? null : this.$store.state.user.instituteId,
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -260,8 +260,8 @@
         })
         let dataForm = {
           ids: ids,
-          instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.dataForm.instituteId,
-          cooperationYear: (this.isAuth("cooperation:export:erAdmin") === true || this.isAuth("cooperation:export:admin") === true) ? null : this.dataForm.cooperationYear
+          instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.$store.state.user.instituteId,
+          cooperationYear: this.dataForm.cooperationYear == null ? null : this.dataForm.cooperationYear.getFullYear()
         }
         this.$http({
           url: this.$http.adornUrl('/cooperation/innovatecooperationprojects/export'),

@@ -25,5 +25,7 @@ public interface InnovateRegisterAuthenticationService extends IService<Innovate
     InnovateRegisterAuthenticationEntity queryById(Long authenticationId);
 
     void deleteList(List<Long> asList);
+
+    List<InnovateRegisterAuthenticationEntity> queryListByIds(Map<String, Object> params);
 }
 

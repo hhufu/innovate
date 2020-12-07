@@ -8,6 +8,7 @@
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('cooperation:innovateregisterauthentication:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('cooperation:innovateregisterauthentication:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('cooperation:innovateregisterauthentication:save')" type="primary" @click="exportAchieve()">导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -180,6 +181,39 @@
               this.$message.error(data.msg)
             }
           })
+        })
+      },
+      // 导出
+      exportAchieve () {
+        this.dataListLoading = true
+        var ids = this.dataListSelections.map(item => {
+          return item.authenticationId
+        })
+        let dataForm = {
+          ids: ids,
+          enterpriseName: this.dataForm.enterpriseName
+        }
+        this.$http({
+          url: this.$http.adornUrl('/cooperation/innovateregisterauthentication/export'),
+          method: 'post',
+          data: this.$http.adornData(dataForm, false),
+          responseType: 'blob'
+        }).then((res) => {
+          this.dataListLoading = false
+          const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+          let filename = '企业登记列表.xls'
+          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+          const elink = document.createElement('a')
+          elink.download = filename
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }).catch(() => {
+          this.dataListLoading = false
+          this.$message.error('导出失败!')
         })
       }
     }

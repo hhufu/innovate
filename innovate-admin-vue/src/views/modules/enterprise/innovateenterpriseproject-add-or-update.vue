@@ -65,7 +65,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="loading" :disabled="loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -82,6 +82,7 @@
   export default {
     data() {
       return {
+        loading: false,
         visible: false,
         dataForm: {
           enterpProjId: 0,
@@ -122,7 +123,6 @@
           ]
         },
         projectName: [],
-        loading: false,
         fileIsNull: false,
         fileList: [],
         url: "",
@@ -131,6 +131,7 @@
     },
     methods: {
       init(id) {
+        tihs.loading = false
         this.url = this.$http.adornUrl(
           `/enterprise/innovateenterpriseattach/upload?token=${this.$cookie.get(
             "token"
@@ -190,6 +191,7 @@
       dataFormSubmit() {
         this.$refs["dataForm"].validate(valid => {
           if (valid) {
+            this.loading = true
             this.$http({
               url: this.$http.adornUrl(
                 `/enterprise/innovateenterpriseproject/${
@@ -226,6 +228,7 @@
                 });
               } else {
                 this.$message.error(data.msg);
+                this.loading = false
               }
             });
             //删除附件

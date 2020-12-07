@@ -53,7 +53,7 @@
         </el-select>
         <div class="sub-title" style="color: red">注：/** 如果是参加活动培训或个人活动时可不填 **/</div>
       </el-form-item>
-      <el-form-item label="申请积分" prop="participateType">
+      <el-form-item label="申请积分" prop="applyIntegral">
         <el-input v-model="dataForm.applyIntegral" style="width: 200px" type="number" :disabled="noEditPoint"
                   placeholder="积分">
           <template slot="append">积分</template>
@@ -86,7 +86,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="loading" :disabled="loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -104,6 +104,7 @@
   export default {
     data() {
       return {
+        loading: false,
         visible: false,
         attachLists: [], // 附件列表
         parentId: 0, // 父id
@@ -158,6 +159,7 @@
     },
     methods: {
       init(id) {
+        this.loading = false
         this.url = this.$http.adornUrl(`/points/attach/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.integralApplyId = id || 0
         this.getTypeList()
@@ -247,6 +249,7 @@
       dataFormSubmit() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid && this.attachLists.length > 0) {
+            this.loading = true
             this.dataForm.applyUserId = this.$store.state.user.id
             this.dataForm.instituteId = this.$store.state.user.instituteId
             this.dataForm.stuNum = this.$store.state.user.username
@@ -271,6 +274,7 @@
                 })
               } else {
                 this.$message.error(data.msg)
+                this.loading = false
               }
             })
           }

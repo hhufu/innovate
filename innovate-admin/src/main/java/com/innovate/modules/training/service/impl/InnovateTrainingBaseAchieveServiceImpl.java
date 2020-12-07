@@ -42,6 +42,7 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
         EntityWrapper<InnovateTrainingBaseAchieveEntity> entityWrapper = new EntityWrapper<>();
         if (params.get("materialYear") != null) entityWrapper.eq("material_year", params.get("materialYear").toString());
         if (params.get("trainingBaseName") != null) entityWrapper.like("training_base_name", params.get("trainingBaseName").toString());
+        if (params.get("instituteId") != null) entityWrapper.eq("institute_id", Integer.parseInt(params.get("instituteId").toString()));
         if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
         // 按时间倒序
         entityWrapper.orderBy("training_achieve_id", false);
@@ -61,7 +62,6 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
     @Override
     public List<InnovateTrainingBaseAchieveEntity> queryListByIds(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>();
-        map.put("materialYear", null);
         if (params.get("ids") != null && !params.get("ids").toString().equals("[]")) {
             map.put("ids", params.get("ids"));
         } else {

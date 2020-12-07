@@ -131,9 +131,10 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            isDel: 0,
+            'isDel': 0,
             'materialYear': this.dataForm.materialYear == null ? null : this.dataForm.materialYear,
-            'trainingBaseName': this.dataForm.trainingBaseName
+            'trainingBaseName': this.dataForm.trainingBaseName,
+            'instituteId': this.isAuth("training:export:admin") === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

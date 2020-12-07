@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.innovate.modules.cooperation.entity.InnovateCooperationAgreementEntity;
 import com.innovate.modules.cooperation.service.InnovateCooperationAgreementService;
 import com.innovate.modules.innovate.entity.ProjectInfoEntity;
+import com.innovate.modules.training.entity.InnovateTrainingBaseAchieveEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -25,6 +28,7 @@ public class InnovateRegisterAuthenticationServiceImpl extends ServiceImpl<Innov
 
     @Autowired
     InnovateCooperationAgreementService agreementService;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateRegisterAuthenticationEntity> entityWrapper = new EntityWrapper<>();
@@ -48,5 +52,18 @@ public class InnovateRegisterAuthenticationServiceImpl extends ServiceImpl<Innov
     public void deleteList(List<Long> list) {
         baseMapper.deleteList(list);
     }
+    @Override
+    public List<InnovateRegisterAuthenticationEntity> queryListByIds(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        if (params.get("ids") != null && !params.get("ids").toString().equals("[]")) {
+            map.put("ids", params.get("ids"));
+        } else {
+            map.put("ids", null);
+        }
+        map.put("enterpriseName", params.get("enterpriseName"));
+
+        return baseMapper.selectMap(map);
+    }
+
 
 }

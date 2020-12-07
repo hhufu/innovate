@@ -5,10 +5,8 @@ import com.innovate.modules.innovate.service.InnovateInstituteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -23,14 +21,14 @@ import com.innovate.modules.training.service.InnovateTrainingBaseInfoService;
 @Service("innovateTrainingBaseInfoService")
 public class InnovateTrainingBaseInfoServiceImpl extends ServiceImpl<InnovateTrainingBaseInfoDao, InnovateTrainingBaseInfoEntity> implements InnovateTrainingBaseInfoService {
 
-
-
     @Autowired
     private InnovateInstituteService innovateInstituteService;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         EntityWrapper<InnovateTrainingBaseInfoEntity> entityWrapper = new EntityWrapper<>();
         if (params.get("trainingBaseName") != null) entityWrapper.like("training_base_name", params.get("trainingBaseName").toString());
+        if (params.get("instituteId") != null) entityWrapper.eq("institute_id", Integer.parseInt(params.get("instituteId").toString()));
         if (params.get("isDel") != null) entityWrapper.eq("is_del", Integer.parseInt(params.get("isDel").toString()));
         Page<InnovateTrainingBaseInfoEntity> page = this.selectPage(
                 new Query<InnovateTrainingBaseInfoEntity>(params).getPage(),
@@ -42,24 +40,21 @@ public class InnovateTrainingBaseInfoServiceImpl extends ServiceImpl<InnovateTra
 
     /**
      * 依据实训基地id查询
-     * @param trainBaseIds
+     * @param
      * @return
      */
     @Override
-    public List<InnovateTrainingBaseInfoEntity> queryListByDeptAndIds(Long[] trainBaseIds) {
-        List<InnovateTrainingBaseInfoEntity> baseInfoEntities = new ArrayList<>();
-        if (trainBaseIds.length > 0) {
-            baseInfoEntities = this.selectBatchIds(Arrays.asList(trainBaseIds));
+    public List<InnovateTrainingBaseInfoEntity> queryListByDeptAndIds(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        if (params.get("ids") != null && !params.get("ids").toString().equals("[]")) {
+            map.put("ids", params.get("ids"));
         } else {
-            baseInfoEntities = this.selectList(null);
+            map.put("ids", null);
         }
+        map.put("instituteId", params.get("instituteId"));
+        map.put("trainingBaseName", params.get("trainingBaseName"));
 
-        for (InnovateTrainingBaseInfoEntity baseInfo: baseInfoEntities) {
-            InnovateInstituteEntity innovateInstituteEntity = innovateInstituteService.selectById(baseInfo.getInstituteId());
-            baseInfo.setInstituteName(innovateInstituteEntity.getInstituteName());
-        }
-
-        return baseInfoEntities;
+        return baseMapper.selectMap(map);
     }
 
     @Override
