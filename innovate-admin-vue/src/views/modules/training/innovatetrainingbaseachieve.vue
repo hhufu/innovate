@@ -132,7 +132,7 @@
             'page': this.pageIndex,
             'limit': this.pageSize,
             'isDel': 0,
-            'materialYear': this.dataForm.materialYear == null ? null : this.dataForm.materialYear,
+            'materialYear': this.dataForm.materialYear == null ? null : this.dataForm.materialYear.getFullYear(),
             'trainingBaseName': this.dataForm.trainingBaseName,
             'instituteId': this.isAuth("training:export:admin") === true ? null : this.$store.state.user.instituteId
           })

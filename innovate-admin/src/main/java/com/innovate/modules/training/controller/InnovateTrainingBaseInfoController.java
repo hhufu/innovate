@@ -9,6 +9,7 @@ import java.util.Map;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.innovate.common.utils.ShiroUtils;
 import com.innovate.modules.sys.entity.SysUserEntity;
 import com.innovate.modules.training.dao.InnovateTrainingBaseInfoDao;
@@ -48,7 +49,18 @@ public class InnovateTrainingBaseInfoController {
 
         return R.ok().put("page", page);
     }
-
+    /**
+     * 按条件查询所有
+     */
+    @RequestMapping("/all")
+    @RequiresPermissions("training:innovatetrainingbaseinfo:list")
+    public R all(@RequestParam Map<String, Object> params){
+        EntityWrapper<InnovateTrainingBaseInfoEntity> entityEntityWrapper = new EntityWrapper<>();
+        if (params.get("instituteId") != null) entityEntityWrapper.eq("institute_id", params.get("instituteId"));
+        entityEntityWrapper.eq("is_del", 0);
+        List<InnovateTrainingBaseInfoEntity> data = innovateTrainingBaseInfoService.selectList(entityEntityWrapper);
+        return R.ok().put("data", data);
+    }
 
     /**
      * 信息

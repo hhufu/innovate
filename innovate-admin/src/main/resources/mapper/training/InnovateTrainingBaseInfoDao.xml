@@ -25,4 +25,22 @@
         </foreach>
     </update>
 
+    <select id="selectMap" parameterType="map" resultType="InnovateTrainingBaseInfoEntity">
+        select m.*, i.institute_name
+        from innovate_training_base_info m left join innovate_sys_institute i on m.institute_id = i.institute_id
+        where m.is_del = 0
+        <if test="ids != null">
+            and m.training_base_id in
+            <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="instituteId != null">
+            and m.institute_id = #{instituteId}
+        </if>
+        <if test="trainingBaseName != null">
+            and m.training_base_name = #{trainingBaseName}
+        </if>
+
+    </select>
 </mapper>

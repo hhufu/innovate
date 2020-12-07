@@ -29,4 +29,21 @@
         </foreach>
 
     </update>
+
+    <select id="selectMap" parameterType="Map" resultType="InnovateRegisterAuthenticationEntity">
+        select *
+        from innovate_register_authentication
+        where is_del =0
+        <if test="ids != null">
+            and authentication_id in
+            <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="enterpriseName != null">
+            and enterprise_name = #{enterpriseName}
+        </if>
+    </select>
+
+
 </mapper>

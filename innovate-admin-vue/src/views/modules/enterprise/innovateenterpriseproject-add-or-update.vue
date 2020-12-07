@@ -131,7 +131,7 @@
     },
     methods: {
       init(id) {
-        tihs.loading = false
+        this.loading = false
         this.url = this.$http.adornUrl(
           `/enterprise/innovateenterpriseattach/upload?token=${this.$cookie.get(
             "token"

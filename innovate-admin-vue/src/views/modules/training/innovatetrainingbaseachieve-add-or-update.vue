@@ -118,14 +118,14 @@
         this.visible = true
         this.getInstituteName()
         this.$http({
-          url: this.$http.adornUrl(`/training/innovatetrainingbaseinfo/list`),
+          url: this.$http.adornUrl(`/training/innovatetrainingbaseinfo/all`),
           method: 'get',
           params: this.$http.adornParams({
-            isDel: 0
+            instituteId: this.isAuth("training:export:admin") === true ? null : this.$store.state.user.instituteId,
           })
         }).then(({data}) => {
-          this.trainingnameList = data.page.list
-          this.dataForm.instituteId = data.page.list[0]
+          this.trainingnameList = data.data
+          this.dataForm.instituteId = data.data[0]
         })
         this.$http({
           url: this.$http.adornUrl(`/training/innovatetrainingachievetype/list`),
