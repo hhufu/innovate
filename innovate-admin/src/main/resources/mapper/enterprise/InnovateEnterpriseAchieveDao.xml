@@ -36,7 +36,6 @@
                 ON a.award_project_type = b.award_project_type_id)
                     LEFT JOIN innovate_sys_institute c ON a.institute_id = c.institute_id
             <where>
-                <if test="params != null">
                     <if test="enterpriseUserId != null">
                         <choose>
                             <when test="instituteId != null">
@@ -47,8 +46,6 @@
                             </otherwise>
                         </choose>
                     </if>
-
-                </if>
                 a.enterprise_name like CONCAT('%',#{enterpriseName},'%') and  apply_status = #{apply_status} and is_del = 0
             </where>
 
