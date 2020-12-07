@@ -23,7 +23,7 @@
         </foreach>
         </if>
         <if test="stuNum != null">
-            and s.stu_num = #{stuNum}
+            and s.stu_num like concat('%', #{stuNum}, '%')
         </if>
         <if test="instituteId != null">
             and u.institute_id = #{instituteId}

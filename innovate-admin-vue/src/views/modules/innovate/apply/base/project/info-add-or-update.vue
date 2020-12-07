@@ -8,6 +8,12 @@
     :visible.sync="visible">
     <el-row :gutter="20">
       <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="16rem" style="width: 94%; margin: 0 auto">
+        <el-form-item :span="24" label="入驻类型">
+          <el-radio-group v-model="dataForm.enterpriseType">
+            <el-radio :label="1">校内企业</el-radio>
+            <el-radio :label="2">校外企业</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-col :span="24">
           <el-form-item label="企业项目名称" prop="projectName">
             <el-input v-model="dataForm.projectName" placeholder="请输入企业项目名称"></el-input>
@@ -180,7 +186,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="指导老师" prop="teacherLists">
+          <el-form-item v-if="dataForm.enterpriseType == 1" label="指导老师" prop="teacherLists">
             <el-button size="mini"
                        v-if="addVisible(teacherLists)"
                        type="primary" plain @click="addTeacher()">添加</el-button>
@@ -829,7 +835,7 @@
       addLegal (item, index) {
         this.legalAddOrUpdateVisible = true
         this.$nextTick(() => {
-          this.$refs['legalAddOrUpdate'].init(item, index + 1)
+          this.$refs['legalAddOrUpdate'].init(item, index + 1, this.dataForm.enterpriseType)
         })
       },
       delStaff: function (data, index) {

@@ -263,7 +263,7 @@
         })
         let dataForm = {
           ids: ids,
-          stuNum: (this.isAuth("points:export:erAdmin") === true || this.isAuth("points:export:admin") === true) ? null : this.$store.state.user.username,
+          stuNum: (this.isAuth("points:export:erAdmin") === true || this.isAuth("points:export:admin") === true) ? this.dataForm.key : this.$store.state.user.username,
           instituteId: this.isAuth("points:export:admin") === true ? null : this.$store.state.user.instituteId
         }
 

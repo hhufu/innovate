@@ -36,6 +36,10 @@
         <if test="isStudent != null and isStudent != ''">
             and a.project_user_id = #{userId}
         </if>
+        <!-- 企业类型 1：校内 2 校外 -->
+        <if test="enterpriseType != null and enterpriseType != ''">
+            and a.enterprise_type = #{enterpriseType}
+        </if>
 
         <!--该值为当前用户的所属部门-->
         <if test="isEr != null and isEr != ''">
@@ -161,6 +165,10 @@
 
         <if test="apply != null and apply != '' and applyStatus != null and hasApply == 2">
             and a.${apply} > #{applyStatus}
+        </if>
+        <!-- 企业类型 1：校内 2 校外 -->
+        <if test="enterpriseType != null and enterpriseType != ''">
+            and a.enterprise_type = #{enterpriseType}
         </if>
 
 --         评委

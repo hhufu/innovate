@@ -54,7 +54,7 @@
       <el-form-item label="籍贯" prop="legalNative">
         <el-input v-model="dataForm.legalNative" placeholder="请输入"></el-input>
       </el-form-item>
-      <el-form-item label="年级" prop="gradeId">
+      <el-form-item v-if="enterpriseType == 1" label="年级" prop="gradeId">
         <el-select v-model="dataForm.gradeId" placeholder="请选择">
           <el-option
             v-for="item in gradeList"
@@ -111,6 +111,7 @@
       //   }
       // }
       return {
+        enterpriseType: null, // 入驻类型 1 校外 2 校内
         visible: false,
         instituteList: this.$store.state.user.institute,
         gradeList: this.$store.state.user.grade,
@@ -184,7 +185,8 @@
       }
     },
     methods: {
-      init (item, index) {
+      init (item, index, enterpriseType) {
+        this.enterpriseType = enterpriseType
         this.visible = true
         this.id = index || 0
         this.$nextTick(() => {

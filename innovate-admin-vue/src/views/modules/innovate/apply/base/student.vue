@@ -10,6 +10,12 @@
         <el-button v-if="isAuth('innovate:project:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
+    <el-card>
+      <el-radio-group v-model="dataForm.enterpriseType" @change="getDataList">
+        <el-radio :label="1">校内</el-radio>
+        <el-radio :label="2">校外</el-radio>
+      </el-radio-group>
+    </el-card>
     <el-table
       :data="dataList"
       border
@@ -53,9 +59,9 @@
                   :active="props.row.projectInfoEntity.projectBaseApplyStatus"
                   finish-status="success">
                   <el-step title="项目负责人提交"></el-step>
-                  <el-step title="指导老师审批"></el-step>
+                  <el-step v-if="props.row.projectInfoEntity.enterpriseType == 1" title="指导老师审批"></el-step>
                   <el-step title="管理员审批"></el-step>
-                  <el-step title="评委审批"></el-step>
+                  <el-step v-if="props.row.projectInfoEntity.enterpriseType == 1" title="评委审批"></el-step>
                   <el-step title="管理员审批"></el-step>
                   <!--<el-step title="超级管理员审批"></el-step>-->
                 </el-steps>
@@ -181,6 +187,7 @@
         userTeacherInfoEntities: [],
         dataForm: {
           baseId: '',
+          enterpriseType: 1,
           idDel: 0
         },
         statusList: [
@@ -245,6 +252,7 @@
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
             'userId': this.$store.state.user.id,
+            'enterpriseType': this.dataForm.enterpriseType,
             // 'isTeacher': true
             'isStudent': true,
             // 'apply': 'project_audit_apply_status',
@@ -329,21 +337,61 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http({
-            url: this.$http.adornUrl('/innovate/project/apply/apply'),
-            method: 'post',
-            params: this.$http.adornParams({
-              'projectId': id,
-              'apply': 'project_base_apply_status',
-              'roleId': 2
-            }, false)
-          }).then(({data}) => {
-            this.$message({
-              type: 'success',
-              message: '提交成功!'
+          if (this.dataForm.enterpriseType == 1) {
+            this.$http({
+              url: this.$http.adornUrl('/innovate/project/apply/apply'),
+              method: 'post',
+              params: this.$http.adornParams({
+                'projectId': id,
+                'apply': 'project_base_apply_status',
+                'roleId': 2
+              }, false)
+            }).then(({data}) => {
+              this.$message({
+                type: 'success',
+                message: '提交成功!'
+              })
+              this.getDataList()
             })
-            this.getDataList()
-          })
+          } else {
+
+            this.$http({
+              url: this.$http.adornUrl('/innovate/project/apply/apply'),
+              method: 'post',
+              params: this.$http.adornParams({
+                'projectId': id,
+                'apply': 'project_base_apply_status',
+                'roleId': 2
+              }, false)
+            }).then(({data}) => {
+              this.$http({
+                url: this.$http.adornUrl('/innovate/project/apply/apply'),
+                method: 'post',
+                params: this.$http.adornParams({
+                  'projectId': id,
+                  'apply': 'project_base_apply_status',
+                  'roleId': 3
+                }, false)
+              }).then(({data}) => {
+                this.$http({
+                  url: this.$http.adornUrl('/innovate/project/apply/apply'),
+                  method: 'post',
+                  params: this.$http.adornParams({
+                    'projectId': id,
+                    'apply': 'project_base_apply_status',
+                    'roleId': 4
+                  }, false)
+                }).then(({data}) => {
+                  this.$message({
+                    type: 'success',
+                    message: '提交成功!'
+                  })
+                  this.getDataList()
+                })
+              })
+            })
+          }
+
         }).catch(() => {
           this.$message({
             type: 'info',

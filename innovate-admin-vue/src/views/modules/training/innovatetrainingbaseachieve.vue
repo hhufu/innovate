@@ -7,7 +7,6 @@
           v-model="dataForm.materialYear"
           align="right"
           type="year"
-          value-format="yyyy"
           placeholder="请选择年度">
         </el-date-picker>
       </el-form-item>
@@ -235,10 +234,12 @@
         var ids = this.dataListSelections.map(item => {
           return item.trainingAchieveId
         })
+        let materialYear = this.dataForm.materialYear == null? null : this.dataForm.materialYear.getFullYear()
         let dataForm = {
           ids: ids,
-          instituteId: this.isAuth("training:export:admin") === true ? null : this.dataForm.instituteId,
-          materialYear: (this.isAuth("training:export:erAdmin") === true || this.isAuth("training:export:admin") === true) ? null : this.dataForm.materialYear
+          instituteId: this.isAuth("training:export:admin") === true ? null : this.$store.state.user.instituteId,
+          materialYear: materialYear,
+          trainingBaseName: this.dataForm.trainingBaseName
         }
         this.$http({
           url: this.$http.adornUrl('/training/innovatetrainingbaseachieve/export'),

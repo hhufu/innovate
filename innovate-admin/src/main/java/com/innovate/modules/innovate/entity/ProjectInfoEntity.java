@@ -56,6 +56,7 @@ public class ProjectInfoEntity implements Serializable {
     private Long finishNoPass;
     @JsonSerialize(using=ToStringSerializer.class)
     private Double projectScoreAvg;
+    private Integer enterpriseType; // 1 校内 2 校外
     private Long isDel;
 
 }

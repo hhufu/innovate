@@ -69,6 +69,7 @@ public class InnovateTrainingBaseAchieveServiceImpl extends ServiceImpl<Innovate
         }
         map.put("materialYear", params.get("materialYear"));
         map.put("instituteId", params.get("instituteId"));
+        map.put("trainingBaseName", params.get("trainingBaseName"));
 
         return baseMapper.selectMaterialYear(map);
     }
