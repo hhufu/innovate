@@ -18,4 +18,8 @@ import java.util.Map;
 public interface InnovateStudentPointsDao extends BaseMapper<InnovateStudentPointsEntity> {
 
     List<InnovateStudentPointsEntity> selectPointsIds(Map<String, Object> map);
+
+    Integer queryCountPage(Map<String, Object> params);
+
+    List<InnovateStudentPointsEntity> queryPageByMap(Map<String, Object> params);
 }

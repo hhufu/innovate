@@ -30,4 +30,37 @@
         </if>
     </select>
 
+    <select id="queryCountPage" parameterType="map" resultType="int">
+        select count(*) from innovate_student_points p LEFT JOIN sys_user u on
+        p.stu_num = u.username
+        where 1 = 1
+        <if test="userId != null">
+           and u.user_id = #{userId}
+        </if>
+        <if test="instituteId != null">
+            and u.institute_id = #{instituteId}
+        </if>
+        <if test="key != null and key != ''">
+            and p.stu_num like concat('%',#{key}, '%')
+        </if>
+    </select>
+
+    <select id="queryPageByMap" parameterType="map" resultType="InnovateStudentPointsEntity">
+        select p.* from innovate_student_points p LEFT JOIN sys_user u on
+        p.stu_num = u.username
+        where 1 = 1
+        <if test="userId != null">
+            and u.user_id  = #{userId}
+        </if>
+        <if test="key != null and key != ''">
+            and p.stu_num like concat('%',#{key}, '%')
+        </if>
+        <if test="instituteId != null">
+            and u.institute_id = #{instituteId}
+        </if>
+
+        <if test="startPage != null and endPage != null">
+            limit #{startPage}, #{endPage}
+        </if>
+    </select>
 </mapper>

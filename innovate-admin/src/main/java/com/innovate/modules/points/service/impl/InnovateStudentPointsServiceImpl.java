@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,21 +40,32 @@ public class InnovateStudentPointsServiceImpl extends ServiceImpl<InnovateStuden
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
 
-        EntityWrapper<InnovateStudentPointsEntity> entityWrapper = new EntityWrapper<>();
+        Integer totalPage  = baseMapper.queryCountPage(params);
+        Integer currPage  = 1;
+        Integer pageSize  = 10;
+        try {
+            if (params.get("currPage")!=null&&params.get("pageSize")!=null) {
 
-        if (params.get("key")!=null)entityWrapper.like("stu_num",params.get("key").toString());
-
-        //根据学号查询&&非管理员
-        if (params.get("userId")!=null){
-            UserPersonInfoEntity user = userPerInfoService.queryUserByUserId(Long.parseLong(params.get("userId").toString()));
-            entityWrapper.eq("stu_num",user.getPerStuNo());
+                currPage = Integer.parseInt(params.get("currPage").toString());
+                pageSize = Integer.parseInt(params.get("pageSize").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        Integer startPage = 1 + pageSize * (currPage - 1);
+        Integer endPage = pageSize;
 
-        Page<InnovateStudentPointsEntity> page = this.selectPage(
-                new Query<InnovateStudentPointsEntity>(params).getPage(),entityWrapper
-        );
+        params.put("startPage", startPage);
+        params.put("endPage", endPage);
 
-        return new PageUtils(page);
+        List<InnovateStudentPointsEntity> innovateStudentPointsEntities = baseMapper.queryPageByMap(params);
+//        //根据学号查询&&非管理员
+//        if (params.get("userId")!=null){
+//            UserPersonInfoEntity user = userPerInfoService.queryUserByUserId(Long.parseLong(params.get("userId").toString()));
+//            entityWrapper.eq("stu_num",user.getPerStuNo());
+//        }
+
+        return new PageUtils(innovateStudentPointsEntities, totalPage, pageSize, currPage);
     }
 
     /**

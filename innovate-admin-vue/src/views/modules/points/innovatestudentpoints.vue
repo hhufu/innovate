@@ -154,10 +154,11 @@
           url: this.$http.adornUrl('/points/innovatestudentpoints/list'),
           method: 'get',
           params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
+            'currPage': this.pageIndex,
+            'pageSize': this.pageSize,
             'key': this.dataForm.key,
-            'userId': this.isAuth('points:innovatestudentpoints:save') === true ? null : this.$store.state.user.id
+            'userId': this.isAuth('points:innovatestudentpoints:save') === true ? null : this.$store.state.user.id,
+            'instituteId': this.isAuth('points:export:admin') === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

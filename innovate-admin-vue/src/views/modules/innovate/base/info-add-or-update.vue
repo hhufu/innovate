@@ -67,11 +67,6 @@
             <el-input v-model="dataForm.baseSeriesNum" placeholder="请输入连续创业数量"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="管理服务人数" prop="baseName">
-            <el-input v-model="dataForm.baseServiceNum" placeholder="请输入管理服务人数"></el-input>
-          </el-form-item>
-        </el-col>
         <el-col :span="24">
           <!--<el-form-item label="实体简况" prop="baseName" label-width="80px" >-->
             <!--<el-input v-model="dataForm.baseMessage" placeholder="请输入实体简况"></el-input>-->
@@ -180,7 +175,6 @@
                 this.dataForm.baseServiceNum = data.baseInfo.baseServiceNum
                 this.dataForm.baseOutRate = data.baseInfo.baseOutRate
                 this.dataForm.baseServiceArea = data.baseInfo.baseServiceArea
-                this.dataForm.baseDirectNum = data.baseInfo.baseDirectNum
                 this.dataForm.baseDirectNum = data.baseInfo.baseDirectNum
                 this.dataForm.baseOutNum = data.baseInfo.baseOutNum
                 this.dataForm.baseEntityNum = data.baseInfo.baseEntityNum
