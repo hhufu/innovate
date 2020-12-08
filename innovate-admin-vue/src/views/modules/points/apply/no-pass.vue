@@ -73,6 +73,15 @@
         label="申请时间">
       </el-table-column>
       <el-table-column
+        prop="remark"
+        header-align="center"
+        align="center"
+        label="不通过原因">
+        <template slot-scope="scope">
+          {{scope.row.remark || '无'}}
+        </template>
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"

@@ -106,13 +106,13 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <el-dialog
-      :title="remarkFrom.applyStatus == 9 ? '驳回':'不通过'"
+      :title="remarkFrom.applyStatus === 9 ? '驳回':'不通过'"
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       width="800px">
       <el-form ref="remarkFrom" :model="remarkFrom" :rules="dataRule" @keyup.enter.native="dataFormSubmit()"
                label-width="120px">
-        <el-form-item :label="remarkFrom.applyStatus == 9 ? '驳回原因':'不通过原因'" prop="remark">
+        <el-form-item :label="remarkFrom.applyStatus === 9 ? '驳回原因':'不通过原因'" prop="remark">
           <el-input type="textarea" v-model="remarkFrom.remark"></el-input>
         </el-form-item>
       </el-form>
@@ -180,8 +180,8 @@ export default {
           apply_status: this.apply_status,
           project_name: this.dataForm.projectName,
           projectYear: this.dataForm.projectYear== null ? null : this.dataForm.projectYear.getFullYear(),
-          enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
-          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? null : this.$store.state.user.id,
+          instituteId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.instituteId
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {

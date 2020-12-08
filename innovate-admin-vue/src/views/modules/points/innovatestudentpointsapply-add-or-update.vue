@@ -108,7 +108,6 @@
         visible: false,
         attachLists: [], // 附件列表
         parentId: 0, // 父id
-        participateList: [],
         integral: 0, // 该项目申请积分
         integralTo: 0, // 积分差值
         fileAskContent: '无',
@@ -117,6 +116,7 @@
         noEditPoint: true,
         fileList: [],
         fileIsNull: false,
+        participateList: [],
         raceGradeList: [],
         prizeGradeList: [],
         persionTypeOptions: [{lable: '负责人', value: 1}, {lable: '参与人员', value: 2}],
@@ -223,6 +223,9 @@
         this.fileList = []
         this.fileAskContent = '无'
         this.delAttachLists = []
+        this.participateList = []
+        this.raceGradeList = []
+        this.prizeGradeList = []
       },
       getTypeList() {
         this.participateList = []

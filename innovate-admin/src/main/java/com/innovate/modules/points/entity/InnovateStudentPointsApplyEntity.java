@@ -72,6 +72,10 @@ public class InnovateStudentPointsApplyEntity implements Serializable {
 	 */
 	private String raceGrade;
 	/**
+	 * 备注
+	 */
+	private String remark;
+	/**
 	 * 申请类型
 	 */
 	private String participateType;

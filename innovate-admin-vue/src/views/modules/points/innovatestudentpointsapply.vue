@@ -110,6 +110,15 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="remark"
+        header-align="center"
+        align="center"
+        label="备注">
+        <template slot-scope="scope">
+          {{scope.row.remark || '无'}}
+        </template>
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
