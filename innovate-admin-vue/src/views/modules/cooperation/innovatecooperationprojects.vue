@@ -254,37 +254,41 @@
       },
       // 导出
       exportAchieve () {
-        this.dataListLoading = true
-        var ids = this.dataListSelections.map(item => {
-          return item.cooperationId
-        })
-        let dataForm = {
-          ids: ids,
-          instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.$store.state.user.instituteId,
-          cooperationYear: this.dataForm.cooperationYear == null ? null : this.dataForm.cooperationYear.getFullYear()
+        if (this.dataList.length > 0) {
+          this.dataListLoading = true
+          var ids = this.dataListSelections.map(item => {
+            return item.cooperationId
+          })
+          let dataForm = {
+            ids: ids,
+            instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.$store.state.user.instituteId,
+            cooperationYear: this.dataForm.cooperationYear == null ? null : this.dataForm.cooperationYear.getFullYear()
+          }
+          this.$http({
+            url: this.$http.adornUrl('/cooperation/innovatecooperationprojects/export'),
+            method: 'post',
+            data: this.$http.adornData(dataForm, false),
+            responseType: 'blob'
+          }).then((res) => {
+            this.dataListLoading = false
+            const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+            let filename = '校政合作项目信息.xls'
+            // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+            const elink = document.createElement('a')
+            elink.download = filename
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+            URL.revokeObjectURL(elink.href) // 释放URL 对象
+            document.body.removeChild(elink)
+          }).catch(() => {
+            this.dataListLoading = false
+            this.$message.error('导出失败!')
+          })
+        } else {
+          this.$message.error('无导出数据');
         }
-        this.$http({
-          url: this.$http.adornUrl('/cooperation/innovatecooperationprojects/export'),
-          method: 'post',
-          data: this.$http.adornData(dataForm, false),
-          responseType: 'blob'
-        }).then((res) => {
-          this.dataListLoading = false
-          const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
-          let filename = '校政合作项目信息.xls'
-          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
-          const elink = document.createElement('a')
-          elink.download = filename
-          elink.style.display = 'none'
-          elink.href = URL.createObjectURL(blob)
-          document.body.appendChild(elink)
-          elink.click()
-          URL.revokeObjectURL(elink.href) // 释放URL 对象
-          document.body.removeChild(elink)
-        }).catch(() => {
-          this.dataListLoading = false
-          this.$message.error('导出失败!')
-        })
       },
       // 年度格式化
       // 多选

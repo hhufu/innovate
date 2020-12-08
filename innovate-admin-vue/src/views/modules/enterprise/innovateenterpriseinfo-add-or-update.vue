@@ -44,6 +44,16 @@
       <el-form-item label="主要经营范围" prop="businessScope">
         <el-input v-model="dataForm.businessScope" placeholder="主要经营范围"></el-input>
       </el-form-item>
+      <el-form-item label="附件要求">
+        <template>
+          <el-alert
+            title=""
+            type="success"
+            :closable="false"
+            :description="fileAskContent">
+          </el-alert>
+        </template>
+      </el-form-item>
       <el-form-item label="相关附件" prop="attachLists">
         <el-upload
           class="upload-demo"
@@ -126,7 +136,8 @@
         url: '',
         instituteList: [],
         noClick: false,
-        delAttachLists:[]
+        delAttachLists:[],
+        fileAskContent: '无'
       }
     },
     methods: {
@@ -189,6 +200,22 @@
             })
           }
         })
+
+        // 获取文件要求：类型=>1 大创,2 中期检查,3 赛事,4 结题
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/file/ask/query`),
+          method: 'get',
+          params: this.$http.adornParams({
+            'fileAskType': 5,
+            'fileAskTime': new Date().getFullYear()
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.fileAskContent = data.fileAsk == null ? '无' : data.fileAsk.fileAskContent
+            this.dataListLoading = false
+          }
+        })
       },
       // 表单提交
       dataFormSubmit() {
@@ -215,7 +242,9 @@
                   applyStatus: this.dataForm.applyStatus,
                   instituteId: this.dataForm.instituteId
                 },
-                attachEntities: this.dataForm.attachLists
+                attachEntities: this.dataForm.attachLists,
+                delAttachLists: this.delAttachLists
+
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -269,7 +298,7 @@
           } else {
             let attachId = this.dataForm.attachLists[index].attachId
             if (attachId) {
-              this.delAttachLists.push(attachId)
+              this.delAttachLists.push(this.dataForm.attachLists[index])
             }
           }
         }

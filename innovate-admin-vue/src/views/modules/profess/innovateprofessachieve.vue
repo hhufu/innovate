@@ -236,33 +236,37 @@
         })
       },
       // 导出
-      exportAchieve(){
-        this.dataListLoading = true
-        var professAchieveIds = this.dataListSelections.map(item => {
-          return item.professAchieveId
-        })
-        this.$http({
-          url: this.$http.adornUrl('/profess/innovateprofessachieve/export'),
-          method: 'post',
-          data: this.$http.adornData(professAchieveIds, false),
-          responseType: 'blob'
-        }).then((res) => {
-          this.dataListLoading = false
-          const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
-          let filename = '专创结合成果.xls'
-          // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
-          const elink = document.createElement('a')
-          elink.download = filename
-          elink.style.display = 'none'
-          elink.href = URL.createObjectURL(blob)
-          document.body.appendChild(elink)
-          elink.click()
-          URL.revokeObjectURL(elink.href) // 释放URL 对象
-          document.body.removeChild(elink)
-        }).catch(() => {
-          this.dataListLoading = false
-          this.$message.error('导出失败!')
-        })
+      exportAchieve() {
+        if (this.dataList.length > 0) {
+          this.dataListLoading = true
+          var professAchieveIds = this.dataListSelections.map(item => {
+            return item.professAchieveId
+          })
+          this.$http({
+            url: this.$http.adornUrl('/profess/innovateprofessachieve/export'),
+            method: 'post',
+            data: this.$http.adornData(professAchieveIds, false),
+            responseType: 'blob'
+          }).then((res) => {
+            this.dataListLoading = false
+            const blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+            let filename = '专创结合成果.xls'
+            // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+            const elink = document.createElement('a')
+            elink.download = filename
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+            URL.revokeObjectURL(elink.href) // 释放URL 对象
+            document.body.removeChild(elink)
+          }).catch(() => {
+            this.dataListLoading = false
+            this.$message.error('导出失败!')
+          })
+        } else {
+          this.$message.error('无导出数据');
+        }
       },
     }
   }

@@ -21,7 +21,7 @@
       <el-form-item label="建立时间" prop="baseCreateTime">
         <el-date-picker
           v-model="dataForm.baseCreateTime"
-          type="datetime"
+          type="date"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="建立时间">

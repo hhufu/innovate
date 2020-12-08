@@ -19,6 +19,9 @@
       <el-form-item label="项目名称" prop="projectName">
         <el-input v-model="dataForm.projectName" placeholder="项目名称"></el-input>
       </el-form-item>
+      <el-form-item label="项目负责人" prop="projectDirector">
+        <el-input v-model="dataForm.projectDirector" placeholder="项目负责人"></el-input>
+      </el-form-item>
       <el-form-item label="项目时间" prop="projStartTime">
         <el-date-picker style="width: 100%"
                         v-model="dataForm.projStartTime"
@@ -46,10 +49,16 @@
                         placeholder="选择年度">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="项目负责人" prop="projectDirector">
-        <el-input v-model="dataForm.projectDirector" placeholder="项目负责人"></el-input>
+      <el-form-item label="附件要求">
+        <template>
+          <el-alert
+            title=""
+            type="success"
+            :closable="false"
+            :description="fileAskContent">
+          </el-alert>
+        </template>
       </el-form-item>
-
       <el-form-item label="相关附件" prop="attachLists">
         <el-upload
           class="upload-demo"
@@ -82,6 +91,7 @@
   export default {
     data() {
       return {
+        fileAskContent:'无',
         loading: false,
         visible: false,
         dataForm: {
@@ -94,9 +104,8 @@
           projectYear: "",
           projectDirector: "",
           projectUserId: "",
-          applyStatus: 0,
-          isDel: 0,
           applyStatus: 9,
+          isDel: 0,
           attachLists: []
         },
         dataRule: {
@@ -186,6 +195,22 @@
             });
           }
         });
+
+        // 获取文件要求：类型=>1 大创,2 中期检查,3 赛事,4 结题
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/file/ask/query`),
+          method: 'get',
+          params: this.$http.adornParams({
+            'fileAskType': 7,
+            'fileAskTime': new Date().getFullYear()
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.fileAskContent = data.fileAsk == null ? '无' : data.fileAsk.fileAskContent
+            this.dataListLoading = false
+          }
+        })
       },
       // 表单提交
       dataFormSubmit() {
@@ -213,7 +238,8 @@
                   isDel: this.dataForm.isDel,
                   applyStatus: this.dataForm.applyStatus
                 },
-                attachEntities: this.dataForm.attachLists
+                attachEntities: this.dataForm.attachLists,
+                delAttachLists: this.delAttachLists
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -286,7 +312,7 @@
           } else {
             let attachId = this.dataForm.attachLists[index].attachId
             if (attachId) {
-              this.delAttachLists.push(attachId)
+              this.delAttachLists.push(this.dataForm.attachLists[index])
             }
           }
         }

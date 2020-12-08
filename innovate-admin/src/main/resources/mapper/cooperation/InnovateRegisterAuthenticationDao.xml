@@ -12,22 +12,31 @@
         <result property="enterpriseType" column="enterprise_type"/>
     </resultMap>
 
-    <update id="deleteList"  parameterType="java.util.List">
-        update innovate_register_authentication r,innovate_cooperation_agreement a,innovate_cooperation_projects p
-        set r.is_del = 1, a.is_del = 1, p.is_del = 1
+    <update id="deleteList"  parameterType="List">
+        update innovate_register_authentication r
+        set r.is_del = 1
         where r.authentication_id in
         <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
             #{item}
         </foreach>
-        and a.authentication_id in
-        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-            #{item}
-        </foreach>
-        and p.authentication_id in
-        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-            #{item}
-        </foreach>
+    </update>
 
+    <update id="deleteAgreementList"  parameterType="List">
+        update innovate_cooperation_agreement a
+        set a.is_del = 1
+        where a.authentication_id in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="deleteProjectsList"  parameterType="List">
+        update innovate_cooperation_projects p
+        set p.is_del = 1
+        where p.authentication_id in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </update>
 
     <select id="selectMap" parameterType="Map" resultType="InnovateRegisterAuthenticationEntity">

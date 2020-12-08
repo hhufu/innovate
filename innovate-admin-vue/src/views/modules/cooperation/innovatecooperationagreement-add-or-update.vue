@@ -61,7 +61,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="this.attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
+          <span v-if="attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -86,13 +86,13 @@
       return {
         loading: false,
         visible: false,
-        instituteList: [],
+        instituteList: [], // 学院列表
         url: '',
         fileAskContent: '无',
         fileIsNull: false,
         fileList: [],
         attachLists: [], // 附件列表
-        delAttachLists: [], // 要删除的附件
+        delMaterialsList: [], // 要删除的附件
         dataForm: {
           enterpriseId: 0,
           enterpriseName: '',
@@ -129,6 +129,7 @@
     },
     methods: {
       init (id) {
+        this.dataForm.instituteId = this.$store.state.user.instituteId
         this.loading = false
         this.url = this.$http.adornUrl(`/cooperation/innovatecooperationmaterials/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.enterpriseId = id || 0
@@ -170,12 +171,10 @@
                 this.fileList = tempFinishAtta
                 this.isTeacherInfoNull()
                 this.dataListLoading = false
-              } else {
-                this.attachLists = []
-                this.fileList = []
-                this.delAttachLists = []
               }
             }).catch((e) => {})  // length异常抛出
+          } else {
+            this.rest()
           }
           // 获取文件要求：类型=>1 大创,2 中期检查,3 赛事,4 结题
           this.dataListLoading = true
@@ -194,20 +193,24 @@
           })
         })
       },
+      rest() {
+        this.attachLists = []
+        this.fileList = []
+        this.delMaterialsList = []
+      },
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
+          if (valid && this.attachLists.length > 0) {
             this.loading = true
             this.dataForm.userId = this.$store.state.user.id
-            console.log(this.attachLists)
             this.$http({
               url: this.$http.adornUrl(`/cooperation/innovatecooperationagreement/${!this.dataForm.enterpriseId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
                 cooperationAgreementEntity: this.dataForm,
                 cooperationMaterialsList: this.attachLists,
-                delMaterialsList: this.delMaterialsList
+                delMaterialsList: this.delMaterialsList,
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -254,7 +257,7 @@
           if (this.attachLists[index].attachName !== file.name) {
             tempFileList.push(this.attachLists[index])
           } else {
-            this.delAttachLists.push(this.attachLists[index])
+            this.delMaterialsList.push(this.attachLists[index])
           }
         }
         this.attachLists = tempFileList

@@ -62,7 +62,7 @@
             and m.institute_id = #{instituteId}
         </if>
         <if test="trainingBaseName != null">
-            and m.training_base_name = #{trainingBaseName}
+            and m.training_base_name like concat('%', #{trainingBaseName}, '%')
         </if>
 
     </select>

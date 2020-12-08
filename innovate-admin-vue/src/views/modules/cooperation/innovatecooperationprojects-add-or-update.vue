@@ -70,7 +70,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="this.attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
+          <span v-if="attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -100,7 +100,7 @@
         fileIsNull: false,
         fileList: [],
         attachLists: [], // 附件列表
-        delAttachLists: [], // 要删除的附件
+        delMaterialsList: [], // 要删除的附件
         dataForm: {
           cooperationId: 0,
           projectName: '',
@@ -141,6 +141,7 @@
     },
     methods: {
       init (id) {
+        this.dataForm.instituteId = this.$store.state.user.instituteId
         this.loading = false
         this.url = this.$http.adornUrl(`/cooperation/innovatecooperationmaterials/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.cooperationId = id || 0
@@ -205,16 +206,16 @@
           })
         })
       },
-      rest() {
+      reset() {
           this.attachLists = []
           this.fileList = []
-          this.delAttachLists = []
+          this.delMaterialsList = []
       },
       // 表单提交
       dataFormSubmit () {
-        this.loading = true
         this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
+          if (valid && this.attachLists.length > 0) {
+            this.loading = true
             this.dataForm.userId = this.$store.state.user.id
             this.$http({
               url: this.$http.adornUrl(`/cooperation/innovatecooperationprojects/${!this.dataForm.cooperationId ? 'save' : 'update'}`),
@@ -222,7 +223,7 @@
               data: this.$http.adornData({
                 cooperationProjectsEntity: this.dataForm,
                 delMaterialsList: this.delMaterialsList,
-                cooperationMaterialsList: this.attachLists
+                cooperationMaterialsList: this.attachLists,
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -269,7 +270,7 @@
           if (this.attachLists[index].attachName !== file.name) {
             tempFileList.push(this.attachLists[index])
           } else {
-            this.delAttachLists.push(this.attachLists[index])
+            this.delMaterialsList.push(this.attachLists[index])
           }
         }
         this.attachLists = tempFileList

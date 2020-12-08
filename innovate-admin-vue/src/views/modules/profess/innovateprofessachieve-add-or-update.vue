@@ -61,7 +61,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileList.length === 0" style="color: crimson">*请上传相关附件</span>
+          <span v-if="attachLists.length == 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
       <!--独立附件end-->
@@ -91,6 +91,7 @@
         url: '',
         fileList: [], // 文件列表
         attachLists: [],
+        delAttachEntityList: [], // 要删除的附件
         fileAskContent: '无', // 附件要求
         dataForm: {
           professAchieveId: 0,
@@ -168,7 +169,7 @@
           } else {
               this.attachLists = []
               this.fileList = []
-              this.delAttachLists = []
+              this.delAttachEntityList = []
           }
         })
       },
@@ -206,7 +207,7 @@
               data: this.$http.adornData({
                 professAchieveEntity: this.dataForm,
                 attachEntityList: this.attachLists,
-                delAttachEntityList: this.delAttachLists
+                delAttachEntityList: this.delAttachEntityList
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -264,7 +265,7 @@
           if (this.attachLists[index].attachName !== file.name) {
             tempFileList.push(this.attachLists[index])
           } else {
-            this.delAttachLists.push(this.attachLists[index])
+            this.delAttachEntityList.push(this.attachLists[index])
           }
         }
         this.attachLists = tempFileList

@@ -26,4 +26,8 @@ public interface InnovateRegisterAuthenticationDao extends BaseMapper<InnovateRe
     void deleteList(List<Long> list);
 
     List<InnovateRegisterAuthenticationEntity> selectMap(Map<String, Object> map);
+
+    void deleteAgreementList(List<Long> list);
+
+    void deleteProjectsList(List<Long> list);
 }

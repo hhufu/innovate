@@ -51,6 +51,8 @@ public class InnovateRegisterAuthenticationServiceImpl extends ServiceImpl<Innov
     @Override
     public void deleteList(List<Long> list) {
         baseMapper.deleteList(list);
+        baseMapper.deleteAgreementList(list);
+        baseMapper.deleteProjectsList(list);
     }
     @Override
     public List<InnovateRegisterAuthenticationEntity> queryListByIds(Map<String, Object> params) {

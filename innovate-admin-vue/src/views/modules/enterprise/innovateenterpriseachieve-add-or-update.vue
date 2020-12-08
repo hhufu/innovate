@@ -308,7 +308,7 @@
           url: this.$http.adornUrl(`/innovate/sys/file/ask/query`),
           method: 'get',
           params: this.$http.adornParams({
-            'fileAskType': 5,
+            'fileAskType': 6,
             'fileAskTime': new Date().getFullYear()
           })
         }).then(({data}) => {

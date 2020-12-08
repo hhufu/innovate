@@ -14,7 +14,10 @@
         <el-input v-model="dataForm.creditCode" placeholder="统一信用代码"></el-input>
       </el-form-item>
       <el-form-item label="企业类型" prop="enterpriseType">
-        <el-input v-model="dataForm.enterpriseType" placeholder="企业类型"></el-input>
+        <el-select v-model="dataForm.enterpriseType" placeholder="请选择企业类型" >
+          <el-option v-for="item in enterpriseTypeList" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -30,6 +33,11 @@
       return {
         loading: false,
         visible: false,
+        enterpriseTypeList: [
+          {value: '先进制造业', label: '先进制造业'}, {value: '现代服务业', label: '现代服务业'},
+          {value: '现代农业', label: '现代农业'}, {value: '批发零售业', label: '批发零售业'},
+          {value: '其他', label: '其他'}
+        ],
         dataForm: {
           authenticationId: 0,
           enterpriseName: '',
