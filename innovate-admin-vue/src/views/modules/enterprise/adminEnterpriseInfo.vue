@@ -165,8 +165,8 @@
             limit: this.pageSize,
             enterpriseName: this.dataForm.enterpriseName,
             apply_status: this.apply_status,
-            enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
-            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+            enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? null : this.$store.state.user.id,
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

@@ -7,7 +7,7 @@
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
              label-width="12rem" style="width: 94%; margin: 0 auto">
       <el-form-item label="企业名称" prop="enterpriseName">
-        <el-select v-model="dataForm.enterpriseName" placeholder="企业名称" style="width: 100%" @change="changeName">
+        <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" style="width: 100%" @change="changeName">
           <el-option v-for="n in projectName" :key="n.enterpriseName" :label="n.enterpriseName"
                      :value="n.enterpriseName"></el-option>
         </el-select>
