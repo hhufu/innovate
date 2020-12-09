@@ -95,7 +95,7 @@
           enterpriseName: '',
           enterpriseUserId: '',
           enterpriseDirector: '',
-          departmentDirector: '',
+          departmentDirector: null,
           settledTime: '',
           enterpriseType: '',
           businessScope: '',
@@ -150,7 +150,15 @@
         )
         this.dataForm.settledEnterpId = id || 0
         this.visible = true
-        this.getInstituteList()
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.instituteList = data.institute
+            this.changeName(this.dataForm.instituteId)
+          }
+        })
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.settledEnterpId) {
@@ -199,9 +207,8 @@
               }
             })
           } else {
-            this.dataForm.enterpriseDirector = this.isAuth('enterprise:innovateenterpriseinfo:admin') === true? null: this.$store.state.user.name
-            this.dataForm.instituteId = this.isAuth('enterprise:innovateenterpriseinfo:admin') === true? null: this.$store.state.user.instituteId
-            this.changeName(this.dataForm.instituteId)
+              this.dataForm.enterpriseDirector = this.isAuth('enterprise:innovateenterpriseinfo:admin') === true? null: this.$store.state.user.name
+              this.dataForm.instituteId = this.isAuth('enterprise:innovateenterpriseinfo:admin') === true? null: this.$store.state.user.instituteId
           }
         })
 
@@ -310,14 +317,7 @@
       },
       // 二级学院
       getInstituteList() {
-        this.$http({
-          url: this.$http.adornUrl(`/innovate/sys/institute/all`),
-          method: 'get'
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.instituteList = data.institute
-          }
-        })
+
       },
       // 清空附件列表
       handleClose() {
@@ -325,7 +325,7 @@
       },
       //根据改变选中值更改学院id
       changeName(query) {
-        if (query !== "") {
+        if (query != "") {
           this.instituteList.forEach(item => {
             if (item.instituteId === query)
               this.dataForm.departmentDirector = item.instituteName;

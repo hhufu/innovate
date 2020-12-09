@@ -52,7 +52,7 @@ public class InnovateStudentPointsServiceImpl extends ServiceImpl<InnovateStuden
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Integer startPage = 1 + pageSize * (currPage - 1);
+        Integer startPage = 0 + pageSize * (currPage - 1);
         Integer endPage = pageSize;
 
         params.put("startPage", startPage);

@@ -167,6 +167,7 @@
               }
             })
           } else {
+            this.dataForm.instituteId = this.isAuth("training:export:admin") === true ? null: this.$store.state.user.instituteId
               this.attachLists = []
               this.fileList = []
               this.delAttachEntityList = []

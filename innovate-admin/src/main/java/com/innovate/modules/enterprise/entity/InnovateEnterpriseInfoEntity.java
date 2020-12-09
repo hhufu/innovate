@@ -50,7 +50,7 @@ public class InnovateEnterpriseInfoEntity implements Serializable {
 	 * 负责人所在学院ID
 	 */
 	@ExcelIgnore
-	private String instituteId;
+	private Integer instituteId;
 	/**
 	 * 负责人所在学院
 	 */

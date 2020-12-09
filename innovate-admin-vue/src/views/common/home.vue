@@ -297,7 +297,7 @@
           <el-col :span="8">
             <el-card v-if="noJudgeEnterpriseAchieveTotal > 0">
               <div slot="header">
-                <span>合作管理->企业项目审核列表(二级学院)</span>
+                <span>合作管理->企业成果审核列表(二级学院)</span>
               </div>
               <div>
                 <span>{{noJudgeEnterpriseAchieveTotal}}条、待审核</span>
@@ -309,7 +309,7 @@
           <el-col :span="8">
             <el-card v-if="noJudgeEnterpriseProjectTotal > 0">
               <div slot="header">
-                <span>合作管理->企业成果审核列表(二级学院)</span>
+                <span>合作管理->企业项目审核列表(二级学院)</span>
               </div>
               <div>
                 <span>{{noJudgeEnterpriseProjectTotal}}条、待审核</span>
