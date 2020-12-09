@@ -63,7 +63,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileIsNull" style="color: crimson">*请上传相关附件</span>
+          <span v-if="dataForm.attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -224,7 +224,7 @@
       // 表单提交
       dataFormSubmit() {
         this.$refs['dataForm'].validate(valid => {
-          if (valid) {
+          if (valid && this.dataForm.attachLists.length >0) {
             this.loading = true
             this.$http({
               url: this.$http.adornUrl(

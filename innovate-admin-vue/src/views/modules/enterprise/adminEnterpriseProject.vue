@@ -57,7 +57,7 @@
         align="center"
         label="项目开始时间">
         <template slot-scope="scope">
-          {{parseTime(scope.row.projStartTime, "{y}年{m}月{d}日")}}
+          {{parseTime(scope.row.projStartTime, "{y}-{m}-{d}")}}
         </template>
       </el-table-column>
       <el-table-column
@@ -66,7 +66,7 @@
         align="center"
         label="截止时间">
         <template slot-scope="scope">
-          {{parseTime(scope.row.projStopTime, "{y}年{m}月{d}日")}}
+          {{parseTime(scope.row.projStopTime, "{y}-{m}-{d}")}}
         </template>
       </el-table-column>
       <el-table-column

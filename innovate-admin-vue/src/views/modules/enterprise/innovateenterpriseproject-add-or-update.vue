@@ -105,6 +105,7 @@
           projectDirector: "",
           projectUserId: "",
           applyStatus: 9,
+          instituteId: null,
           isDel: 0,
           attachLists: []
         },
@@ -176,6 +177,7 @@
                   data.infoModel.projectEntity.projectYear;
                 this.dataForm.projectDirector =
                   data.infoModel.projectEntity.projectDirector;
+                this.dataForm.instituteId = data.infoModel.projectEntity.instituteId;
                 this.dataForm.projectUserId =
                   data.infoModel.projectEntity.projectUserId;
                 this.dataForm.isDel = data.infoModel.projectEntity.isDel;
@@ -235,6 +237,7 @@
                   projectYear: this.dataForm.projectYear,
                   projectDirector: this.dataForm.projectDirector,
                   projectUserId: this.dataForm.projectUserId,
+                  instituteId: this.dataForm.instituteId,
                   isDel: this.dataForm.isDel,
                   applyStatus: this.dataForm.applyStatus
                 },
@@ -292,6 +295,7 @@
             return item.enterpriseName.indexOf(query) > -1;
           });
           this.dataForm.enterpriseId = list[0].settledEnterpId;
+          this.dataForm.instituteId = list[0].instituteId
         }
       },
       // 上传成功

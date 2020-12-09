@@ -109,6 +109,9 @@
         header-align="center"
         align="center"
         label="申请时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.applyTime, "{y}-{m}-{d}")}}
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"

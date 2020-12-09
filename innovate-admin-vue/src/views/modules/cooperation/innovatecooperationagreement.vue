@@ -75,6 +75,9 @@
         header-align="center"
         align="center"
         label="备注">
+        <template slot-scope="scope">
+          {{scope.row.enterpriseRecords || '无'}}
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -254,7 +257,8 @@
           let dataForm = {
             ids: ids,
             instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.$store.state.user.instituteId,
-            agreementYear: this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear.getFullYear()
+            agreementYear: this.dataForm.agreementYear == null ? null : this.dataForm.agreementYear.getFullYear(),
+            enterpriseName: this.dataForm.enterpriseName
           }
           this.$http({
             url: this.$http.adornUrl('/cooperation/innovatecooperationagreement/export'),

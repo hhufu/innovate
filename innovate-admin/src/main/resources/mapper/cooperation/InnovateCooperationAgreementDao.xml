@@ -66,6 +66,9 @@
         <if test="instituteId != null">
             and a.institute_id = #{instituteId}
         </if>
+        <if test="enterpriseName != null">
+            and a.enterprise_name like concat('%', #{enterpriseName}, '%')
+        </if>
 
     </select>
 

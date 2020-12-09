@@ -51,7 +51,6 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
     @Override
     public List<InnovateCooperationAgreementEntity> queryListByIds(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>();
-        map.put("agreementYear", null);
         if (params.get("ids") != null && !params.get("ids").toString().equals("[]")) {
             map.put("ids", params.get("ids"));
         } else {
@@ -59,6 +58,7 @@ public class InnovateCooperationAgreementServiceImpl extends ServiceImpl<Innovat
         }
         map.put("agreementYear", params.get("agreementYear"));
         map.put("instituteId", params.get("instituteId"));
+        map.put("enterpriseName", params.get("enterpriseName"));
 
         return baseMapper.selectAgreementYear(map);
     }

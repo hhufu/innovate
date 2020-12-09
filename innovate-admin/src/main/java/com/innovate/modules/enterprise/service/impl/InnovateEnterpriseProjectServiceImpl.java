@@ -49,7 +49,7 @@ public class InnovateEnterpriseProjectServiceImpl extends ServiceImpl<InnovateEn
         // 用户id
         Object userId = params.get("enterpriseUserId");
         //学院id
-//        Object instituteId = params.get("instituteId");
+        Object instituteId = params.get("instituteId");
         //项目名称
         Object projectName = params.get("project_name");
         //项目年度
@@ -59,7 +59,8 @@ public class InnovateEnterpriseProjectServiceImpl extends ServiceImpl<InnovateEn
         EntityWrapper<InnovateEnterpriseProjectEntity> wrapper = new EntityWrapper<>();
         wrapper.eq("is_del", 0)
                 .eq("apply_status", params.get("apply_status"));
-
+        if (instituteId!=null)
+           wrapper.eq("institute_id", Long.parseLong(instituteId.toString()));
         if (userId != null) { //非空无管理权限
 //            if (instituteId!=null){
 //                wrapper.eq("institute_id", instituteId.toString());

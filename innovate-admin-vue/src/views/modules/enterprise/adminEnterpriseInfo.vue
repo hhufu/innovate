@@ -53,6 +53,9 @@
         header-align="center"
         align="center"
         label="入驻时间">
+        <template slot-scope="scope">
+          {{parseTime(scope.row.settledTime, "{y}-{m}-{d}")}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="enterpriseType"

@@ -53,7 +53,7 @@
         align="center"
         label="获奖时间">
         <template slot-scope="scope">
-          {{parseTime(scope.row.awardTime, "{y}年{m}月{d}日")}}
+          {{parseTime(scope.row.awardTime, "{y}-{m}-{d}")}}
         </template>
       </el-table-column>
       <el-table-column

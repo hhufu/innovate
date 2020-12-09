@@ -79,7 +79,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileList.length === 0" style="color: crimson">*请上传相关附件</span>
+          <span v-if="attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
       <!--独立附件end-->

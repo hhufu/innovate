@@ -63,7 +63,7 @@
         align="center"
         label="获奖时间">
         <template slot-scope="scope">
-          {{parseTime(scope.row.awardTime, "{y}年{m}月{d}日")}}
+          {{parseTime(scope.row.awardTime, "{y}-{m}-{d}")}}
         </template>
       </el-table-column>
       <el-table-column
@@ -120,7 +120,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" v-if="scope.row.applyStatus === '9'" @click="hintVisible(scope.row.enterpAchieveId)">提交审核</el-button>
           <el-button type="text" size="small" @click="detailInfo(scope.row.enterpAchieveId)">查看</el-button>
-          <el-button type="text" size="small" v-if="apply_status ===0 ||apply_status ===9  " @click="addOrUpdateHandle(scope.row.enterpAchieveId)">修改</el-button>
+          <el-button type="text" size="small" v-if="apply_status ===9" @click="addOrUpdateHandle(scope.row.enterpAchieveId)">修改</el-button>
           <el-button type="text" size="small"  @click="deleteHandle(scope.row.enterpAchieveId)">删除</el-button>
         </template>
       </el-table-column>

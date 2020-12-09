@@ -38,10 +38,6 @@
         <th colspan="2">主要经营范围</th>
         <td colspan="8">{{dataForm.businessScope}}</td>
       </tr>
-      <tr align='center'>
-        <th colspan="2">审核状态</th>
-        <td colspan="8">{{dataForm.applyStatus}}</td>
-      </tr>
       <!--附件开始-->
       <tr align='center'>
         <td colspan="10" style="height: 1.2rem"></td>

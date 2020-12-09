@@ -5,7 +5,7 @@
     :visible.sync="visible"
     @close="handleClose">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
-             label-width="12rem" style="width: 94%; margin: 0 auto">
+             label-width="110px" style="width: 94%; margin: 0 auto">
       <el-form-item label="企业名称" prop="enterpriseName">
         <el-select v-model="dataForm.enterpriseName" filterable placeholder="企业名称" style="width: 100%" @change="changeName">
           <el-option v-for="n in projectName" :key="n.enterpriseName" :label="n.enterpriseName"
@@ -22,8 +22,8 @@
         <el-date-picker v-model="dataForm.awardTime" type="date" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd"
                         placeholder="选择日期"/>
       </el-form-item>
-      <el-form-item label="类型" prop="awardProjectType">
-        <el-select v-model="dataForm.awardProjectType" placeholder="类型（应用成果转化/获奖/著作权/企业证书）" style="width: 100%"
+      <el-form-item label="成果类型" prop="awardProjectType">
+        <el-select v-model="dataForm.awardProjectType" placeholder="成果类型" style="width: 100%"
                    @change="changeTypeId">
           <el-option v-for="n in awardProjectType" :key="n.awardProjectType" :label="n.awardProjectType"
                      :value="n.awardProjectType"></el-option>
@@ -56,7 +56,7 @@
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
-          <span v-if="fileIsNull" style="color: crimson">*请上传相关附件</span>
+          <span v-if="attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -203,7 +203,7 @@
       // 表单提交
       dataFormSubmit() {
         this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
+          if (valid && this.attachLists.length > 0) {
             this.loading = true
             this.$http({
               url: this.$http.adornUrl(

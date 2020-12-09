@@ -67,7 +67,7 @@
         align="center"
         label="入驻时间">
         <template slot-scope="scope">
-          {{parseTime(scope.row.settledTime, "{y}年{m}月{d}日")}}
+          {{parseTime(scope.row.settledTime, "{y}-{m}-{d}")}}
         </template>
       </el-table-column>
       <el-table-column

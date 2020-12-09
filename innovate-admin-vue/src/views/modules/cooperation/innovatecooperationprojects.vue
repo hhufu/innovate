@@ -262,7 +262,8 @@
           let dataForm = {
             ids: ids,
             instituteId: this.isAuth("cooperation:export:admin") === true ? null : this.$store.state.user.instituteId,
-            cooperationYear: this.dataForm.cooperationYear == null ? null : this.dataForm.cooperationYear.getFullYear()
+            cooperationYear: this.dataForm.cooperationYear == null ? null : this.dataForm.cooperationYear.getFullYear(),
+            projectName: this.dataForm.projectName
           }
           this.$http({
             url: this.$http.adornUrl('/cooperation/innovatecooperationprojects/export'),

@@ -94,7 +94,7 @@ public class InnovateEnterpriseAchieveEntity implements Serializable {
 	private String instituteName;
 
 	//备注
-	@ExcelProperty(value = "备注信息")
+	@ExcelIgnore
 	private String remark;
 
 }
