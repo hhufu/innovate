@@ -139,9 +139,6 @@
           applyTime: [
             {required: true, message: '申请时间不能为空', trigger: 'blur'}
           ],
-          isDel: [
-            {required: true, message: '是否删除不能为空', trigger: 'blur'}
-          ],
           applyIntegral: [
             {required: true, message: '积分不能为空', trigger: 'blur'}
           ],

@@ -15,10 +15,10 @@
       <el-form-item label="企业负责人姓名" prop="enterpriseDirector">
         <el-input v-model="dataForm.enterpriseDirector" placeholder="企业负责人姓名"></el-input>
       </el-form-item>
-      <el-form-item label="负责人所在学院" prop="departmentDirector">
-        <el-select v-model="dataForm.departmentDirector" placeholder="负责人所在学院" @change="changeName" style="display: unset">
+      <el-form-item label="负责人所在学院" prop="instituteId">
+        <el-select v-model="dataForm.instituteId" placeholder="负责人所在学院" @change="changeName" style="display: unset">
           <el-option v-for="item in instituteList" :key="item.instituteName" :label="item.instituteName"
-                     :value="item.instituteName">
+                     :value="item.instituteId">
           </el-option>
         </el-select>
       </el-form-item>
@@ -102,7 +102,7 @@
           applyStatus: 9,
           isDel: 0,
           attachLists: [],
-          instituteId: ''
+          instituteId: 0
         },
         dataRule: {
           enterpriseName: [
@@ -111,7 +111,7 @@
           enterpriseDirector: [
             {required: true, message: '企业负责人姓名不能为空', trigger: 'blur'}
           ],
-          departmentDirector: [
+          instituteId: [
             {required: true, message: '负责人所在学院不能为空', trigger: 'blur'}
           ],
           settledTime: [
@@ -198,6 +198,10 @@
                 this.fileList = attachList
               }
             })
+          } else {
+            this.dataForm.enterpriseDirector = this.isAuth('enterprise:innovateenterpriseinfo:admin') === true? null: this.$store.state.user.name
+            this.dataForm.instituteId = this.isAuth('enterprise:innovateenterpriseinfo:admin') === true? null: this.$store.state.user.instituteId
+            this.changeName(this.dataForm.instituteId)
           }
         })
 
@@ -322,10 +326,11 @@
       //根据改变选中值更改学院id
       changeName(query) {
         if (query !== "") {
-          let list = this.instituteList.filter(item => {
-            return item.instituteName.indexOf(query) > -1;
+          this.instituteList.forEach(item => {
+            if (item.instituteId === query)
+              this.dataForm.departmentDirector = item.instituteName;
           });
-          this.dataForm.instituteId = list[0].instituteId;
+
         }
       },
     }

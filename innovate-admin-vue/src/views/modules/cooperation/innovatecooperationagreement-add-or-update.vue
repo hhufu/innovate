@@ -109,7 +109,7 @@
             { required: true, message: '企业名称不能为空', trigger: 'blur' }
           ],
           instituteId: [
-            { required: true, message: '二级学院 innovate_sys_institute主键不能为空', trigger: 'blur' }
+            { required: true, message: '二级学院不能为空', trigger: 'blur' }
           ],
           agreementYear: [
             { required: true, message: '年度不能为空', trigger: 'blur' }

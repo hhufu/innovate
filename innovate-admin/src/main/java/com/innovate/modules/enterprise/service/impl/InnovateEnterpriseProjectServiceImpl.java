@@ -68,7 +68,7 @@ public class InnovateEnterpriseProjectServiceImpl extends ServiceImpl<InnovateEn
 //            }
         }
 
-        if (!"".equals(projectName)) { //根据项目名称搜索
+        if (projectName != null && !"".equals(projectName)) { //根据项目名称搜索
             wrapper.like("project_name", projectName.toString());
         }
 

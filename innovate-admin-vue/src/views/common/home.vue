@@ -281,11 +281,47 @@
               </div>
             </el-card>
           </el-col>
+          <!--企业入驻审核-->
+          <el-col :span="8">
+            <el-card v-if="noJudgeEnterpriseTotal > 0">
+              <div slot="header">
+                <span>合作管理->企业入驻审核列表(二级学院)</span>
+              </div>
+              <div>
+                <span>{{noJudgeEnterpriseTotal}}条、待审核</span>
+                <router-link to="/enterprise-adminEnterpriseInfo">跳转</router-link>
+              </div>
+            </el-card>
+          </el-col>
+          <!--企业项目审核-->
+          <el-col :span="8">
+            <el-card v-if="noJudgeEnterpriseAchieveTotal > 0">
+              <div slot="header">
+                <span>合作管理->企业项目审核列表(二级学院)</span>
+              </div>
+              <div>
+                <span>{{noJudgeEnterpriseAchieveTotal}}条、待审核</span>
+                <router-link to="/enterprise-adminEnterpriseAchieve">跳转</router-link>
+              </div>
+            </el-card>
+          </el-col>
+          <!--企业成果审核-->
+          <el-col :span="8">
+            <el-card v-if="noJudgeEnterpriseProjectTotal > 0">
+              <div slot="header">
+                <span>合作管理->企业成果审核列表(二级学院)</span>
+              </div>
+              <div>
+                <span>{{noJudgeEnterpriseProjectTotal}}条、待审核</span>
+                <router-link to="/enterprise-adminEnterpriseProject">跳转</router-link>
+              </div>
+            </el-card>
+          </el-col>
           <!--审核积分申请-->
           <el-col :span="8">
             <el-card v-if="noJudgePointsTotal > 0">
               <div slot="header">
-                <span>积分申请->二级学院审核列表(二级学院)</span>
+                <span>积分管理->学院审核列表(二级学院)</span>
               </div>
               <div>
                 <span>{{noJudgePointsTotal}}条、待审核</span>
@@ -491,7 +527,7 @@
           <el-col :span="8">
             <el-card v-if="noJudgePointsTotal > 0">
               <div slot="header">
-                <span>积分申请->二级学院审核列表(管理员)</span>
+                <span>积分管理->二级学院审核列表(管理员)</span>
               </div>
               <div>
                 <span>{{noJudgePointsTotal}}条、待审核</span>
@@ -553,7 +589,13 @@
         // 不通过积分申请
         noPassPoints: '',
         // 没审核积分条数
-        noJudgePointsTotal: ''
+        noJudgePointsTotal: 0,
+        // 没审核企业入驻条数
+        noJudgeEnterpriseTotal: 0,
+        // 未审核企业成果
+        noJudgeEnterpriseAchieveTotal: 0,
+        // 未审核企业项目
+        noJudgeEnterpriseProjectTotal: 0
       }
     },
     mounted () {
@@ -1011,7 +1053,7 @@
           method: 'get',
           params: this.$http.adornParams({
             'page': 1,
-            'limit': 20,
+            'limit': 10,
             'applyStatus': 1,
             'instituteId': this.$store.state.user.instituteId
           })
@@ -1024,6 +1066,62 @@
             this.noJudgePointsTotal = 0
           }
         })
+
+        // 企业入驻审核
+        this.$http({
+          url: this.$http.adornUrl("/enterprise/innovateenterpriseinfo/list"),
+          method: "get",
+          params: this.$http.adornParams({
+            page: this.pageIndex,
+            limit: this.pageSize,
+            apply_status: 0,
+            enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.noJudgeEnterpriseTotal = data.page.totalCount;
+          } else {
+            this.noJudgeEnterpriseTotal = 0;
+          }
+        });
+        // 查询企业成果
+        this.$http({
+          url: this.$http.adornUrl('/enterprise/innovateenterpriseachieve/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'page': 1,
+            'limit': 10,
+            apply_status: 0,
+            // enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.noJudgeEnterpriseAchieveTotal = data.page.totalCount
+          } else {
+            this.noJudgeEnterpriseAchieveTotal = 0
+          }
+        })
+
+        // 查询企业项目
+        this.$http({
+          url: this.$http.adornUrl("/enterprise/innovateenterpriseproject/list"),
+          method: "get",
+          params: this.$http.adornParams({
+            page: 1,
+            limit: 10,
+            apply_status: 0,
+            // enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? null : this.$store.state.user.id,
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.instituteId
+          })
+        }).then(({ data }) => {
+          if (data && data.code === 0) {
+            this.noJudgeEnterpriseProjectTotal = data.page.totalCount;
+          } else {
+            this.noJudgeEnterpriseProjectTotal = 0;
+          }
+        });
       },
       getAdmin () {
         this.$http({
@@ -1261,7 +1359,7 @@
           method: 'get',
           params: this.$http.adornParams({
             'page': 1,
-            'limit': 20,
+            'limit': 10,
             'applyStatus': 1
           })
         }).then(({data}) => {
@@ -1273,6 +1371,7 @@
             this.noJudgePointsTotal = 0
           }
         })
+
       },
       getJury () {
         this.$http({

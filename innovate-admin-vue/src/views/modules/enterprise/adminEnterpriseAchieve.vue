@@ -103,7 +103,7 @@
       <el-form ref="remarkFrom" :model="remarkFrom" :rules="dataRule" @keyup.enter.native="dataFormSubmit()"
                label-width="120px">
         <el-form-item :label="remarkFrom.applyStatus == 9 ? '驳回原因':'不通过原因'" prop="remark">
-          <el-input type="textarea" v-model="remarkFrom.remark"></el-input>
+          <el-input type="textarea" :rows="4" v-model="remarkFrom.remark"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

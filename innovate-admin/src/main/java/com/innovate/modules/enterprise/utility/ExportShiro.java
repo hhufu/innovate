@@ -24,7 +24,7 @@ public class ExportShiro<T> {
                 wrapper.eq("enterprise_user_id", userId.toString());
             }
         }
-        if (!"".equals(enterpriseName)){  //根据企业名称搜索
+        if (enterpriseName != null && !"".equals(enterpriseName)){  //根据企业名称搜索
             wrapper.like("enterprise_name" , enterpriseName.toString());
         }
         return wrapper;

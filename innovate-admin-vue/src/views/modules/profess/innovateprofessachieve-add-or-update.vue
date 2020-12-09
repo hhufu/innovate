@@ -110,7 +110,7 @@
             {required: true, message: '所属二级学院不能为空', trigger: 'blur'}
           ],
           awardAchieName: [
-            {required: true, message: '获奖(项目）名称不能为空', trigger: 'blur'}
+            {required: true, message: '获奖名称不能为空', trigger: 'blur'}
           ],
           professAchieDirector: [
             {required: true, message: '负责人不能为空', trigger: 'blur'}
