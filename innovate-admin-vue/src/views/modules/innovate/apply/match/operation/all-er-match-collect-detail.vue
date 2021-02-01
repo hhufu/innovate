@@ -36,6 +36,7 @@
             <th colspan="3">团队成员姓名</th>
             <th>指导老师</th>
             <th>平均得分</th>
+            <th>所属二级学院</th>
           </tr>
         <template>
         <tr align='center' v-if="matchInfoList.length === 0">
@@ -80,6 +81,7 @@
                 </span>
               </td>
               <td><span v-text="item.matchInfoEntity.matchScoreAvg"></span></td>
+              <td><span v-text="item.userPersonInfoEntities.length > 0? fomatterInstitute(item.userPersonInfoEntities[0].sysUserEntity.instituteId): 0"></span></td>
             </tr>
           </template>
           <!--员工信息结束-->
@@ -177,7 +179,8 @@
           '在驻',
           '孵化成功出园',
           '孵化失败出园'
-        ]
+        ],
+        institute: []
       }
     },
     methods: {
@@ -201,6 +204,7 @@
         }).then(({data}) => {
           if (data && data.code === 0) {
             this.matchInfoList = data.page.list
+            this.institute = data.institute
             this.totalPage = data.page.totalCount
             this.dataListLoading = false
           } else {
@@ -208,6 +212,18 @@
             this.totalPage = 0
           }
         })
+      },
+      // 格式化学院名称
+      fomatterInstitute (instituteId) {
+        var actions = []
+        Object.keys(this.instituteList).some((key) => {
+          // eslint-disable-next-line eqeqeq
+          if (this.institute[key].instituteId == instituteId) {
+            actions.push(this.institute[key].instituteName)
+            return true
+          }
+        })
+        return actions.join('')
       },
       // 导出
       exportDeclare () {

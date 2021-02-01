@@ -76,7 +76,6 @@
         return {
           downloadLoading: false,
           downloadText: '下载',
-          downloadLoading: false,
           visible: false,
           dataForm: {
             enterpAchieveId: 0,
