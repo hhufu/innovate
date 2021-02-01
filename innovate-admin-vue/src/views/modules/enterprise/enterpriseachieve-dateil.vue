@@ -5,7 +5,7 @@
     :visible.sync="visible"
     :append-to-body="true"
   >
-    <table border="1" cellspacing="0" width="100%" class="table">
+    <table border="1" cellspacing="0" width="100%" class="table" style="table-layout: fixed">
       <tr align='center'>
         <td colspan="10" style="height: 1.2rem"></td>
       </tr>
