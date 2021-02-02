@@ -17,5 +17,4 @@ import java.util.List;
 public interface InnovateEnterpriseInfoDao extends BaseMapper<InnovateEnterpriseInfoEntity> {
     //伪删除
     void  delList(List<Long> list);
-
 }

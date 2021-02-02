@@ -2,6 +2,16 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-date-picker
+          @change="getDataList"
+          v-model="dataForm.settledTime"
+          align="right"
+          clearable
+          type="year"
+          placeholder="请选择年度">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
         <el-input v-model="dataForm.enterpriseName" placeholder="企业名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
@@ -156,7 +166,8 @@
     data() {
       return {
         dataForm: {
-          enterpriseName: ''
+          enterpriseName: '',
+          settledTime: new Date() // 默认当前时间年度
         },
         dataList: [],
         pageIndex: 1,
@@ -189,7 +200,8 @@
             enterpriseName: this.dataForm.enterpriseName,
             apply_status: this.apply_status,
             enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
-            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null,
+            settledTime: this.dataForm.settledTime == null ? null : this.dataForm.settledTime.getFullYear()
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -282,7 +294,8 @@
               apply_status: this.apply_status,
               enterpriseName: this.dataForm.enterpriseName,
               enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
-              instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+              instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null,
+              settledTime: this.dataForm.settledTime == null ? null : this.dataForm.settledTime.getFullYear()
             }),
             responseType: "blob"
           })

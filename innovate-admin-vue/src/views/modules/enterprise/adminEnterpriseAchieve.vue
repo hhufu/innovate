@@ -2,6 +2,16 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-date-picker
+          @change="getDataList"
+          v-model="dataForm.awardTime"
+          align="right"
+          clearable
+          type="year"
+          placeholder="请选择年度">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
         <el-input v-model="dataForm.enterpriseName" placeholder="请输入企业名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
@@ -125,7 +135,8 @@
     data() {
       return {
         dataForm: {
-          enterpriseName: ''
+          enterpriseName: '',
+          awardTime: new Date()
         },
         dataList: [],
         pageIndex: 1,
@@ -173,7 +184,8 @@
             apply_status: this.apply_status,
             enterpriseName: this.dataForm.enterpriseName,
             enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? null : this.$store.state.user.id,
-            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.instituteId
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.instituteId,
+            awardTime: this.dataForm.awardTime == null ? null : this.dataForm.awardTime.getFullYear()
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -272,7 +284,8 @@
             apply_status: this.apply_status,
             enterpriseName: this.dataForm.enterpriseName,
             enterpriseUserId: this.isAuth('enterprise:innovateenterpriseinfo:superAdmin') ? null : this.$store.state.user.id,
-            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null
+            instituteId: this.isAuth('enterprise:innovateenterpriseinfo:admin') ? this.$store.state.user.instituteId : null,
+            awardTime: this.dataForm.awardTime == null ? null : this.dataForm.awardTime.getFullYear()
           }),
           responseType: "blob"
         })

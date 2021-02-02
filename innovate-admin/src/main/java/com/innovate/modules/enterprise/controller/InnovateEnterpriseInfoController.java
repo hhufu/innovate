@@ -67,7 +67,7 @@ public class InnovateEnterpriseInfoController {
             if ("wzxyGLY".equals(adminName) || true) {
                 excelWriter = EasyExcel.write(response.getOutputStream(), InnovateEnterpriseInfoEntity.class).build();
                 WriteSheet writeSheet = EasyExcel.writerSheet(0, "企业入驻信息").build();
-                trainBaseInfoList = innovateEnterpriseInfoService.queryListByIds(settledEnterpIds,params);
+                trainBaseInfoList = innovateEnterpriseInfoService.queryListByIds(settledEnterpIds, params);
                 excelWriter.write(trainBaseInfoList, writeSheet);
             }
         } catch (Exception e) {
