@@ -249,6 +249,33 @@
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {
+        if (id != null && id != "") {
+          this.addOrUpdatePage(id)
+        } else {
+          this.$http({
+            url: this.$http.adornUrl(`/innovate/innovatedeclarationprocesssetting/queryCount`),
+            method: 'post',
+            data: this.$http.adornData({
+              'declareProcessName': 1,
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.addOrUpdatePage(id)
+            } else {
+              this.$message({
+                message: data.msg,
+                type: 'error',
+                duration: 1500,
+                onClose: () => {
+
+                }
+              })
+            }
+          })
+        }
+
+      },
+      addOrUpdatePage(id) {
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
