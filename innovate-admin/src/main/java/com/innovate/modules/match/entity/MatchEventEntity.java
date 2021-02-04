@@ -2,11 +2,13 @@ package com.innovate.modules.match.entity;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 /**
  * @author:tz
@@ -27,4 +29,8 @@ public class MatchEventEntity implements Serializable {
     private String attachName;
     private String attachPath;
     private String fileAskContent;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date eventStartTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date eventStopTime;
 }

@@ -9,6 +9,26 @@
       <el-form-item label="赛事名称" prop="eventName">
         <el-input v-model="dataForm.eventName" placeholder="请输入"></el-input>
       </el-form-item>
+      <el-col>
+        <el-form-item label="赛事开始时间" prop="fileAskContent">
+          <el-date-picker
+            v-model="dataForm.eventStartTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+      </el-col>
+      <el-col>
+        <el-form-item label="赛事截止时间" prop="fileAskContent">
+          <el-date-picker
+            v-model="dataForm.eventStopTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+      </el-col>
 
       <el-col>
         <el-form-item label="赛事上传文件要求" prop="fileAskContent">
@@ -82,7 +102,9 @@
           eventName: '',
           fileAskContent: '',
           attachName: '',
-          attachPath: ''
+          attachPath: '',
+          eventStartTime: '',
+          eventStopTime: '',
         },
         dataRule: {
           eventName: [

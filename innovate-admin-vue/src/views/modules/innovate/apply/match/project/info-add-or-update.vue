@@ -7,7 +7,8 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-row :gutter="20">
-      <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="8rem" style="width: 94%; margin: 0 auto">
+      <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
+               label-width="8rem" style="width: 94%; margin: 0 auto">
         <el-col :span="24">
           <el-form-item label="项目名称" prop="matchName">
             <el-input v-model="dataForm.matchName" placeholder="请输入企业项目名称"></el-input>
@@ -20,15 +21,18 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="比赛赛事名" prop="eventId">
-            <el-select v-model="dataForm.eventId"  placeholder="请选择" @change="fileAskContentHandler($event)" >
-              <el-option v-for="item in eventLists" :key="item.eventId" :label="item.eventName" :value="item.eventId">
+            <el-select v-model="dataForm.eventId" placeholder="请选择" @change="fileAskContentHandler($event)">
+              <el-option v-for="item in eventLists" :key="item.eventId" :label="item.eventName" :value="item.eventId"
+                         :disabled="item.optionDisable">
+                <span style="float: left">{{ item.eventName }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.tip }}</span>
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="参赛作品类型" prop="matchType">
-            <el-select v-model="dataForm.matchType"  placeholder="请选择">
+            <el-select v-model="dataForm.matchType" placeholder="请选择">
               <el-option v-for="item in matchTypeList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -36,7 +40,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="参赛组别" prop="matchGroupType">
-            <el-select v-model="dataForm.matchGroupType"  placeholder="请选择">
+            <el-select v-model="dataForm.matchGroupType" placeholder="请选择">
               <el-option v-for="item in matchGroupTypeList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -44,7 +48,6 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="项目简介(300字之内)" prop="matchDescribe">
-
             <el-input type="textarea" maxlength="400"
                       :rows="5"
                       v-model="dataForm.matchDescribe"
@@ -53,7 +56,7 @@
         </el-col>
         <el-col :span="24">
           <!--<el-form-item label="项目创新之处和亮点" prop="matchBrightSpot">-->
-            <el-form-item label="项目所获投资情况" prop="matchBrightSpot">
+          <el-form-item label="项目所获投资情况" prop="matchBrightSpot">
             <el-input type="textarea"
                       :rows="5"
                       v-model="dataForm.matchBrightSpot"
@@ -73,7 +76,8 @@
           <el-form-item label="指导老师" prop="teacherLists">
             <el-button size="mini"
                        v-if="addVisible(teacherLists)"
-                       type="primary" plain @click="addTeacher()">添加</el-button>
+                       type="primary" plain @click="addTeacher()">添加
+            </el-button>
             <template v-for="(item,index) in teacherLists" v-if="item.isDel !== 1">
               <el-col :span="24">
                 <el-tag style="margin-right: 1rem"
@@ -93,7 +97,8 @@
         <el-col :span="24">
           <el-form-item label="项目参与者信息" prop="staffInfoLists">
             <el-button size="mini"
-                       v-if="addVisible(staffInfoLists)" type="primary" plain @click="addStaff()">添加</el-button>
+                       v-if="addVisible(staffInfoLists)" type="primary" plain @click="addStaff()">添加
+            </el-button>
             <template v-for="(item,index) in staffInfoLists" v-if="item.isDel !== 1">
               <el-col :span="24">
                 <el-tag style="margin-right: 1rem"
@@ -107,28 +112,28 @@
           </el-form-item>
         </el-col>
         <!--<el-col :span="24">-->
-          <!--<el-form-item label="项目获奖情况" prop="awardLists">-->
-            <!--<el-button size="mini"-->
-                       <!--v-if="addVisible(awardLists)"-->
-                       <!--type="primary" plain @click="addAward()">添加</el-button>-->
-            <!--<template v-for="(item,index) in awardLists" v-if="item.isDel !== 1">-->
-              <!--<el-col :span="24">-->
-                <!--<template-->
-                  <!--v-for="runk in awardRankList"-->
-                  <!--v-if="item.awardRank === runk.value">-->
-                  <!--<el-tag style="margin-right: 1rem"-->
-                          <!--v-for="award in awardTypeList"-->
-                          <!--:key="award.value"-->
-                          <!--v-if="item.awardType === award.value"-->
-                          <!--v-text="item.awardName + '：' + award.label + '（' + runk.label + '）'">-->
-                  <!--</el-tag>-->
-                <!--</template>-->
-                <!--<el-button size="mini" type="primary" plain @click="addAward()">添加</el-button>-->
-                <!--<el-button size="mini" type="primary" plain @click="addAward(item, index)">修改</el-button>-->
-                <!--<el-button size="mini" type="danger" @click="delAward(item, index)">删除</el-button>-->
-              <!--</el-col>-->
-            <!--</template>-->
-          <!--</el-form-item>-->
+        <!--<el-form-item label="项目获奖情况" prop="awardLists">-->
+        <!--<el-button size="mini"-->
+        <!--v-if="addVisible(awardLists)"-->
+        <!--type="primary" plain @click="addAward()">添加</el-button>-->
+        <!--<template v-for="(item,index) in awardLists" v-if="item.isDel !== 1">-->
+        <!--<el-col :span="24">-->
+        <!--<template-->
+        <!--v-for="runk in awardRankList"-->
+        <!--v-if="item.awardRank === runk.value">-->
+        <!--<el-tag style="margin-right: 1rem"-->
+        <!--v-for="award in awardTypeList"-->
+        <!--:key="award.value"-->
+        <!--v-if="item.awardType === award.value"-->
+        <!--v-text="item.awardName + '：' + award.label + '（' + runk.label + '）'">-->
+        <!--</el-tag>-->
+        <!--</template>-->
+        <!--<el-button size="mini" type="primary" plain @click="addAward()">添加</el-button>-->
+        <!--<el-button size="mini" type="primary" plain @click="addAward(item, index)">修改</el-button>-->
+        <!--<el-button size="mini" type="danger" @click="delAward(item, index)">删除</el-button>-->
+        <!--</el-col>-->
+        <!--</template>-->
+        <!--</el-form-item>-->
         <!--</el-col>-->
         <el-col :span="24" style="padding-bottom: 2em">
           <template>
@@ -166,10 +171,14 @@
       <el-button @click="visible = false">取消</el-button>
       <el-button type="primary" @click="dataFormSubmit()" :loading="addLoading">确定</el-button>
     </span>
-    <teacher-add-or-update v-if="teacherAddOrUpdateVisible" ref="teacherAddOrUpdate" @refreshDataList="teacherRef"></teacher-add-or-update>
-    <person-add-or-update v-if="personAddOrUpdateVisible" ref="personAddOrUpdate" @refreshDataList="personRef"></person-add-or-update>
-    <already-award-add-or-update v-if="awardAddOrUpdateVisible" ref="awardAddOrUpdate" @refreshDataList="awardRef"></already-award-add-or-update>
-    <staff-add-or-update v-if="staffAddOrUpdateVisible" ref="staffAddOrUpdate" @refreshDataList="staffRef"></staff-add-or-update>
+    <teacher-add-or-update v-if="teacherAddOrUpdateVisible" ref="teacherAddOrUpdate"
+                           @refreshDataList="teacherRef"></teacher-add-or-update>
+    <person-add-or-update v-if="personAddOrUpdateVisible" ref="personAddOrUpdate"
+                          @refreshDataList="personRef"></person-add-or-update>
+    <already-award-add-or-update v-if="awardAddOrUpdateVisible" ref="awardAddOrUpdate"
+                                 @refreshDataList="awardRef"></already-award-add-or-update>
+    <staff-add-or-update v-if="staffAddOrUpdateVisible" ref="staffAddOrUpdate"
+                         @refreshDataList="staffRef"></staff-add-or-update>
   </el-dialog>
 </template>
 
@@ -179,7 +188,7 @@
   import AlreadyAwardAddOrUpdate from './already-award-add-or-update'
 
   class MatchAttachment {
-    constructor (file) {
+    constructor(file) {
       this.name = file.attachName
       this.url = file.attachPath
       this.file = file
@@ -192,7 +201,7 @@
       TeacherAddOrUpdate,
       AlreadyAwardAddOrUpdate
     },
-    data () {
+    data() {
       var validateTeacher = (rule, value, callback) => {
         if (this.teacherLists.length === 0) {
           callback(new Error('指导老师信息不能为空'))
@@ -282,39 +291,54 @@
         },
         dataRule: {
           matchName: [
-            { required: true, message: '项目名称不能为空', trigger: 'blur' }
+            {required: true, message: '项目名称不能为空', trigger: 'blur'}
           ],
           matchTeamName: [
-            { required: true, message: '团队名称不能为空', trigger: 'blur' }
+            {required: true, message: '团队名称不能为空', trigger: 'blur'}
           ],
           eventId: [
-            { required: true, message: '请选择比赛赛事', trigger: 'blur' }
+            {required: true, message: '请选择比赛赛事', trigger: 'blur'}
           ],
           matchType: [
-            { required: true, message: '请选择比赛类型', trigger: 'blur' }
+            {required: true, message: '请选择比赛类型', trigger: 'blur'}
           ],
           matchGroupType: [
-            { required: true, message: '请选择参赛组别', trigger: 'blur' }
+            {required: true, message: '请选择参赛组别', trigger: 'blur'}
           ],
           matchDescribe: [
-            { required: true, message: '项目简介不能为空', trigger: 'blur' }
+            {required: true, message: '项目简介不能为空', trigger: 'blur'}
           ],
           matchBrightSpot: [
-            { required: true, message: '项目创新之处和亮点不能为空', trigger: 'blur' }
+            {required: true, message: '项目创新之处和亮点不能为空', trigger: 'blur'}
           ],
           matchExpect: [
-            { required: true, message: '项目预期或已取得的成果不能为空', trigger: 'blur' }
+            {required: true, message: '项目预期或已取得的成果不能为空', trigger: 'blur'}
           ],
           teacherLists: [
-            { validator: validateTeacher, trigger: 'blur' }
+            {validator: validateTeacher, trigger: 'blur'}
           ]
         }
       }
     },
     methods: {
-      init (id) {
+      init(id) {
         this.url = this.$http.adornUrl(`/innovate/match/attach/upload?token=${this.$cookie.get('token')}`)
         this.eventLists = this.$store.state.eventLists
+        /** 获取当前日期 */
+        let newCurDate = this.dateFormat("YYYY-mm-dd", new Date())
+        this.eventLists.forEach(item => {
+          console.log("活动截止日期："+item.eventStopTime)
+          if (new Date(item.eventStopTime).getTime() < new Date(newCurDate).getTime()) {
+            item.optionDisable = true
+            item.tip = "该活动已截止"
+          } else if(new Date(item.eventStartTime).getTime() > new Date(newCurDate).getTime()) {
+            item.optionDisable = true
+            item.tip = "活动未开始"
+          } else {
+            item.optionDisable = false
+            item.tip = "活动进行中"
+          }
+        })
         this.visible = true
         this.dataListLoading = true
         this.dataForm.matchId = id || 0
@@ -333,14 +357,13 @@
           this.$http({
             url: this.$http.adornUrl(`/innovate/use/teacher/all`),
             method: 'get',
-            params: this.$http.adornParams({
-            })
+            params: this.$http.adornParams({})
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.userTeacherInfoEntities = data.userTeacherInfoEntities
             }
           })
-          this.$refs['dataForm'].resetFields()
+          // this.$refs['dataForm'].resetFields()
           if (this.dataForm.matchId) {
             this.$http({
               url: this.$http.adornUrl(`/innovate/match/info/info`),
@@ -387,8 +410,32 @@
           // })
         })
       },
+      /** 格式化日期*/
+      dateFormat(fmt, date) {
+        let ret;
+        const opt = {
+          "Y+": date.getFullYear().toString(),        // 年
+          "m+": (date.getMonth() + 1).toString(),     // 月
+          "d+": date.getDate().toString(),            // 日
+          "H+": date.getHours().toString(),           // 时
+          "M+": date.getMinutes().toString(),         // 分
+          "S+": date.getSeconds().toString()          // 秒
+          // 有其他格式化字符需求可以继续添加，必须转化成字符串
+        };
+        for (let k in opt) {
+          ret = new RegExp("(" + k + ")").exec(fmt);
+          if (ret) {
+            fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+          }
+        }
+        return fmt;
+      },
+      /** 比较日期 */
+      compareDate(s1, s2) {
+        return ((new Date(s1.replace(/-/g, "\/"))) > (new Date(s2.replace(/-/g, "\/"))));
+      },
       // 表单提交
-      dataFormSubmit () {
+      dataFormSubmit() {
         this.$refs['dataForm'].validate((valid) => {
           this.dataForm.matchId = this.dataForm.matchId || undefined
           if (valid) {
@@ -431,7 +478,7 @@
         })
       },
       // 子组件的各类方法
-      addVisible (list) {
+      addVisible(list) {
         let isDelNum = 0
         let visible = false
         for (let index in list) {
@@ -444,7 +491,7 @@
         }
         return visible
       },
-      addTeacher (item, index) {
+      addTeacher(item, index) {
         this.teacherAddOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs['teacherAddOrUpdate'].init(item, index + 1)
@@ -456,7 +503,7 @@
         this.teacherLists[index] = data
         this.isTeacherInfoNull()
       },
-      teacherRef (data, index) {
+      teacherRef(data, index) {
         data.matchId = this.dataForm.matchId
         this.teacherAddOrUpdateVisible = false
         if (index) {
@@ -466,7 +513,7 @@
         }
         this.isTeacherInfoNull()
       },
-      isTeacherInfoNull () {
+      isTeacherInfoNull() {
         this.isTeacherInfoNullVisible = false
         var teacherNum = 0
         var teacherLength = 0
@@ -486,7 +533,7 @@
           this.isTeacherInfoNullVisible = true
         }
       },
-      personRef (data, index) {
+      personRef(data, index) {
         data.matchId = this.dataForm.matchId
         this.personAddOrUpdateVisible = false
         if (index) {
@@ -495,7 +542,7 @@
           this.personInfoList.push(data)
         }
       },
-      addAward (item, index) {
+      addAward(item, index) {
         this.awardAddOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs['awardAddOrUpdate'].init(item, index + 1)
@@ -505,7 +552,7 @@
         data.isDel = 1
         this.awardLists[index] = data
       },
-      awardRef (data, index) {
+      awardRef(data, index) {
         data.matchId = this.dataForm.matchId
         this.awardAddOrUpdateVisible = false
         if (index) {
@@ -514,7 +561,7 @@
           this.awardLists.push(data)
         }
       },
-      addStaff (item, index) {
+      addStaff(item, index) {
         this.staffAddOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs['staffAddOrUpdate'].init(item, index + 1)
@@ -524,7 +571,7 @@
         data.isDel = 1
         this.staffInfoLists[index] = data
       },
-      staffRef (data, index) {
+      staffRef(data, index) {
         data.matchId = this.dataForm.matchId
         this.staffAddOrUpdateVisible = false
         if (index) {
@@ -533,10 +580,10 @@
           this.staffInfoLists.push(data)
         }
       },
-      upLoadSubmit () {
+      upLoadSubmit() {
         this.$refs.upLoadFiles.submit()
       },
-      upLoadChange () {
+      upLoadChange() {
         this.upLoadData = {
           'matchName': this.dataForm.matchName,
           'token': this.$cookie.get('token')
@@ -544,7 +591,7 @@
         this.upLoadUrl = this.$http.adornUrl(`/innovate/match/attach/upload`)
       },
       // 移除文件
-      upLoadRemove (file, fileList) {
+      upLoadRemove(file, fileList) {
         let tempFileList = []
         for (var index = 0; index < fileList.length; index++) {
           tempFileList.push(fileList[index].file)
@@ -557,11 +604,11 @@
         }
         this.$message.success('已移除')
       },
-      upLoadPreview (file) {
+      upLoadPreview(file) {
         console.log(file)
       },
       // 上传成功
-      upLoadSuccess (data) {
+      upLoadSuccess(data) {
         if (data && data.code === 0) {
           this.attachLists.push(data.matchAttachEntity)
           this.tempAttachLists = this.attachLists // 临时存放
@@ -569,7 +616,7 @@
           this.$message.error(data.msg)
         }
       },
-      beforeAvatarUpload (file) {
+      beforeAvatarUpload(file) {
         // 756907362
         const isLt2M = file.size / 1000000 < 100
         if (!isLt2M) {
@@ -581,11 +628,11 @@
         }
         return isLt2M
       },
-      closeDialog () {
+      closeDialog() {
         this.visible = false
         this.$emit('refreshDataList')
       },
-      deleteFileHandle (file) {
+      deleteFileHandle(file) {
         var temp = []
         for (var index = 0; index < this.tempAttachLists.length; index++) {
           if (this.tempAttachLists[index].attachName === file.name) {
@@ -596,7 +643,7 @@
         this.tempAttachLists = temp
         this.attachLists = temp
       },
-      fileAskContentHandler (event) {
+      fileAskContentHandler(event) {
         this.fileAskContent = this.eventLists[event - 1].fileAskContent
       }
     }

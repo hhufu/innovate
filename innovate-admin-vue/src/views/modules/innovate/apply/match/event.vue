@@ -36,6 +36,20 @@
         label="赛事名称">
       </el-table-column>
       <el-table-column
+        prop="eventStartTime"
+        header-align="center"
+        width="93px"
+        align="center"
+        label="开始时间">
+      </el-table-column>
+      <el-table-column
+        prop="eventStopTime"
+        header-align="center"
+        width="93px"
+        align="center"
+        label="截止时间">
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
