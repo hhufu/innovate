@@ -10,22 +10,14 @@
         <el-input v-model="dataForm.eventName" placeholder="请输入"></el-input>
       </el-form-item>
       <el-col>
-        <el-form-item label="赛事开始时间" prop="fileAskContent">
-          <el-date-picker
-            v-model="dataForm.eventStartTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
-      </el-col>
-      <el-col>
         <el-form-item label="赛事截止时间" prop="fileAskContent">
           <el-date-picker
-            v-model="dataForm.eventStopTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择日期">
+          v-model="evenStartAndStoptTime"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="截止日期">
           </el-date-picker>
         </el-form-item>
       </el-col>
@@ -97,6 +89,7 @@
         id: 0,
         fileList: [],
         attachLists: [],
+        evenStartAndStoptTime: [], //赛事开始和截止时间
         dataForm: {
           eventId: '',
           eventName: '',
@@ -132,6 +125,12 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm = data.matchEventEntity
+                this.evenStartAndStoptTime = []
+                this.evenStartAndStoptTime.push(new Date(data.matchEventEntity.eventStartTime))
+                this.evenStartAndStoptTime.push(new Date(data.matchEventEntity.eventStopTime))
+                console.log(new Date(data.matchEventEntity.eventStartTime))
+                console.log(new Date(data.matchEventEntity.eventStopTime))
+                console.log(this.evenStartAndStoptTime)
                 if (data.matchEventEntity.attachName !== null) {
                   var tempFile = []
                   tempFile.push(new MatchAttachment(data.matchEventEntity))
@@ -151,6 +150,8 @@
             return
           }
           if (valid) {
+            this.dataForm.eventStartTime = this.evenStartAndStoptTime[0]
+            this.dataForm.eventStopTime = this.evenStartAndStoptTime[1]
             this.addLoading = true
             this.$http({
               url: this.$http.adornUrl(`/innovate/match/event/${!this.dataForm.eventId ? 'save' : 'update'}`),

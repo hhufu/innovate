@@ -24,8 +24,8 @@
             <el-select v-model="dataForm.eventId" placeholder="请选择" @change="fileAskContentHandler($event)">
               <el-option v-for="item in eventLists" :key="item.eventId" :label="item.eventName" :value="item.eventId"
                          :disabled="item.optionDisable">
-                <span style="float: left">{{ item.eventName }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.tip }}</span>
+                <span style="float: left;padding-left: 10px">{{ item.eventName }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px;padding-left: 10px">{{ item.tip }}</span>
               </el-option>
             </el-select>
           </el-form-item>
@@ -325,18 +325,22 @@
         this.url = this.$http.adornUrl(`/innovate/match/attach/upload?token=${this.$cookie.get('token')}`)
         this.eventLists = this.$store.state.eventLists
         /** 获取当前日期 */
-        let newCurDate = this.dateFormat("YYYY-mm-dd", new Date())
+        let newCurDate = this.dateFormat("YYYY-mm-dd HH:MM:SS", new Date())
+        console.log(newCurDate)
         this.eventLists.forEach(item => {
           console.log("活动截止日期："+item.eventStopTime)
-          if (new Date(item.eventStopTime).getTime() < new Date(newCurDate).getTime()) {
+          let curTime = new Date(newCurDate).getTime()
+          let startTime = new Date(item.eventStartTime).getTime()
+          let stopTime = new Date(item.eventStopTime).getTime()
+          if (curTime > stopTime) {
             item.optionDisable = true
-            item.tip = "该活动已截止"
-          } else if(new Date(item.eventStartTime).getTime() > new Date(newCurDate).getTime()) {
-            item.optionDisable = true
-            item.tip = "活动未开始"
-          } else {
+            item.tip = "活动已截止"
+          }else if(curTime < stopTime && curTime > startTime) {
             item.optionDisable = false
             item.tip = "活动进行中"
+          } else if(curTime < startTime) {
+            item.optionDisable = true
+            item.tip = "活动未开始"
           }
         })
         this.visible = true
@@ -429,10 +433,6 @@
           }
         }
         return fmt;
-      },
-      /** 比较日期 */
-      compareDate(s1, s2) {
-        return ((new Date(s1.replace(/-/g, "\/"))) > (new Date(s2.replace(/-/g, "\/"))));
       },
       // 表单提交
       dataFormSubmit() {

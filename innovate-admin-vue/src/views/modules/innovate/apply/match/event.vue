@@ -38,22 +38,22 @@
       <el-table-column
         prop="eventStartTime"
         header-align="center"
-        width="93px"
+        width="160"
         align="center"
-        label="开始时间">
+        label="开始日期">
       </el-table-column>
       <el-table-column
         prop="eventStopTime"
         header-align="center"
-        width="93px"
+        width="160"
         align="center"
-        label="截止时间">
+        label="截止日期">
       </el-table-column>
       <el-table-column
         fixed="right"
         header-align="center"
         align="center"
-        width="150"
+        width="130"
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:event:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.eventId)">修改</el-button>
