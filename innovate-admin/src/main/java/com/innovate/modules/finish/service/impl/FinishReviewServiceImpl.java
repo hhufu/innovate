@@ -15,6 +15,7 @@ import com.innovate.modules.finish.service.FinishInfoService;
 import com.innovate.modules.finish.service.FinishReviewService;
 import com.innovate.modules.innovate.entity.InnovateReviewGroupUserEntity;
 import com.innovate.modules.innovate.service.InnovateReviewGroupUserService;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import com.innovate.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,6 +93,13 @@ public class FinishReviewServiceImpl extends ServiceImpl<FinishReviewDao, Finish
         page.setRecords(records);
 
         return new PageUtils(page);
+    }
+    /**
+     * 查询未评分评委信息
+     */
+    @Override
+    public List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params) {
+        return baseMapper.queryTeacher(params);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.innovate.modules.check.dao;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.innovate.modules.check.entity.InnovateCheckReviewEntity;
 import com.innovate.modules.declare.entity.DeclareReviewEntity;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -32,4 +33,9 @@ public interface InnovateCheckReviewDao extends BaseMapper<InnovateCheckReviewEn
     Double queryScoreAvg(Map<String, Object> params);
     //查询分数
     InnovateCheckReviewEntity queryScore(Map<String, Object> params);
+
+    /**
+     * 查询未评分评委信息
+     */
+    List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params);
 }

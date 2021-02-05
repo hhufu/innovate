@@ -24,6 +24,18 @@
         </if>
     </update>
 
+    <!--查找未评分评委信息-->
+    <select id="queryTeacher" resultType="MatchUnScoreTeacherEntity" parameterType="map">
+      select u.name, u.email, u.mobile ,u.institute_id,  t.teacher_sex, t.teacher_post, t.teacher_title
+      from innovate_match_review r LEFT JOIN sys_user u USING(user_id) LEFT JOIN innovate_user_teacher_info t USING(user_id)
+        where 1 = 1
+        <if test="matchId != null and matchId != ''">
+            and r.match_id = #{matchId}
+        </if>
+        and ISNULL(r.score)
+        and is_del = 0
+    </select>
+
     <!--统计未评分的个数-->
     <select id="queryCount" resultType="Long" parameterType="map">
       select count(distinct review_id) from innovate_match_review

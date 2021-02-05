@@ -3,7 +3,6 @@ package com.innovate.modules.declare.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.google.gson.Gson;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.Query;
 import com.innovate.modules.declare.dao.DeclareReviewDao;
@@ -14,9 +13,9 @@ import com.innovate.modules.declare.service.DeclareApplyService;
 import com.innovate.modules.declare.service.DeclareInfoService;
 import com.innovate.modules.declare.service.DeclareReviewService;
 import com.innovate.modules.declare.service.DeclareTeacherService;
-import com.innovate.modules.innovate.entity.InnovateGradeEntity;
 import com.innovate.modules.innovate.entity.InnovateReviewGroupUserEntity;
 import com.innovate.modules.innovate.service.InnovateReviewGroupUserService;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import com.innovate.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,6 +96,11 @@ public class DeclareReviewServiceImpl extends ServiceImpl<DeclareReviewDao, Decl
         page.setRecords(records);
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params) {
+        return baseMapper.queryTeacher(params);
     }
 
     @Override

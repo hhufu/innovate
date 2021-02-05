@@ -3,12 +3,14 @@ package com.innovate.modules.match.controller;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
 import com.innovate.modules.match.entity.MatchReviewEntity;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import com.innovate.modules.match.service.MatchReviewService;
 import com.innovate.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +54,17 @@ public class MatchReviewController extends AbstractController {
         MatchReviewEntity matchReviewEntity = matchReviewService.queryScore(params);
         return R.ok().put("matchReviewEntity",matchReviewEntity);
     }
+
+    /**
+     * 查询未评分评委
+     */
+    @GetMapping("/noScoreTeacher")
+    @RequiresPermissions("innovate:match:list")
+    public R unReviewTeacher(@RequestParam Map<String,Object> params){
+        List<MatchUnScoreTeacherEntity> noScoreTeacher = matchReviewService.queryTeacher(params);
+        return R.ok().put("noScoreTeacher", noScoreTeacher);
+    }
+
     /**
      * 查询未评分
      */

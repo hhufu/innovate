@@ -2,6 +2,7 @@ package com.innovate.modules.declare.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.innovate.modules.declare.entity.DeclareReviewEntity;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -31,4 +32,8 @@ public interface DeclareReviewDao extends BaseMapper<DeclareReviewEntity> {
     Double queryScoreAvg(Map<String, Object> params);
     //查询分数
     DeclareReviewEntity queryScore(Map<String, Object> params);
+    /**
+     * 查询未评分评委信息
+     */
+    List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params);
 }

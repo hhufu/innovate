@@ -10,6 +10,7 @@ import com.innovate.modules.match.entity.MatchInfoEntity;
 import com.innovate.modules.match.entity.MatchInfoModel;
 import com.innovate.modules.match.service.MatchInfoModelService;
 import com.innovate.modules.match.service.MatchInfoService;
+import com.innovate.modules.match.service.MatchReviewService;
 import com.innovate.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class MatchInfoController extends AbstractController {
     private UserTeacherInfoService userTeacherInfoService;
     @Autowired
     private MatchInfoModelService matchInfoModelService;
+    @Autowired
+    private MatchReviewService matchReviewService;
 
     private MatchInfoEntity tempMatchInfoEntity;
 
@@ -49,6 +52,7 @@ public class MatchInfoController extends AbstractController {
     @GetMapping("/list")
     @RequiresPermissions("innovate:match:list")
     public R list(@RequestParam Map<String, Object> params){
+
         /*获得当前用户的所属部门*/
         Long erInstituteId = ShiroUtils.getUserEntity().getInstituteId();
         params.put("erInstituteId",erInstituteId);
@@ -56,7 +60,6 @@ public class MatchInfoController extends AbstractController {
 
         List<InnovateInstituteEntity> institute = innovateInstituteService.queryAllInstitute();
         List<InnovateGradeEntity> grade = innovateGradeService.queryAllGrade();
-
         return R.ok().put("page", page)
                 .put("institute", institute)
                 .put("grade", grade);
@@ -85,6 +88,7 @@ public class MatchInfoController extends AbstractController {
         return R.ok()
                 .put("matchInfo", matchInfo)
                 .put("userTeacherInfoEntities", userTeacherInfoEntities);
+
     }
 
 

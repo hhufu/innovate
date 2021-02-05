@@ -16,6 +16,7 @@ import com.innovate.modules.declare.service.DeclareReviewService;
 import com.innovate.modules.declare.service.DeclareTeacherService;
 import com.innovate.modules.innovate.entity.InnovateReviewGroupUserEntity;
 import com.innovate.modules.innovate.service.InnovateReviewGroupUserService;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import com.innovate.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,14 @@ public class InnovateCheckReviewServiceImpl extends ServiceImpl<InnovateCheckRev
     @Override
     public Double queryScoreAvg(Map<String, Object> params) {
         return baseMapper.queryScoreAvg(params);
+    }
+
+    /**
+     * 查询未评分评委信息
+     */
+    @Override
+    public List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params) {
+        return  baseMapper.queryTeacher(params);
     }
 
     @Override

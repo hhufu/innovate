@@ -3,6 +3,7 @@ package com.innovate.modules.match.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.modules.match.entity.MatchReviewEntity;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -36,6 +37,10 @@ public interface MatchReviewService extends IService<MatchReviewEntity> {
      * 统计未评分的个数
      */
     Long queryCount(Map<String, Object> params);
+    /**
+     * 未评分评委姓名
+     */
+    List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params);
 
     /**
      * 计算平均分

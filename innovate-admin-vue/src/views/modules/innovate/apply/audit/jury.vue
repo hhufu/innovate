@@ -19,9 +19,9 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="hasReview" @change="getDataList">
-        <el-radio label="1">未打分</el-radio>
-        <el-radio label="2">等待他人打分</el-radio>
-        <el-radio label="3">已打分</el-radio>
+        <el-radio label="1" @change="teacherNoShow">未打分</el-radio>
+        <el-radio label="2" @change="teacherShow">等待他人打分</el-radio>
+        <el-radio label="3" @change="teacherNoShow">已打分</el-radio>
       </el-radio-group>
     </el-card>
     <el-table
@@ -110,6 +110,16 @@
         </template>
       </el-table-column>
       <el-table-column
+        fixed = "right"
+        header-align="center"
+        align="center"
+        label="未打分评委"
+        v-if="unTeacherShow">
+        <template slot-scope="scope">
+          <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="TeacherDetail(scope.row.declareInfoEntity.declareId)">查看未评分评委</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -132,6 +142,7 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <detail v-if="detailVisible" ref="detail" @refreshDataList="getDataList"></detail>
+    <TeacherDetail v-if="teacherVisible" ref="TeacherDetail"></TeacherDetail>
     <score-add-or-update v-if="scoreVisible" ref="score" @refreshDataList="getDataList"></score-add-or-update>
   </div>
 </template>
@@ -139,6 +150,7 @@
 <script>
   import Detail from './operation/info-detail'
   import ScoreAddOrUpdate from './operation/score-add-or-update'
+  import TeacherDetail from "./operation/teacher-detail";
 
   export default {
     data () {
@@ -173,12 +185,15 @@
         addOrUpdateVisible: false,
         detailVisible: false,
         applyVisible: false,
-        scoreVisible: false
+        scoreVisible: false,
+        unTeacherShow: false,
+        teacherVisible: false
       }
     },
     components: {
       ScoreAddOrUpdate,
-      Detail
+      Detail,
+      TeacherDetail
     },
     activated () {
       this.getDataList()
@@ -189,6 +204,7 @@
         this.dataListLoading = true
         this.addOrUpdateVisible = false
         this.detailVisible = false
+        this.teacherVisible = false
         this.scoreVisible = false
         this.$http({
           url: this.$http.adornUrl(`/innovate/use/teacher/teacher`),
@@ -229,6 +245,14 @@
           }
           this.dataListLoading = false
         })
+      },
+      // 未打分评委不显示方法
+      teacherNoShow() {
+        this.unTeacherShow = false
+      },
+      // 未打分评委显示方法
+      teacherShow() {
+        this.unTeacherShow = true
       },
       // 每页数
       sizeChangeHandle (val) {
@@ -281,6 +305,13 @@
           }
         }
         return false
+      },
+      // 查看未评分老师
+      TeacherDetail (id){
+        this.teacherVisible = true
+        this.$nextTick(() => {
+          this.$refs.TeacherDetail.init(id)
+        })
       },
       // 详情
       detailHandle (id) {

@@ -68,6 +68,18 @@
         </where>
     </select>
 
+    <!--查找未评分评委信息-->
+    <select id="queryTeacher" resultType="MatchUnScoreTeacherEntity" parameterType="map">
+        select u.name, u.email, u.mobile ,u.institute_id,  t.teacher_sex, t.teacher_post, t.teacher_title
+        from innovate_finish_review f LEFT JOIN sys_user u USING(user_id) LEFT JOIN innovate_user_teacher_info t USING(user_id)
+        where 1 = 1
+        <if test="finishId != null and finishId != ''">
+            and f.finish_id = #{finishId}
+        </if>
+        and ISNULL(f.score)
+        and is_del = 0
+    </select>
+
     <insert id="insertBatch" parameterType = "java.util.List">
         INSERT INTO innovate_finish_review (apply, finish_id, user_id, finish_year)
         VALUES

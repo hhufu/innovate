@@ -2,6 +2,7 @@ package com.innovate.modules.finish.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.innovate.modules.finish.entity.FinishReviewEntity;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -33,4 +34,8 @@ public interface FinishReviewDao extends BaseMapper<FinishReviewEntity> {
     FinishReviewEntity queryScore(Map<String, Object> params);
     //批量插入
     Integer insertBatch(List<FinishReviewEntity> list);
+    /**
+     * 查询未评分评委信息
+     */
+    List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params);
 }

@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.innovate.common.utils.DateUtils;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.Query;
-import com.innovate.modules.declare.entity.DeclareReviewEntity;
 import com.innovate.modules.innovate.entity.InnovateReviewGroupUserEntity;
 import com.innovate.modules.innovate.service.InnovateReviewGroupUserService;
 import com.innovate.modules.match.dao.MatchReviewDao;
 import com.innovate.modules.match.entity.MatchInfoEntity;
 import com.innovate.modules.match.entity.MatchReviewEntity;
 import com.innovate.modules.match.entity.MatchTeacherEntity;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import com.innovate.modules.match.service.*;
 import com.innovate.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +60,11 @@ public class MatchReviewServiceImpl extends ServiceImpl<MatchReviewDao, MatchRev
     }
 
     @Override
+    public List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params){
+        return baseMapper.queryTeacher(params);
+    }
+
+    @Override
     public Double queryScoreAvg(Map<String, Object> params) {
         return baseMapper.queryScoreAvg(params);
     }
@@ -90,6 +95,13 @@ public class MatchReviewServiceImpl extends ServiceImpl<MatchReviewDao, MatchRev
         return new PageUtils(page);
 
     }
+
+////    @Override
+//    public void queryAll1(Map<String, Object> params) {
+//        List<MatchReviewEntity> matchReviewEntity = matchReviewService.queryAll(params);
+//        List unViewTeacher = matchReviewService.queryTeacher(params);
+//
+//    }
 
     @Override
     public void reviewUser(Map<String,Object> params) {
@@ -146,6 +158,7 @@ public class MatchReviewServiceImpl extends ServiceImpl<MatchReviewDao, MatchRev
             matchInfoEntity.setMatchScoreAvg(scoreAvg);
             matchInfoService.updateById(matchInfoEntity);
         }
+//        List unViewTeacher = matchReviewService.queryTeacher(params);
     }
 
     @Override

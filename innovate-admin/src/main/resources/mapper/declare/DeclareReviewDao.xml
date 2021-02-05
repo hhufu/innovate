@@ -37,6 +37,18 @@
         and is_del = 0
     </select>
 
+    <!--查找未评分评委信息-->
+    <select id="queryTeacher" resultType="MatchUnScoreTeacherEntity" parameterType="map">
+        select u.name, u.email, u.mobile ,u.institute_id,  t.teacher_sex, t.teacher_post, t.teacher_title
+        from innovate_declare_review r LEFT JOIN sys_user u USING(user_id) LEFT JOIN innovate_user_teacher_info t USING(user_id)
+        where 1 = 1
+        <if test="declareId != null and declareId != ''">
+            and r.declare_id = #{declareId}
+        </if>
+        and ISNULL(r.score)
+        and is_del = 0
+    </select>
+
     <!--计算平均分-->
     <select id="queryScoreAvg" resultType="java.lang.Double" parameterType="map">
         select avg(score) from innovate_declare_review

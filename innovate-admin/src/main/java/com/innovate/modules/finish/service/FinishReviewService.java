@@ -3,6 +3,7 @@ package com.innovate.modules.finish.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.modules.finish.entity.FinishReviewEntity;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -48,4 +49,9 @@ public interface FinishReviewService extends IService<FinishReviewEntity> {
      * @return
      */
     PageUtils unReview(Map<String, Object> params);
+
+    /**
+     * 查询未评分评委信息
+     */
+    List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params);
 }

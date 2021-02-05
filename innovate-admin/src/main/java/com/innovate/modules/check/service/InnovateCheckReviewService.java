@@ -3,6 +3,7 @@ package com.innovate.modules.check.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.innovate.modules.check.entity.InnovateCheckReviewEntity;
 import com.innovate.modules.declare.entity.DeclareReviewEntity;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -41,4 +42,9 @@ public interface InnovateCheckReviewService extends IService<InnovateCheckReview
      * 计算平均分
      */
     Double queryScoreAvg(Map<String, Object> params);
+
+    /**
+     * 查询未评分评委信息
+     */
+    List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params);
 }

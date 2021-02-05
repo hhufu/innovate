@@ -7,6 +7,7 @@ import com.innovate.modules.check.service.InnovateCheckAwardService;
 import com.innovate.modules.check.service.InnovateCheckReviewService;
 import com.innovate.modules.declare.entity.DeclareReviewEntity;
 import com.innovate.modules.declare.service.DeclareReviewService;
+import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import com.innovate.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,16 @@ public class InnovateCheckReviewController extends AbstractController {
     public R info(@RequestParam Map<String,Object> params){
         InnovateCheckReviewEntity innovateCheckReviewEntity = innovateCheckReviewService.queryScore(params);
         return R.ok().put("checkReviewEntity",innovateCheckReviewEntity);
+    }
+
+    /**
+     * 查询未评分评委
+     */
+    @GetMapping("/noScoreTeacher")
+    @RequiresPermissions("innovate:check:list")
+    public R unReviewTeacher(@RequestParam Map<String,Object> params){
+        List<MatchUnScoreTeacherEntity> noScoreTeacher = innovateCheckReviewService.queryTeacher(params);
+        return R.ok().put("noScoreTeacher", noScoreTeacher);
     }
 
     /**
