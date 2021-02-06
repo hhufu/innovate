@@ -114,7 +114,7 @@
         header-align="center"
         align="center"
         label="未打分评委"
-        v-if="unTeacherShow">
+        v-if="unTeacherShow && isAuth('innovate:project:juryPerson')">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="TeacherDetail(scope.row.declareInfoEntity.declareId)">查看未评分评委</el-button>
         </template>

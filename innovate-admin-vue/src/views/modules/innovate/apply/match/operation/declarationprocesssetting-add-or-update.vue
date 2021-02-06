@@ -86,10 +86,10 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.declareProcessName = data.innovatedeclarationprocesssetting.declareProcessName
-                this.dataForm.startTime = data.innovatedeclarationprocesssetting.startTime
-                this.dataForm.endTime = data.innovatedeclarationprocesssetting.endTime
-                this.dataForm.remark = data.innovatedeclarationprocesssetting.remark
+                this.dataForm.declareProcessName = data.innovateDeclarationProcessSetting.declareProcessName
+                this.dataForm.startTime = data.innovateDeclarationProcessSetting.startTime
+                this.dataForm.endTime = data.innovateDeclarationProcessSetting.endTime
+                this.dataForm.remark = data.innovateDeclarationProcessSetting.remark
                 this.dataForm.dateTimeRange = [this.dataForm.startTime, this.dataForm.endTime]
               }
             })

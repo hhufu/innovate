@@ -21,7 +21,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="比赛赛事名" prop="eventId">
-            <el-select v-model="dataForm.eventId" placeholder="请选择" @change="fileAskContentHandler($event)">
+            <el-select style="width: 70%" v-model="dataForm.eventId" placeholder="请选择" @change="fileAskContentHandler($event)">
               <el-option v-for="item in eventLists" :key="item.eventId" :label="item.eventName" :value="item.eventId"
                          :disabled="item.optionDisable">
                 <span style="float: left;padding-left: 10px">{{ item.eventName }}</span>

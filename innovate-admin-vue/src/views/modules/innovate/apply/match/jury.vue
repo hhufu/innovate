@@ -18,7 +18,7 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="hasReview" @change="getDataList">
-        <el-radio label="1" @change="teacherNoShow">未打分</el-radio>
+        <el-radio v-if="!isAuth('innovate:match:juryPerson')" label="1" @change="teacherNoShow">未打分</el-radio>
         <el-radio label="2" @change="teacherShow">等待他人打分</el-radio>
         <el-radio label="3" @change="teacherNoShow">已打分</el-radio>
       </el-radio-group>
@@ -112,9 +112,9 @@
         header-align="center"
         align="center"
         label="未打分评委"
-        v-if="unTeacherShow">
+        v-if="unTeacherShow && isAuth('innovate:match:juryPerson')">
         <template slot-scope="scope">
-        <el-button v-if="isAuth('innovate:match:list')" type="text" size="small" @click.prevent="TeacherDetail(scope.row.matchInfoEntity.matchId)">查看未评分评委</el-button>
+        <el-button type="text" size="small" @click.prevent="TeacherDetail(scope.row.matchInfoEntity.matchId)">查看未评分评委</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -125,7 +125,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:match:list')" type="text" size="small" @click="detailHandle(scope.row.matchInfoEntity.matchId)">详情</el-button>
-          <el-button v-if="applyIsVisible(scope.row.matchInfoEntity)" type="text" size="small" @click="applyHandle(scope.row.matchInfoEntity,scope.row.matchInfoEntity.matchGroupType)">评分</el-button>
+          <el-button v-if="applyIsVisible(scope.row.matchInfoEntity) && !isAuth('innovate:match:juryPerson')" type="text" size="small" @click="applyHandle(scope.row.matchInfoEntity,scope.row.matchInfoEntity.matchGroupType)">评分</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -149,6 +149,7 @@
   import Detail from './operation/info-detail'
   import TeacherDetail from './operation/teacher-detail'
   import ScoreAddOrUpdate from './operation/score-add-or-update'
+  import {isAuth} from "../../../../../utils";
 
   export default {
     data () {
@@ -156,7 +157,7 @@
         matchList: [],
         eventLists: this.$store.state.eventLists,
         sysTeacherEntities: [],
-        hasReview: '1',
+        hasReview: isAuth('innovate:match:juryPerson') ? '2':'1',
         dataForm: {
           baseId: '',
           projectName: '',
@@ -225,7 +226,7 @@
             'matchTime': this.dataForm.matchTime == null ? '' : this.dataForm.matchTime.getFullYear(),
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
-            'userId': this.$store.state.user.id,
+            'userId': !isAuth("innovate:match:juryPerson") ? this.$store.state.user.id: null,
             'hasReview': this.hasReview,
             'noPass': 'match_no_pass',
             'noPassStatus': 0,
