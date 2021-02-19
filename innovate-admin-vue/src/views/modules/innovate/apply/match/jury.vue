@@ -18,7 +18,7 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="hasReview" @change="getDataList">
-        <el-radio label="1" @change="teacherShow">未打分</el-radio>
+        <el-radio v-if="!isAuth('innovate:match:juryPerson')" label="1" @change="teacherShow">未打分</el-radio>
         <el-radio label="2" @change="teacherShow">等待他人打分</el-radio>
         <el-radio label="3" @change="teacherNoShow">已打分</el-radio>
       </el-radio-group>
@@ -157,7 +157,7 @@
         matchList: [],
         eventLists: this.$store.state.eventLists,
         sysTeacherEntities: [],
-        hasReview: '1',
+        hasReview: isAuth('innovate:match:juryPerson') ? '2':'1',
         dataForm: {
           baseId: '',
           projectName: '',

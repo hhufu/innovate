@@ -18,7 +18,7 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="hasReview" @change="getDataList">
-        <el-radio label="1" @change="teacherNoShow">未打分</el-radio>
+        <el-radio v-if="!isAuth('innovate:check:juryPerson')" label="1" @change="teacherShow">未打分</el-radio>
         <el-radio label="2" @change="teacherShow">等待他人打分</el-radio>
         <el-radio label="3" @change="teacherNoShow">已打分</el-radio>
       </el-radio-group>
@@ -160,13 +160,14 @@
   import Detail from './operation/info-detail'
   import ScoreAddOrUpdate from './operation/score-add-or-update'
   import TeacherDetail from "./operation/teacher-detail";
+  import {isAuth} from "../../../../../utils";
 
   export default {
     data () {
       return {
         declareList: [],
         sysTeacherEntities: [],
-        hasReview: '1',
+        hasReview: isAuth('innovate:check:juryPerson') ? '2':'1',
         dataForm: {
           projectName: '',
           checkTime: new Date(),
@@ -195,7 +196,7 @@
         detailVisible: false,
         applyVisible: false,
         scoreVisible: false,
-        unTeacherShow: false,
+        unTeacherShow: true,
         teacherVisible: false
       }
     },
@@ -243,7 +244,6 @@
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            console.log(data)
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
           } else {

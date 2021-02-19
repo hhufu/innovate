@@ -19,7 +19,7 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="hasReview" @change="getDataList">
-        <el-radio label="1" @change="teacherNoShow">未打分</el-radio>
+        <el-radio label="1" @change="teacherShow">未打分</el-radio>
         <el-radio label="2" @change="teacherShow">等待他人打分</el-radio>
         <el-radio label="3" @change="teacherNoShow">已打分</el-radio>
       </el-radio-group>
@@ -117,7 +117,7 @@
         label="未打分评委"
         v-if="unTeacherShow && isAuth('innovate:finish:juryPerson')">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('innovate:match:list')" type="text" size="small" @click="TeacherDetail(scope.row.finishInfoEntity.finishId)">查看未评分评委</el-button>
+          <el-button v-if="isAuth('innovate:finish:list')" type="text" size="small" @click="TeacherDetail(scope.row.finishInfoEntity.finishId)">查看未评分评委</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -187,7 +187,7 @@
         detailVisible: false,
         applyVisible: false,
         scoreVisible: false,
-        unTeacherShow: false,
+        unTeacherShow: true,
         teacherVisible: false
       }
     },
