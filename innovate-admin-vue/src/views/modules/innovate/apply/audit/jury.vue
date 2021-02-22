@@ -127,7 +127,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="detailHandle(scope.row.declareInfoEntity.declareId)">详情</el-button>
-          <el-button v-if="applyIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="applyHandle(scope.row.declareInfoEntity.declareId)">评分</el-button>
+          <el-button v-if="applyIsVisible(scope.row.declareInfoEntity) && !isAuth('innovate:project:juryPerson')" type="text" size="small" @click="applyHandle(scope.row.declareInfoEntity.declareId)">评分</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -143,7 +143,7 @@
     <!-- 弹窗, 新增 / 修改 -->
     <detail v-if="detailVisible" ref="detail" @refreshDataList="getDataList"></detail>
     <TeacherDetail v-if="teacherVisible" ref="TeacherDetail"></TeacherDetail>
-    <score-add-or-update v-if="scoreVisible" ref="score" @refreshDataList="getDataList"></score-add-or-update>
+    <ScoreAddOrUpdate v-if="scoreVisible" ref="ScoreAddOrUpdate" @refreshDataList="getDataList"></ScoreAddOrUpdate>
   </div>
 </template>
 
@@ -151,6 +151,7 @@
   import Detail from './operation/info-detail'
   import ScoreAddOrUpdate from './operation/score-add-or-update'
   import TeacherDetail from "./operation/teacher-detail";
+  import {isAuth} from "../../../../../utils";
 
   export default {
     data () {
@@ -225,7 +226,7 @@
             'declareTime': this.dataForm.declareTime == null ? '' : this.dataForm.declareTime.getFullYear(),
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
-            'userId': this.$store.state.user.id,
+            'userId': !isAuth("innovate:project:juryPerson") ? this.$store.state.user.id: null,
             'hasReview': this.hasReview,
             'noPass': 'audit_no_pass',
             'noPassStatus': 0,
@@ -324,7 +325,7 @@
       applyHandle (id) {
         this.scoreVisible = true
         this.$nextTick(() => {
-          this.$refs.score.init(id)
+          this.$refs.ScoreAddOrUpdate.init(id)
         })
       }
     }

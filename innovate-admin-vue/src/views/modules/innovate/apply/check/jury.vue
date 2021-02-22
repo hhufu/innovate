@@ -18,7 +18,7 @@
     </el-form>
     <el-card>
       <el-radio-group v-model="hasReview" @change="getDataList">
-        <el-radio v-if="!isAuth('innovate:check:juryPerson')" label="1" @change="teacherShow">未打分</el-radio>
+        <el-radio label="1" @change="teacherShow">未打分</el-radio>
         <el-radio label="2" @change="teacherShow">等待他人打分</el-radio>
         <el-radio label="3" @change="teacherNoShow">已打分</el-radio>
       </el-radio-group>
@@ -123,7 +123,7 @@
         header-align="center"
         align="center"
         label="未打分评委"
-        v-if="unTeacherShow && isAuth('innovate:project:juryPerson')">
+        v-if="unTeacherShow && isAuth('innovate:check:juryPerson')">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:check:list')" type="text" size="small" @click="TeacherDetail(scope.row.innovateCheckInfoEntity.checkId)">查看未评分评委</el-button>
         </template>
@@ -136,7 +136,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="detailHandle(scope.row.innovateCheckInfoEntity.declareId)">详情</el-button>
-          <el-button v-if="applyIsVisible(scope.row.innovateCheckInfoEntity)" type="text" size="small" @click="applyHandle(scope.row.innovateCheckInfoEntity.checkId)">评分</el-button>
+          <el-button v-if="applyIsVisible(scope.row.innovateCheckInfoEntity) && !isAuth('innovate:check:juryPerson')" type="text" size="small" @click="applyHandle(scope.row.innovateCheckInfoEntity.checkId)">评分</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -167,7 +167,7 @@
       return {
         declareList: [],
         sysTeacherEntities: [],
-        hasReview: isAuth('innovate:check:juryPerson') ? '2':'1',
+        hasReview: '1',
         dataForm: {
           projectName: '',
           checkTime: new Date(),
@@ -233,7 +233,7 @@
           params: this.$http.adornParams({
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
-            'reviewUserId': this.$store.state.user.id,
+            'reviewUserId': !isAuth("innovate:check:juryPerson") ? this.$store.state.user.id: null,
             'hasReview': this.hasReview,
             'isReview': true,
             'checkNoPass': 0,

@@ -128,7 +128,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:finish:list')" type="text" size="small" @click="detailHandle(scope.row.finishInfoEntity.finishId)">详情</el-button>
-          <el-button v-if="applyIsVisible(scope.row.finishInfoEntity)" type="text" size="small" @click="applyHandle(scope.row.finishInfoEntity.finishId)">评分</el-button>
+          <el-button v-if="applyIsVisible(scope.row.finishInfoEntity) && !isAuth('innovate:finish:juryPerson')" type="text" size="small" @click="applyHandle(scope.row.finishInfoEntity.finishId)">评分</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -152,6 +152,7 @@
   import Detail from './operation/info-detail'
   import ScoreAddOrUpdate from './operation/score-add-or-update'
   import TeacherDetail from "./operation/teacher-detail";
+  import {isAuth} from "../../../../../utils";
 
   export default {
     data () {
@@ -226,7 +227,7 @@
             'finishTime': this.dataForm.finishTime == null ? '' : this.dataForm.finishTime.getFullYear(),
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
-            'userId': this.$store.state.user.id,
+            'userId': !isAuth("innovate:finish:juryPerson") ? this.$store.state.user.id: null,
             'hasReview': this.hasReview,
             'noPass': 'finish_no_pass',
             'noPassStatus': 0,
