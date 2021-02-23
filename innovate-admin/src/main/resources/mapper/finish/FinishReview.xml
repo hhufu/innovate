@@ -68,7 +68,7 @@
         </where>
     </select>
 
-    <!--查找未评分评委信息-->
+    <!--查找未评分评委信息 解决bug-->
     <select id="queryTeacher" resultType="MatchUnScoreTeacherEntity" parameterType="map">
         select u.name, u.email, u.mobile ,u.institute_id,  t.teacher_sex, t.teacher_post, t.teacher_title
         from innovate_finish_review f LEFT JOIN sys_user u USING(user_id) LEFT JOIN innovate_user_teacher_info t USING(user_id)
