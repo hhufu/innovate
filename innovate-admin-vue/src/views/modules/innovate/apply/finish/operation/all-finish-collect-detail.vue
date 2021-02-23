@@ -7,19 +7,19 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-row>
-      <table border="1" cellspacing="0" width="100%" class="table" id="out-table">
+      <table border="1" cellspacing="0" width="100%" class="table" style="table-layout: fixed" id="out-table">
         <tr align='center'>
-          <td colspan="21" style="height: 1.2rem"></td>
+          <td colspan="22" style="height: 1.2rem"></td>
         </tr>
         <tr class="contents" align="center">
-          <th colspan="21">梧州学院 “互联网+” 大学生创新创业结题项目汇总表</th>
+          <th colspan="22">梧州学院 “互联网+” 大学生创新创业结题项目汇总表</th>
           <!--<th colspan="20">梧州学院{{finishYear}}“互联网+”大学生创新创业结题项目汇总表</th>-->
         </tr>
         <tr align='center' style="height: 3.0rem">
           <th>二级学院名称(盖章)：</th>
           <td colspan="7" style="height: 1rem"></td>
           <th>联系人：</th>
-          <td colspan="5" style="height: 1rem"></td>
+          <td colspan="6" style="height: 1rem"></td>
           <th>联系电话：</th>
           <td colspan="6" style="height: 1rem"></td>
         </tr>
@@ -36,7 +36,7 @@
           <!--<th colspan="2">参与学生人数</th>-->
           <!--<th colspan="3">项目其他成员信息</th>-->
           <!--李四/112583030116,王五/112583030114  -->
-          <th colspan="2">指导老师姓名</th>
+          <th colspan="1">指导老师姓名</th>
           <th colspan="2">指导教师职称</th>
           <!--<td>平均分</td>-->
           <td colspan="2">学院</td>
@@ -92,7 +92,7 @@
                   <!--</span>-->
                 <!--</span>-->
             <!--</td>-->
-            <td colspan="2">
+            <td colspan="1">
                 <span v-for="finishTeacher in item.finishTeacherEntities">
                   <span v-for="allT in userTeacherInfoEntities" v-if="finishTeacher.userId === allT.userId" v-text="allT.sysUserEntity.name+'  '" align="center"></span>
                 </span>
@@ -124,13 +124,13 @@
         </template>
         <tr align='center'  style="height: 3.0rem">
           <th>备注：</th>
-          <td colspan="9" style="height: 1.5rem">已核实所有参赛队员学籍信息，均符合参赛要求</td>
+          <td colspan="10" style="height: 1.5rem">已核实所有参赛队员学籍信息，均符合参赛要求</td>
           <th>二级学院领导签名：</th>
           <td colspan="10" style="height: 1.5rem"></td>
         </tr>
         <!--附件结束-->
         <tr align='center'>
-          <td colspan="21" style="height: 1.2rem"></td>
+          <td colspan="22" style="height: 1.2rem"></td>
         </tr>
       </table>
     </el-row>
