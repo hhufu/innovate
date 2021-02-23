@@ -27,7 +27,7 @@ CREATE SCHEMA innovate_admin DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 4. 构建镜像： `docker build -t mikeyboom/innovate-admin:lastst .`
 5. 推到仓库： `docker push mikeyboom/innovate-admin`
 6. 拉取镜像： `docker pull mikeyboom/innovate-admin:latest`
-6. 启动服务： `docker-compose -f docker-compose.yml -d`
+6. 启动服务： `docker-compose -f docker-compose.yml up -d`
 
 ### 修改数据库密码
 
