@@ -3,7 +3,7 @@
 
 <mapper namespace="com.innovate.modules.check.dao.InnovateCheckInfoDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.innovate.modules.check.entity.InnovateCheckInfoEntity" id="innovateCheckInfoMap">
         <result property="checkId" column="check_id"/>
         <result property="declareId" column="declare_id"/>
@@ -60,9 +60,9 @@
             and a.institute_id = #{instituteId}
         </if>
 
-<!--        <if test="projectCheckApplyStatus != null and projectCheckApplyStatus != ''">-->
-<!--            and a.project_check_apply_status = #{projectCheckApplyStatus}-->
-<!--        </if>-->
+        <!--        <if test="projectCheckApplyStatus != null and projectCheckApplyStatus != ''">-->
+        <!--            and a.project_check_apply_status = #{projectCheckApplyStatus}-->
+        <!--        </if>-->
 
         <!--未审批-->
         <if test="hasApply != null and hasApply != '' and hasApply == 1 and projectCheckApplyStatus != null and projectCheckApplyStatus != ''" >
@@ -134,7 +134,7 @@
         where 1 = 1
 
         <if test="declareId != null and declareId != ''">
-                and a.declare_id = #{declareId}
+            and a.declare_id = #{declareId}
         </if>
 
         <if test="groupId != null and groupId != ''">
@@ -157,9 +157,9 @@
             and a.institute_id = #{instituteId}
         </if>
 
-<!--        <if test="projectCheckApplyStatus != null and projectCheckApplyStatus != ''">-->
-<!--            and a.project_check_apply_status = #{projectCheckApplyStatus}-->
-<!--        </if>-->
+        <!--        <if test="projectCheckApplyStatus != null and projectCheckApplyStatus != ''">-->
+        <!--            and a.project_check_apply_status = #{projectCheckApplyStatus}-->
+        <!--        </if>-->
 
         <!--未审批-->
         <if test="hasApply != null and hasApply != '' and hasApply == 1 and projectCheckApplyStatus != null and projectCheckApplyStatus != ''" >
@@ -208,6 +208,8 @@
         <if test="hasReview != null and hasReview != '' and hasReview == 3">
             and a.check_score_avg is not null
         </if>
+
+        order by a.check_score_avg desc
 
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}

@@ -20,7 +20,7 @@
             inner join sys_user b on a.project_user_id = b.user_id
             inner join innovate_user_person_info c on c.user_id = b.user_id
         </if>
-         <!--与isEr为独立事件-->
+        <!--与isEr为独立事件-->
         <if test="isInstitute != null and isInstitute != '' and instituteId != null and instituteId != '' ">
             inner join sys_user b on a.project_user_id = b.user_id
             inner join innovate_user_person_info c on c.user_id = b.user_id
@@ -76,7 +76,7 @@
             and a.${apply} > #{applyStatus}
         </if>
 
-        --         评委
+        <!-- 评委-->
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}
         </if>
@@ -170,14 +170,13 @@
         </if>
 
         <if test="apply != null and apply != '' and applyStatus != null and hasApply == 1">
-          and a.${apply} = #{applyStatus}
+            and a.${apply} = #{applyStatus}
         </if>
 
         <if test="apply != null and apply != '' and applyStatus != null and hasApply == 2">
             and a.${apply} > #{applyStatus}
         </if>
 
---         评委
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}
         </if>
@@ -204,8 +203,7 @@
         <if test="matchTime != null and matchTime != ''">
             and a.match_time like CONCAT('%',#{matchTime},'%')
         </if>
-
-
+        order by a.match_score_avg desc
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}
         </if>
@@ -214,11 +212,11 @@
     <!--筛选满足当前条件的项目-->
     <select id="noPass" resultType="MatchInfoEntity" parameterType="map">
         SELECT * FROM innovate_match_info
-          WHERE is_del = '0'
-          AND (match_no_pass = '1')
-          <if test="userId != '' and userId != null">
-              AND project_user_id = #{userId}
-          </if>
+        WHERE is_del = '0'
+        AND (match_no_pass = '1')
+        <if test="userId != '' and userId != null">
+            AND project_user_id = #{userId}
+        </if>
     </select>
 
     <update id="remove" parameterType="map">

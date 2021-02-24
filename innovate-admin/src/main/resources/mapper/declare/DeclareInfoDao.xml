@@ -230,7 +230,7 @@
         </if>
 
         <if test="apply != null and apply != '' and applyStatus != null and hasApply == 1">
-          and a.${apply} = #{applyStatus}
+            and a.${apply} = #{applyStatus}
         </if>
 
         <if test="apply != null and apply != '' and applyStatus != null and hasApply == 2">
@@ -241,7 +241,7 @@
             and b.score is null
         </if>
 
---         评委
+        --         评委
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}
         </if>
@@ -269,6 +269,8 @@
             and a.declare_time like CONCAT('%',#{declareTime},'%')
         </if>
 
+        order by a.declare_score_avg desc
+
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}
         </if>
@@ -278,11 +280,11 @@
     <!--筛选满足当前条件的项目-->
     <select id="noPass" resultType="DeclareInfoEntity" parameterType="map">
         SELECT * FROM innovate_declare_info
-          WHERE is_del = '0'
-          AND (audit_no_pass = '1')
-          <if test="userId != '' and userId != null">
-              AND project_user_id = #{userId}
-          </if>
+        WHERE is_del = '0'
+        AND (audit_no_pass = '1')
+        <if test="userId != '' and userId != null">
+            AND project_user_id = #{userId}
+        </if>
     </select>
 
     <update id="remove" parameterType="map">
