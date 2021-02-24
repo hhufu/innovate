@@ -209,8 +209,6 @@
             and a.check_score_avg is not null
         </if>
 
-        order by a.check_score_avg desc
-
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}
         </if>

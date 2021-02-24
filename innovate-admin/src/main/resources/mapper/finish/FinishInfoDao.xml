@@ -228,7 +228,6 @@
             and a.finish_name like CONCAT('%',#{projectName},'%')
         </if>
 
-        order by a.finish_score_avg desc
 
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}

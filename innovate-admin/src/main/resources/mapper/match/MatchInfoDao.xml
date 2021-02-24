@@ -76,7 +76,7 @@
             and a.${apply} > #{applyStatus}
         </if>
 
-        <!-- 评委-->
+        --         评委
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}
         </if>
@@ -177,6 +177,7 @@
             and a.${apply} > #{applyStatus}
         </if>
 
+--         评委
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}
         </if>
@@ -203,7 +204,8 @@
         <if test="matchTime != null and matchTime != ''">
             and a.match_time like CONCAT('%',#{matchTime},'%')
         </if>
-        order by a.match_score_avg desc
+
+
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}
         </if>

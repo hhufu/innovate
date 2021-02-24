@@ -269,8 +269,6 @@
             and a.declare_time like CONCAT('%',#{declareTime},'%')
         </if>
 
-        order by a.declare_score_avg desc
-
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}
         </if>
