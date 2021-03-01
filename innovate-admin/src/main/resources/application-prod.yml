@@ -1,7 +1,7 @@
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
-        driverClassName: com.mysql.jdbc.Driver
+        driverClassName: com.mysql.cj.jdbc.Driver
         druid:
 #            first:
 #                url: jdbc:mysql://47.112.103.217:3306/innovate_admin?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
@@ -11,14 +11,14 @@ spring:
 #                url: jdbc:mysql://47.112.103.217:3306/innovate_admin?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
 #                username: ENC(pBbX+yjP+pW+gfXS1PIBzw==)
 #                password: ENC(PlIDciDH4kexjtFnsFH6t6okWHII/ZGiWfvpLwTu1tU=)
-            first:  #数据源1
-                url: jdbc:mysql://rm-2zetn83n05wz7ipp76o.mysql.rds.aliyuncs.com:3306/innovate_admin?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-                username: innovate
-                password: Ii123456
-            second:  #数据源2
-                url: jdbc:mysql://rm-2zetn83n05wz7ipp76o.mysql.rds.aliyuncs.com:3306/innovate_admin?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-                username: innovate
-                password: Ii123456
+            first:
+                url: jdbc:mysql://47.112.103.217:3306/innovate_all?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                username: ENC(T3PFeEs/mQPT9NFDWGUXLw==)
+                password: ENC(Nve3rwvAuhO04Wmvht932gtGPdfhNhr5)
+            second:
+                url: jdbc:mysql://47.112.103.217:3306/innovate_all?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                username: ENC(T3PFeEs/mQPT9NFDWGUXLw==)
+                password: ENC(Nve3rwvAuhO04Wmvht932gtGPdfhNhr5)
             initial-size: 10
             max-active: 100
             min-idle: 10

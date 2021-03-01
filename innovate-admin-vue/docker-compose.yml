@@ -4,5 +4,5 @@ services:
     image: hhufu/innovate-admin-vue:latest
     container_name: innovate-admin-vue-hhufu
     ports:
-      - 8005:8001
+      - 8001:8001
     restart: always
