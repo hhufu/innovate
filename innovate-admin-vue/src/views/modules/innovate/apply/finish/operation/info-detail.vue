@@ -289,6 +289,22 @@
         </tr>
         <!--指导老师签署意见结束-->
 
+        <!--二级学院签署意见开始-->
+        <tr align='center'>
+          <td colspan="10" style="height: 1.2rem"></td>
+        </tr>
+        <tr align="center" class="contents">
+          <th colspan="10">二级学院签署意见</th>
+        </tr>
+        <tr align='center'>
+          <td colspan="10" style="height: 1.2rem"></td>
+        </tr>
+        <tr align='center'>
+          <th colspan="2">签署意见</th>
+          <th colspan="8" v-if="signingOpinionER!==null" v-text="signingOpinionER.signingOpinion"></th>
+        </tr>
+        <!--二级学院签署意见结束-->
+
         <!--附件开始-->
         <tr align='center'>
           <td colspan="10" style="height: 1.2rem"></td>
@@ -394,6 +410,10 @@
           signingOpinion: '',
           signingOpinionTime: ''
         },
+        signingOpinionER: {
+          signingOpinion: '',
+          signingOpinionTime: ''
+        },
         reviewTypeList: [
           {value: 'project_audit_apply_status', label: '训练申请流程'},
           {value: 'project_base_apply_status', label: '中心申请流程'},
@@ -420,6 +440,10 @@
           teacherJob: '',
           teacherInstinct: '',
           signingOpinionEntity: {
+            signingOpinion: '',
+            signingOpinionTime: ''
+          },
+          signingOpinionER: {
             signingOpinion: '',
             signingOpinionTime: ''
           },
@@ -479,11 +503,25 @@
                 url: this.$http.adornUrl(`/innovate/finish/signingopinion/info`),
                 method: 'get',
                 params: this.$http.adornParams({
-                  'finishId': this.dataForm.id
+                  'finishId': this.dataForm.id,
+                  'optionPersonType': 0
                 })
               }).then(({data}) => {
                 if (data && data.code === 0) {
                   this.signingOpinionEntity = data.sighingOpinion
+                }
+              })
+              // 获取二级学院签署意见
+              this.$http({
+                url: this.$http.adornUrl(`/innovate/finish/signingopinion/info`),
+                method: 'get',
+                params: this.$http.adornParams({
+                  'finishId': this.dataForm.id,
+                  'optionPersonType': 1
+                })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.signingOpinionER = data.sighingOpinion
                 }
               })
               this.dataListLoading = false

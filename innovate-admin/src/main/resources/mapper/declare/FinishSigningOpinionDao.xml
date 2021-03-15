@@ -3,9 +3,9 @@
 
 <mapper namespace="com.innovate.modules.finish.dao.FinishSigningOpinionDao">
 
-    <select id="queryFinishSigningOpinionByFinishId" parameterType="java.lang.Long" resultType="FinishSigningOpinionEntity">
+    <select id="queryFinishSigningOpinionByFinishId" parameterType="map" resultType="FinishSigningOpinionEntity">
         select  * from innovate_finish_signing_opinion
-        where finish_id = #{finishId}
+        where finish_id = #{finishId} and option_person_type = #{optionPersonType}
             and is_del = 0
     </select>
 

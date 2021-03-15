@@ -24,4 +24,5 @@ public class FinishSigningOpinionEntity implements Serializable {
     private String signingOpinion;
     private Date signingOpinionTime;
     private Integer isDel;
+    private Integer optionPersonType;
 }

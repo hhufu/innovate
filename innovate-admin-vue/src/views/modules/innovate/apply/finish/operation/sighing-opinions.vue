@@ -11,6 +11,9 @@
           type="textarea"
           :rows="5"
           placeholder="请输入"
+          :minlength="minlength"
+          show-word-limit
+          :maxlength="maxlength"
           v-model="dataForm.sighingOpinion">
         </el-input>
       </el-form-item>
@@ -26,24 +29,43 @@
   export default {
     name: 'sighing-opinions',
     data () {
+      var sighingOpinion = (rule, value, callback) => {
+        let len = value.length
+        if (len > this.maxlength || len < this.minlength) {
+          //重点重点，下面就是填写提示的文字
+          callback(new Error('签署意见必须在' + this.minlength + '~' + this.maxlength + '字之间'));
+        } else {
+          callback();
+        }
+      };
       return {
         visible: false,
         loading: false,
+        maxlength: 300,
+        minlength: 200,
         userMap: [],
         id: 0,
+        roleId: 3,
+        optionPersonType: 0,
         dataForm: {
           sighingOpinion: ''
         },
         dataRule: {
           sighingOpinion: [
-            { required: true, message: '签署意见不能为空', trigger: 'blur' }
+            {validator: sighingOpinion,trigger: 'blur' }
           ]
         }
       }
     },
     methods: {
-      init (index) {
+      init (index, type) {
         this.visible = true
+        if (type === "er") {
+          this.maxlength = 200
+          this.minlength = 100
+          this.roleId = 4
+          this.optionPersonType = 1
+        }
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           this.id = index || 0
@@ -68,7 +90,8 @@
                   'userId': this.$store.state.user.id,
                   'sighingOpinion': this.dataForm.sighingOpinion,
                   'apply': 'project_finish_apply_status',
-                  'roleId': 3
+                  'roleId': this.roleId,
+                  'optionPersonType': this.optionPersonType
                 })
               }).then(({data}) => {
                 if (data && data.code === 0) {

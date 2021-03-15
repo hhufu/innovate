@@ -19,10 +19,10 @@ public interface FinishSigningOpinionDao extends BaseMapper<FinishSigningOpinion
 
     /**
      * 通过项目ID查询指导老师签署意见
-     * @param finishId
+     * @param map
      * @return
      */
-    FinishSigningOpinionEntity queryFinishSigningOpinionByFinishId(Long finishId);
+    FinishSigningOpinionEntity queryFinishSigningOpinionByFinishId(Map<String, Object> map);
 
     void remove(Map<String, Object> params);
 }

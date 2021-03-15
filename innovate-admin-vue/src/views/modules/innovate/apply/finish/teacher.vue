@@ -331,7 +331,7 @@
       sighingOpinionsHandle (id) {
         this.sighingOpinionsVisible = true
         this.$nextTick(() => {
-          this.$refs.sighingOpinions.init(id)
+          this.$refs.sighingOpinions.init(id, "teacher")
         })
       },
       // 不通过

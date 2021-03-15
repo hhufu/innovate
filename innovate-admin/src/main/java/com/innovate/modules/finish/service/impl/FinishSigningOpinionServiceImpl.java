@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,6 +40,8 @@ public class FinishSigningOpinionServiceImpl extends ServiceImpl<FinishSigningOp
 
         finishSigningOpinionEntity.setUserId(Long.parseLong(params.get("userId").toString()));
 
+        finishSigningOpinionEntity.setOptionPersonType(Integer.parseInt(params.get("optionPersonType").toString()));
+
         finishSigningOpinionEntity.setSigningOpinionTime(new Date());
 
         this.insert(finishSigningOpinionEntity);
@@ -54,8 +57,10 @@ public class FinishSigningOpinionServiceImpl extends ServiceImpl<FinishSigningOp
      */
     @Override
     public FinishSigningOpinionEntity queryFinishSigningOpinionByFinishId(Map<String, Object> params) {
-
-        return baseMapper.queryFinishSigningOpinionByFinishId(Long.parseLong(params.get("finishId").toString()));
+        Map<String, Object> map = new HashMap<>();
+        map.put("finishId", Long.parseLong(params.get("finishId").toString()));
+        map.put("optionPersonType", Long.parseLong(params.get("optionPersonType").toString()));
+        return baseMapper.queryFinishSigningOpinionByFinishId(map);
 
 
     }
