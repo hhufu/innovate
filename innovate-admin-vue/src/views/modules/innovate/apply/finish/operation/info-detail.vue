@@ -290,19 +290,19 @@
         <!--指导老师签署意见结束-->
 
         <!--二级学院签署意见开始-->
-        <tr align='center'>
-          <td colspan="10" style="height: 1.2rem"></td>
-        </tr>
-        <tr align="center" class="contents">
-          <th colspan="10">二级学院签署意见</th>
-        </tr>
-        <tr align='center'>
-          <td colspan="10" style="height: 1.2rem"></td>
-        </tr>
-        <tr align='center'>
-          <th colspan="2">签署意见</th>
-          <th colspan="8" v-if="signingOpinionER!==null" v-text="signingOpinionER.signingOpinion"></th>
-        </tr>
+<!--        <tr align='center'>-->
+<!--          <td colspan="10" style="height: 1.2rem"></td>-->
+<!--        </tr>-->
+<!--        <tr align="center" class="contents">-->
+<!--          <th colspan="10">二级学院签署意见</th>-->
+<!--        </tr>-->
+<!--        <tr align='center'>-->
+<!--          <td colspan="10" style="height: 1.2rem"></td>-->
+<!--        </tr>-->
+<!--        <tr align='center'>-->
+<!--          <th colspan="2">签署意见</th>-->
+<!--          <th colspan="8" v-if="signingOpinionER!==null" v-text="signingOpinionER.signingOpinion"></th>-->
+<!--        </tr>-->
         <!--二级学院签署意见结束-->
 
         <!--附件开始-->

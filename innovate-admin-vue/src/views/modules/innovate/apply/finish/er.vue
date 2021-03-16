@@ -124,8 +124,8 @@
           <br v-if="applyFinishIsVisible(scope.row.finishInfoEntity)">
           <!--<el-button v-if="applyFinishIsVisible(scope.row.finishInfoEntity)" type="text" size="small" @click="detailedAddOrUpdateHandle(scope.row.finishInfoEntity.finishId)">填写评审明细汇总表</el-button>-->
           <br v-if="applyFinishIsVisible(scope.row.finishInfoEntity)">
-          <el-button v-if="applyFinishIsVisible(scope.row.finishInfoEntity)" type="text" size="small" @click="applyFinishHandle(scope.row.finishInfoEntity.finishId)">签署</el-button>
-          <el-button v-if="retreatIsVisible(scope.row.finishInfoEntity)" type="text" size="small" @click="retreatHandle(scope.row.finishInfoEntity)">不通过</el-button>
+          <el-button v-if="applyFinishIsVisible(scope.row.finishInfoEntity)" type="text" size="small" @click="applyFinishHandle(scope.row.finishInfoEntity.finishId)">同意推荐</el-button>
+          <el-button v-if="retreatIsVisible(scope.row.finishInfoEntity)" type="text" size="small" @click="retreatHandle(scope.row.finishInfoEntity)">不同意推荐</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -145,7 +145,7 @@
     <update-add-or-update v-if="isUpdateVisible" ref="isUpdate" @refreshDataList="getDataList"></update-add-or-update>
     <detail v-if="detailVisible" ref="detail" @refreshDataList="getDataList"></detail>
     <retreat-add-or-update v-if="retreatVisible" ref="retreat" @refreshDataList="getDataList"></retreat-add-or-update>
-    <sighing-opinions v-if="sighingOpinionsVisible" ref="sighingOpinions" @refreshDataList="getDataList"></sighing-opinions>
+<!--    <sighing-opinions v-if="sighingOpinionsVisible" ref="sighingOpinions" @refreshDataList="getDataList"></sighing-opinions>-->
 
   </div>
 </template>
@@ -333,36 +333,36 @@
       },
       // 审批
       applyFinishHandle (id) {
-        this.sighingOpinionsVisible = true
-        this.$nextTick(() => {
-          this.$refs.sighingOpinions.init(id, "er")
-        })
-        // this.$confirm('此操作将使该项目进入下一个审批流程，是否继续?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
-        //   this.$http({
-        //     url: this.$http.adornUrl('/innovate/finish/apply/apply'),
-        //     method: 'post',
-        //     params: this.$http.adornParams({
-        //       'finishId': id,
-        //       'apply': 'project_finish_apply_status',
-        //       'roleId': 4
-        //     }, false)
-        //   }).then(({data}) => {
-        //     this.$message({
-        //       type: 'success',
-        //       message: '提交成功!'
-        //     })
-        //     this.getDataList()
-        //   })
-        // }).catch(() => {
-        //   this.$message({
-        //     type: 'info',
-        //     message: '已取消申请'
-        //   })
+        // this.sighingOpinionsVisible = true
+        // this.$nextTick(() => {
+        //   this.$refs.sighingOpinions.init(id, "er")
         // })
+        this.$confirm('此操作将使该项目进入下一个审批流程，是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/innovate/finish/apply/apply'),
+            method: 'post',
+            params: this.$http.adornParams({
+              'finishId': id,
+              'apply': 'project_finish_apply_status',
+              'roleId': 4
+            }, false)
+          }).then(({data}) => {
+            this.$message({
+              type: 'success',
+              message: '提交成功!'
+            })
+            this.getDataList()
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消申请'
+          })
+        })
       },
       addOrUpadate (item) {
         if ((item.projectFinishApplyStatus === 0) &&
