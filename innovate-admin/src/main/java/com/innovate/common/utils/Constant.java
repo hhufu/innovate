@@ -13,8 +13,7 @@ public class Constant {
 
 	public static final String QR_CODE_PATH = "points/qr_code_path/";
 
-//    public static final String PROTOCOL_IP_PORT = "http://cxcy.gxxiaoxiong.com:8001";
-    public static final String PROTOCOL_IP_PORT = "http://39.97.210.215:8001";
+    public static final String PROTOCOL_IP_PORT = "http://cxcy.gxxiaoxiong.com:8001";
 
     /**
 	 * 菜单类型
