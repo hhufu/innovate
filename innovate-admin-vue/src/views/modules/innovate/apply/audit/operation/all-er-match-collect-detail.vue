@@ -13,7 +13,7 @@
         </tr>
         <tr class="contents" align="center">
           <th colspan="23">
-            梧州学院“互联网+”大学生创新创业项目汇总表112312313
+            梧州学院2021年大学生创新创业项目汇总表
           </th>
         </tr>
         <tr align='center' style="height: 3.0rem">
@@ -299,7 +299,8 @@
           teacherPhone: '',
           teacherJob: '',
           teacherInstinct: '',
-          baseId: ''
+          baseId: '',
+          declareTime: ""
         },
         staticList: [
           '在驻',
@@ -311,6 +312,7 @@
     },
     methods: {
       init (instituteId, declareTime) {
+        this.declareTime = declareTime
         this.visible = true
         this.dataListLoading = true
         // this.dataForm.id = id || 0
@@ -372,7 +374,8 @@
       closeDialog () {
         this.visible = false
         this.$emit('refreshDataList')
-      }
+      },
+
     }
   }
 </script>
