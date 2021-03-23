@@ -9,11 +9,11 @@
     <el-row>
       <table border="1" cellspacing="0" width="100%" class="table" id="out-table">
         <tr align='center'>
-          <td colspan="21" style="height: 1.2rem"></td>
+          <td colspan="23" style="height: 1.2rem"></td>
         </tr>
         <tr class="contents" align="center">
-          <th colspan="21">
-            梧州学院“互联网+”大学生创新创业大创项目汇总表
+          <th colspan="23">
+            梧州学院“互联网+”大学生创新创业项目汇总表112312313
           </th>
         </tr>
         <tr align='center' style="height: 3.0rem">
@@ -22,19 +22,20 @@
           <th>联系人：</th>
           <td colspan="5" style="height: 1rem"></td>
           <th>联系电话：</th>
-          <td colspan="5" style="height: 1rem"></td>
+          <td colspan="7" style="height: 1rem"></td>
         </tr>
         <tr align='center' v-if="">
           <th>序号</th>
-          <th>项目级别</th>
+          <th>高校代码</th>
+          <th>高校名称</th>
           <th>项目编号</th>
+          <th>项目级别</th>
           <th>项目名称</th>
+          <th>项目类型</th>
           <th>项目年限</th>
-          <th>所属专业类</th>
           <th>负责人姓名</th>
           <th>负责人学号</th>
           <!--<th>申报组别</th>-->
-          <th>项目类型</th>
           <th>参与学生人数</th>
           <th colspan="2">项目其他成员信息</th>
           <th>指导老师姓名</th>
@@ -42,6 +43,7 @@
           <th>总经费(元)</th>
           <th>区财政(元)</th>
           <th>校拨(元)</th>
+          <th>所属专业类</th>
           <th colspan="2">项目简介</th>
           <td>平均分</td>
           <td>所属学院</td>
@@ -50,6 +52,8 @@
         <template>
           <tr align='center' v-if="declareInfoList.length === 0">
             <td>暂无数据</td>
+            <td>11354</td>
+            <td>梧州学院</td>
             <td>暂无数据</td>
             <td colspan="1">暂无数据</td>
             <td colspan="2">暂无数据</td>
@@ -74,24 +78,27 @@
           <tr v-for="(item,index) in declareInfoList" align="center"
               v-if="item.declareInfoEntity.projectAuditApplyStatus !==0 && item.declareInfoEntity.auditNoPass === 0">
             <td v-text="index+1"></td>
+            <td v-text="11354"></td>
+            <td v-text="schoolname"></td>
+            <td>
+              <!--项目编号-->
+              <span v-text="item.declareInfoEntity.declareNum"></span>
+            </td>
             <td>
               <!--项目最高级别-->
               <!--<span v-for="award in awardTypeList" v-if="item.declareAwardEntities.length > 0 && award.value === item.declareAwardEntities[0].awardType" v-text="award.label"></span>-->
               <span v-for="grade in declareGradeList" v-if="grade.value === item.declareInfoEntity.declareGrade" v-text="grade.label"></span>
             </td>
-            <td>
-              <!--项目编号-->
-              <span v-text="item.declareInfoEntity.declareNum"></span>
-            </td>
+            <!-- 项目名称-->
             <td v-text="item.declareInfoEntity.declareName"></td>
+            <!-- 项目类型-->
             <td>
-              <!--项目最高级别-->
+              <span v-for="temp in declareTypeList" v-if="temp.value === item.declareInfoEntity.declareType" v-text="temp.label"></span>
+            </td>
+            <td>
+              <!--项目年限-->
               <!--<span v-for="award in awardTypeList" v-if="item.declareAwardEntities.length > 0 && award.value === item.declareAwardEntities[0].awardType" v-text="award.label"></span>-->
               <span v-for="year in declareYearList" v-if="year.value === item.declareInfoEntity.declareYear" v-text="year.label"></span>
-            </td>
-            <td>
-              <!--项目所属一级学科-->
-              <span v-for="subject in subjectList" v-if="subject.subjectId === item.declareInfoEntity.subjectId" v-text="subject.subjectName"></span>
             </td>
             <!--负责人-->
             <td colspan="1">
@@ -100,12 +107,10 @@
                 </span>
             </td>
             <td>
+              <!--负责人学号-->
                 <span v-for="user in item.userPersonInfoEntities" >
                   <span v-text="user.perStuNo"></span>
                 </span>
-            </td>
-            <td>
-              <span v-for="temp in declareTypeList" v-if="temp.value === item.declareInfoEntity.declareType" v-text="temp.label"></span>
             </td>
             <!--<td>-->
             <!--<span v-for="temp in declareType" v-if="temp.value === item.declareInfoEntity.declareType" v-text="temp.label"/>-->
@@ -113,23 +118,26 @@
             <!--学生人数-->
             <td v-text="item.declareStaffInfoEntities.length+1"></td>
             <td colspan="2">
-              <span v-for="staff in item.declareStaffInfoEntities" v-text="staff.staffName+'  '" align="center"></span>
+              <!--项目其他成员信息-->
+              <span v-for="(staff,index2) in item.declareStaffInfoEntities" v-text="staff.staffName+'/'+staff.staffStuNo + (index2 ===0 ? '':',')" align="center"></span>
             </td>
             <td>
+              <!--指导老师姓名-->
                 <span v-for="teacher in userTeacherInfoEntities">
-                  <span v-for="teacher2 in item.declareTeacherEntities"
+                  <span v-for="(teacher2,index2) in item.declareTeacherEntities"
                         v-if="teacher.userId === teacher2.userId"
-                        v-text="teacher.sysUserEntity.name+'  '" align="center">
+                        v-text="teacher.sysUserEntity.name+(index2 === 0? '': ',')" align="center">
                   </span>
                 </span>
             </td>
             <td>
+              <!--指导老师职称-->
               <span v-for="teacher in userTeacherInfoEntities">
                  <span v-for="teacher2 in item.declareTeacherEntities"
                        v-if="teacher.userId === teacher2.userId">
                         <!--v-text="teacher.teacherTitle" align="center">-->
                    <!--teacherTitleList-->
-                     <span v-for="temp in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text="temp.titleName"></span>
+                     <span v-for="(temp,index2) in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text="temp.titleName + (index2 === 0? '': ',')"></span>
                   </span>
                 </span>
             </td>
@@ -145,14 +153,20 @@
               <!-- 校拨(元)-->
               <span v-if="item.declareAwardEntities.length > 0" v-text="item.declareAwardEntities[0].awardMoneySchool"></span>
             </td>
+            <td>
+              <!--项目所属一级学科-->
+              <span v-for="subject in subjectList" v-if="subject.subjectId === item.declareInfoEntity.subjectId" v-text="'0'+ subject.subjectNum"></span>
+            </td>
             <td colspan="2" class="info-content">
               <!-- 项目简介-->
               <span v-text="item.declareInfoEntity.declareDescribe"></span>
             </td>
             <td>
+              <!-- 平均分 -->
               <span v-text="item.declareInfoEntity.declareScoreAvg"></span>
             </td>
             <td colspan="1">
+              <!--二级学院-->
               <span v-for="inst in instituteList" v-if="item.declareInfoEntity.instituteId === inst.instituteId" v-text="inst.instituteName"></span>
             </td>
           </tr>
@@ -193,11 +207,11 @@
           <th>备注：</th>
           <td colspan="9" style="height: 1.5rem">已核实所有参赛队员学籍信息，均符合参赛要求</td>
           <th>二级学院领导签名：</th>
-          <td colspan="10" style="height: 1.5rem"></td>
+          <td colspan="12" style="height: 1.5rem"></td>
         </tr>
         <!--附件结束-->
         <tr align='center'>
-          <td colspan="21" style="height: 1.2rem"></td>
+          <td colspan="23" style="height: 1.2rem"></td>
         </tr>
       </table>
     </el-row>
@@ -291,7 +305,8 @@
           '在驻',
           '孵化成功出园',
           '孵化失败出园'
-        ]
+        ],
+        schoolname: '梧州学院'
       }
     },
     methods: {

@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.parser.Entity;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: 尧志欣
@@ -150,9 +147,19 @@ public class DeclareInfoModelServiceImpl implements DeclareInfoModelService {
 
     @Override
     public void saveEntity(DeclareInfoModel declareInfoModel) {
-
-        //D+当前时间戳自动生成项目编号
-        declareInfoModel.getDeclareInfoEntity().setDeclareNum("D"+System.currentTimeMillis());
+        Calendar cal = Calendar.getInstance();
+        Map<String, Object> map = new HashMap<>();
+        map.put("declareTime", cal.get(Calendar.YEAR));
+        map.put("isDel", 0);
+        int total = declareInfoService.queryCountPage(map) + 1;
+        String ls = "";
+        if (total < 100 && total >= 10){
+            ls = "0" + total;
+        } else {
+            ls = "00" + total;
+        }
+        //2021+ 5 位学校代码 + 3 位流水号。
+        declareInfoModel.getDeclareInfoEntity().setDeclareNum(cal.get(Calendar.YEAR) + "11354" + ls);
 
         declareInfoService.insert(declareInfoModel.getDeclareInfoEntity());
         this.saveOrupdateProps(declareInfoModel);
