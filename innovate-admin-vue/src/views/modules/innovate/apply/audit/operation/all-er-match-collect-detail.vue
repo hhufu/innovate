@@ -119,14 +119,14 @@
             <td v-text="item.declareStaffInfoEntities.length+1"></td>
             <td colspan="2">
               <!--项目其他成员信息-->
-              <span v-for="(staff,index2) in item.declareStaffInfoEntities" v-text="staff.staffName+'/'+staff.staffStuNo + (index2 ===0 ? '':',')" align="center"></span>
+              <span v-for="(staff,index2) in item.declareStaffInfoEntities" v-text=" (index2 ===0 ? '':',') + staff.staffName+'/'+staff.staffStuNo" align="center"></span>
             </td>
             <td>
               <!--指导老师姓名-->
                 <span v-for="teacher in userTeacherInfoEntities">
                   <span v-for="(teacher2,index2) in item.declareTeacherEntities"
                         v-if="teacher.userId === teacher2.userId"
-                        v-text="teacher.sysUserEntity.name+(index2 === 0? '': ',')" align="center">
+                        v-text="(index2 === 0? '': ',') + teacher.sysUserEntity.name" align="center">
                   </span>
                 </span>
             </td>
@@ -137,7 +137,7 @@
                        v-if="teacher.userId === teacher2.userId">
                         <!--v-text="teacher.teacherTitle" align="center">-->
                    <!--teacherTitleList-->
-                     <span v-for="(temp,index2) in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text="temp.titleName + (index2 === 0? '': ',')"></span>
+                     <span v-for="(temp,index2) in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text=" (index2 === 0? '': ',') + temp.titleName"></span>
                   </span>
                 </span>
             </td>
