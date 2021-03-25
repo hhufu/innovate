@@ -80,7 +80,6 @@
             and a.${apply} > #{applyStatus}
         </if>
 
-        --         评委
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}
         </if>
@@ -114,6 +113,10 @@
         <!--项目名称-->
         <if test="projectName != null and projectName != ''">
             and a.finish_name like CONCAT('%',#{projectName},'%')
+        </if>
+        <!--大创id-->
+        <if test="declareId != null and declareId != ''">
+            and a.declare_id = #{declareId}
         </if>
 
         <if test="startPage != null and endPage != null">

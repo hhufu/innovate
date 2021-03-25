@@ -92,8 +92,10 @@ public class FinishInfoController extends AbstractController {
     @PostMapping("/save")
     @RequiresPermissions("innovate:finish:save")
     public R save(@RequestBody(required = false) FinishInfoModel finishInfoModel){
-        finishInfoModelService.saveEntity(finishInfoModel);
-        return R.ok();
+        int code = finishInfoModelService.saveEntity(finishInfoModel);
+        return R.ok()
+                .put("code", code)
+                .put("msg", "今年您已结过题！");
     }
 
     /**

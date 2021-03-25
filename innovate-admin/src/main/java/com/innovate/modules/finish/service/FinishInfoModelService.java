@@ -26,7 +26,7 @@ public interface FinishInfoModelService {
 
 //    保存项目
     @Transactional
-    void saveEntity(FinishInfoModel finishInfoModel);
+    Integer saveEntity(FinishInfoModel finishInfoModel);
 
 //    更新项目
     @Transactional

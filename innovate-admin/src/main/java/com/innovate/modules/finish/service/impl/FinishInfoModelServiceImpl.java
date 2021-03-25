@@ -111,9 +111,22 @@ public class FinishInfoModelServiceImpl implements FinishInfoModelService {
     }
 
     @Override
-    public void saveEntity(FinishInfoModel finishInfoModel) {
-        finishInfoService.insert(finishInfoModel.getFinishInfoEntity());
-        this.saveOrupdateProps(finishInfoModel);
+    public Integer saveEntity(FinishInfoModel finishInfoModel) {
+        Calendar cal = Calendar.getInstance();
+        Map<String, Object> param = new HashMap<>();
+        param.put("declareId", finishInfoModel.getFinishInfoEntity().getDeclareId());
+        param.put("finishTime", cal.get(Calendar.YEAR));
+        param.put("isDel", 0);
+        int i = finishInfoService.queryCountPage(param);
+        if(i == 0){
+            finishInfoService.insert(finishInfoModel.getFinishInfoEntity());
+            this.saveOrupdateProps(finishInfoModel);
+            return 0;
+        } else {
+            return 500;
+        }
+
+
     }
 
     @Override
