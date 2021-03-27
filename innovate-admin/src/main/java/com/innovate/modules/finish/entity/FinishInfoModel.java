@@ -1,5 +1,6 @@
 package com.innovate.modules.finish.entity;
 
+import com.innovate.modules.enterprise.entity.InnovateEnterpriseAttachEntity;
 import com.innovate.modules.finish.entity.*;
 import com.innovate.modules.innovate.entity.UserPersonInfoEntity;
 import com.innovate.modules.innovate.entity.UserTeacherInfoEntity;
@@ -18,7 +19,9 @@ public class FinishInfoModel implements Serializable {
     private List<UserPersonInfoEntity> userPersonInfoEntities;
     private List<FinishTeacherEntity> finishTeacherEntities;
     private List<UserTeacherInfoEntity> finishUserTeacherInfoEntities;//教师用户
-    private List<FinishAttachEntity> finishAttachEntities;
+    private List<FinishAttachEntity> finishAttachEntities; // 附件
     private List<FinishStaffInfoEntity> finishStaffInfoEntities;
     private List<FinishReviewEntity> finishReviewEntities;
+    //删除附件
+    private List<FinishAttachEntity> delAttachLists;
 }

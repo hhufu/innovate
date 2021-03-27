@@ -72,10 +72,12 @@
       <!--独立附件start-->
       <el-form-item label="相关附件" prop="reportSalesName">
         <el-upload
+          ref="uploadF"
           class="upload-demo"
           :action="url"
           :data="{stuNum: $store.state.user.username}"
           :on-success="successHandle1"
+          :auto-upload="false"
           :on-remove="fileRemoveHandler"
           :file-list="fileList">
           <el-button size="small" type="primary">点击上传</el-button>
@@ -113,6 +115,7 @@
         fileAskContent: '无',
         delAttachLists: [], // 要删除的附件
         url: '',
+        fileNameI: 0, // 是否重名
         noEditPoint: true,
         fileList: [],
         fileIsNull: false,
@@ -391,6 +394,19 @@
           // 参与人员积分
           this.dataForm.applyIntegral = this.integral - this.integralTo
         }
+      },
+      beforeUpload(file) {
+        console.log(1)
+        let ii = 0;
+        for (var index = 0; index < this.attachLists.length; index++) {
+          if (this.attachLists[index].attachName === file.name) {
+               ii++;
+          }
+        }
+        // let fileName = file.name + (ii > 0 ? ("(" + ii + ")") : '');
+        // const copyFile = new File([file], fileName);
+        this.fileNameI = ii
+        this.$refs.uploadF.submit();
       },
       // 上传成功
       successHandle1(response, file, fileList) {

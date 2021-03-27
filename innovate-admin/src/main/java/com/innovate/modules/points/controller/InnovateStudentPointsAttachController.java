@@ -3,6 +3,7 @@ package com.innovate.modules.points.controller;
 import java.io.File;
 import java.util.*;
 
+import com.innovate.common.utils.DateUtils;
 import com.innovate.common.utils.OSSUtils;
 import com.innovate.modules.finish.entity.FinishAttachEntity;
 import com.innovate.modules.points.entity.InnovateStudentActivityEntity;
@@ -111,7 +112,8 @@ public class InnovateStudentPointsAttachController {
         InnovateStudentPointsAttachEntity pointsAttachEntity = null;
         for(MultipartFile file : files){
 
-            String fileName = file.getOriginalFilename();
+            String fileName = file.getOriginalFilename() + "(" +DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + ")";
+
 //                result = FileUtils.upLoad(UPLOAD_FILES_PATH, fileName, file);
             OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
             UPLOAD_FILES_PATH += fileName;

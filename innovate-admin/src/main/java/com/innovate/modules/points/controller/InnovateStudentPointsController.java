@@ -73,7 +73,7 @@ public class InnovateStudentPointsController {
     @RequestMapping("/save")
 //    @RequiresPermissions("points:innovatestudentpoints:save")
     public R save(@RequestBody InnovateStudentPointsEntity innovateStudentPoints){
-        //生成二维码
+        //保存积分
 		R r = innovateStudentPointsService.insertAndCheck(innovateStudentPoints);
 
         return r;

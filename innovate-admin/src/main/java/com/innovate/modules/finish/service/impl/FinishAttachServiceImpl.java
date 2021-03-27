@@ -6,9 +6,11 @@ import com.innovate.modules.enterprise.entity.InnovateEnterpriseInfoModel;
 import com.innovate.modules.enterprise.service.InnovateEnterpriseAttachService;
 import com.innovate.modules.finish.entity.FinishAttachEntity;
 import com.innovate.modules.finish.dao.FinishAttachDao;
+import com.innovate.modules.finish.entity.FinishInfoModel;
 import com.innovate.modules.finish.service.FinishAttachService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class FinishAttachServiceImpl extends ServiceImpl<FinishAttachDao, FinishAttachEntity> implements FinishAttachService {
     @Autowired
     private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
+    @Autowired
+    private FinishAttachServiceImpl finishAttachService;
 
 
     @Override
@@ -44,6 +48,20 @@ public class FinishAttachServiceImpl extends ServiceImpl<FinishAttachDao, Finish
                 if (a.getAttachId() != null) {
                     a.setIsDel(1);
                     innovateEnterpriseAttachService.updateById(a);
+                }
+            }
+
+        }
+    }
+
+    @Transactional
+    @Override
+    public void delAttachLists(FinishInfoModel finishInfoModel) {
+        if (finishInfoModel.getDelAttachLists() != null) {
+            for (FinishAttachEntity a: finishInfoModel.getDelAttachLists()) {
+                if (a.getAttachId() != null) {
+                    a.setIsDel((long) 1);
+                    finishAttachService.updateById(a);
                 }
             }
 

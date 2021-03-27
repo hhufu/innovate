@@ -37,6 +37,7 @@
               v-model="dataForm.finishYear"
               align="right"
               type="year"
+              format="yyyy"
               :editable="false"
               placeholder="请选择年度">
             </el-date-picker>
@@ -168,6 +169,7 @@
         upLoadUrl: '',
         upLoadData: {},
         fileAskContent: '无',
+        delAttachLists: [],// 要删除的文件
         fileIsNull: false,
         tables: [],
         fileList: [],
@@ -309,6 +311,7 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm = data.finishInfo.finishInfoEntity
+                this.dataForm.finishYear = new Date(this.dataForm.finishYear.toString())
                 this.teacherLists = data.finishInfo.finishTeacherEntities
                 this.personInfoList = []
                 this.attachLists = data.finishInfo.finishAttachEntities
@@ -378,7 +381,8 @@
                 'userPersonInfoEntities': this.personInfoList,
                 'finishTeacherEntities': this.teacherLists,
                 'finishAttachEntities': this.attachLists,
-                'finishStaffInfoEntities': this.staffInfoLists
+                'finishStaffInfoEntities': this.staffInfoLists,
+                'delAttachLists': this.delAttachLists
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -555,6 +559,8 @@
         for (var index = 0; index < this.attachLists.length; index++) {
           if (this.attachLists[index].attachName !== file.name) {
             tempFileList.push(this.attachLists[index])
+          } else {
+            this.delAttachLists.push(this.attachLists[index])
           }
         }
         this.attachLists = tempFileList

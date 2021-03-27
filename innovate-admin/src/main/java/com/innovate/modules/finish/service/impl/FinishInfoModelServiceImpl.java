@@ -151,6 +151,7 @@ public class FinishInfoModelServiceImpl implements FinishInfoModelService {
             finishAttachEntity.setFinishId(finishId);
             finishAttachService.insertOrUpdate(finishAttachEntity);
         }
+        finishAttachService.delAttachLists(finishInfoModel);
         for (FinishStaffInfoEntity finishStaffInfoEntity : finishInfoModel.getFinishStaffInfoEntities()) {
             finishStaffInfoEntity.setFinishId(finishId);
             finishStaffInfoService.insertOrUpdate(finishStaffInfoEntity);
