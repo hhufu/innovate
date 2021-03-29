@@ -111,4 +111,14 @@ public class MatchAttachController extends AbstractController {
         FileUtils.download(response, filePath);
     }
 
+    /**
+     * 文件下载
+     */
+    @PostMapping(value = "/downloadurl")
+    @RequiresPermissions("innovate:project:list")
+    public R downloadFileUrl(@RequestParam("filePath") String filePath) {
+
+        return R.ok().put("url", FileUtils.getUrl(filePath));
+    }
+
 }

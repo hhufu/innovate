@@ -556,49 +556,27 @@
       },
       attachDown (attach) {
         this.downloadLoading = true
-        this.downloadText = '正在下载'
-        this.$notify({
-          title: '下载提示',
-          message: '文件正在后台下载,请您稍后!',
-          duration: 0,
-          type: 'success'
-        })
-        this.$httpFile({
-          url: this.$httpFile.adornUrl(`/innovate/finish/attach/download`),
+        // this.downloadText = '正在下载'
+        // this.$notify({
+        //   title: '下载提示',
+        //   message: '文件正在后台下载,请您稍后!',
+        //   duration: 0,
+        //   type: 'success'
+        // })
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/finish/attach/downloadurl`),
           method: 'post',
-          params: this.$httpFile.adornParams({
+          params: this.$http.adornParams({
             'filePath': attach.attachPath
           })
-        }).then(response => {
-          if (!response) {
-            this.$notify({
-              title: '下载提示',
-              message: '下载失败',
-              duration: 0,
-              type: 'error'
-            })
-            this.downloadLoading = false
-            return
-          }
-          let url = window.URL.createObjectURL(new Blob([response.data]))
-          let link = document.createElement('a')
-          link.style.display = 'none'
-          link.href = url
-          link.setAttribute('download', attach.attachName)
-          document.body.appendChild(link)
-          link.click()
-          this.$notify({
-            title: '下载成功',
-            message: '后台文件下载成功',
-            duration: 0,
-            type: 'success'
-          })
-          this.downloadText = '下载'
+        }).then(({data}) => {
+          window.open(data.url)
           this.downloadLoading = false
         }).catch(err => {
-          console.log(err)
           this.downloadLoading = false
+          console.log(err)
         })
+
       },
 
       closeDialog () {

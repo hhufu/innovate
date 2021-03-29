@@ -515,29 +515,18 @@
       },
       attachDown (attach) {
         this.downloadLoading = true
-        this.$httpFile({
-          url: this.$httpFile.adornUrl(`/innovate/declare/attach/download`),
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/declare/attach/downloadurl`),
           method: 'post',
-          params: this.$httpFile.adornParams({
+          params: this.$http.adornParams({
             'filePath': attach.attachPath
-            // 'apply': 'project_base_apply_status'
           })
-        }).then(response => {
-          if (!response) {
-            this.downloadLoading = false
-            return
-          }
-          let url = window.URL.createObjectURL(new Blob([response.data]))
-          let link = document.createElement('a')
-          link.style.display = 'none'
-          link.href = url
-          link.setAttribute('download', attach.attachName)
-          document.body.appendChild(link)
-          link.click()
+        }).then(({data}) => {
+          window.open(data.url)
           this.downloadLoading = false
         }).catch(err => {
-          console.log(err)
           this.downloadLoading = false
+          console.log(err)
         })
       },
       closeDialog () {

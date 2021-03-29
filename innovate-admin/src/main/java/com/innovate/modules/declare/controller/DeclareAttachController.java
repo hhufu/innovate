@@ -79,4 +79,14 @@ public class DeclareAttachController extends AbstractController {
         FileUtils.download(response, filePath);
     }
 
+
+    /**
+     * 文件下载
+     */
+    @PostMapping(value = "/downloadurl")
+    @RequiresPermissions("innovate:declare:list")
+    public R downloadFileUrl(@RequestParam("filePath") String filePath) {
+
+        return R.ok().put("url", FileUtils.getUrl(filePath));
+    }
 }

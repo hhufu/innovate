@@ -1,5 +1,7 @@
 package com.innovate.modules.util;
 
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.innovate.common.utils.OSSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,13 +9,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class FileUtils {
 
+    private static String endpoint = "oss-cn-shenzhen.aliyuncs.com";
+
+    private static String accessKeyId = "LTAI0X8ssJ8ezs4C";
+
+    private static String accessKeySecret = "BMbWYHeCOaF8BMCXcgCY2c2TwyPHEs";
+
+    private static String bucketName = "innovate-admin";
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -39,6 +50,24 @@ public class FileUtils {
             }
             file.delete();
         }
+    }
+
+    /**
+     * 使用外网访问私有oss文件下载签名
+     * @param
+     * @return
+     */
+    public static String getUrl(String key){
+
+        OSSClient ossClient = new OSSClient(endpoint, accessKeyId,
+                accessKeySecret);
+        // 设置URL过期时间为10分钟
+        Date expiration = new Date(new Date().getTime() + 600 * 1000);
+        GeneratePresignedUrlRequest generatePresignedUrlRequest ;
+        generatePresignedUrlRequest =new GeneratePresignedUrlRequest(bucketName, key);
+        generatePresignedUrlRequest.setExpiration(expiration);
+        URL url = ossClient.generatePresignedUrl(generatePresignedUrlRequest);
+        return url.toString();
     }
 
     /**

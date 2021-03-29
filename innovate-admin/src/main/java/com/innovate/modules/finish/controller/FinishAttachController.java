@@ -75,10 +75,20 @@ public class FinishAttachController extends AbstractController {
      * 文件下载
      */
     @PostMapping(value = "/download")
-    @RequiresPermissions("innovate:project:list")
+    @RequiresPermissions("innovate:finish:list")
     public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
         String filePath = request.getParameter("filePath");
         FileUtils.download(response, filePath);
+    }
+
+    /**
+     * 文件下载
+     */
+    @PostMapping(value = "/downloadurl")
+    @RequiresPermissions("innovate:finish:list")
+    public R downloadFileUrl(@RequestParam("filePath") String filePath) {
+
+        return R.ok().put("url", FileUtils.getUrl(filePath));
     }
 
 }

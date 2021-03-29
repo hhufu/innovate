@@ -297,10 +297,10 @@
         </tr>
         <!--补助类型：1投资，2管理服务，3房租和宽带，4水电费，5一次性创业，6吸纳困难群体，7社会保险，8创业担保贷款-->
         <template>
-          <tr v-for="item in attachList"
+          <tr v-for="(item,index) in attachList"
               align="center">
             <td colspan="7" v-text="item.attachName"></td>
-            <td colspan="3"><el-button @click="attachDown(item)">下载</el-button></td>
+            <td colspan="3"><el-button @click="attachDown(item, index)" :loading="down[index]">下载</el-button></td>
           </tr>
         </template>
         <tr align='center'>
@@ -358,10 +358,12 @@
 </template>
 
 <script>
+
   export default {
     data () {
       return {
         visible: false,
+        down: [],
         dataListLoading: false,
         matchInfo: {},
         instituteList: this.$store.state.user.institute,
@@ -508,28 +510,20 @@
           console.log(err)
         })
       },
-      attachDown (attach) {
-        this.$httpFile({
-          url: this.$httpFile.adornUrl(`/innovate/match/attach/download`),
+      attachDown (attach, i) {
+
+        this.$http({
+          url: this.$http.adornUrl(`/innovate/match/attach/downloadurl`),
           method: 'post',
-          params: this.$httpFile.adornParams({
+          params: this.$http.adornParams({
             'filePath': attach.attachPath
           })
-        }).then(response => {
-          if (!response) {
-            return
-          }
-          let url = window.URL.createObjectURL(new Blob([response.data]))
-          let link = document.createElement('a')
-          link.style.display = 'none'
-          link.href = url
-          link.setAttribute('download', attach.attachName)
-          document.body.appendChild(link)
-          link.click()
-          link.remove()
+        }).then(({data}) => {
+          window.open(data.url)
         }).catch(err => {
           console.log(err)
         })
+
       },
 
       closeDialog () {
