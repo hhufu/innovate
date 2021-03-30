@@ -20,6 +20,7 @@ public class DeclareInfoModel implements Serializable {
     private List<DeclareTeacherEntity> declareTeacherEntities;//教师
     private List<UserTeacherInfoEntity> declareUserTeacherInfoEntities;//教师用户
     private List<DeclareAttachEntity> declareAttachEntities;//附件
+    private List<DeclareAttachEntity> delAttachLists;//删除附件
     private List<DeclareStaffInfoEntity> declareStaffInfoEntities;//员工
     private List<DeclareReviewEntity> declareReviewEntities;//回退
     private List<DeclareAwardEntity> declareAwardEntities;//获奖

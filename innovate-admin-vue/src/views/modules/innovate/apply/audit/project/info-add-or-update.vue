@@ -111,7 +111,7 @@
           <!--</el-form-item>-->
         </el-col>
         <el-col :span="24">
-          <el-form-item label="项目参与者信息" prop="staffInfoLists">
+          <el-form-item label="项目参与者信息(不包括项目负责人)" prop="staffInfoLists">
             <el-button size="mini"
                        v-if="addVisible(staffInfoLists)" type="primary" plain @click="addStaff()">添加</el-button>
             <template v-for="(item,index) in staffInfoLists" v-if="item.isDel !== 1">
@@ -144,10 +144,12 @@
         <el-form-item label="提交申报书">
           <el-upload
             class="upload-demo"
-            :action="url"
+            ref="upload"
+            action="#"
             :data="{declareName: dataForm.declareName}"
             :on-remove="removeFileHandle"
-            :on-success="successHandle1"
+            :on-change="upLoadSubmit"
+            :auto-upload="false"
             :file-list="fileList">
             <el-button size="small" icon="el-icon-upload" type="primary">点击上传</el-button>
           </el-upload>
@@ -234,6 +236,7 @@
 <script>
   import TeacherAddOrUpdate from './teacher-add-or-update'
   import StaffAddOrUpdate from './staff-add-or-update'
+  import {http} from "../../../../../../utils/httpRequest";
 
   class DeclareAttachment {
     constructor (file) {
@@ -288,6 +291,7 @@
         upLoadUrl: '',
         upLoadData: {},
         fileAskContent: '无',
+        delAttachLists: [],// 要删除的文件
         tables: [],
         fileList: [],
         teacherLists: [],
@@ -482,7 +486,8 @@
                   'declareTeacherEntities': this.teacherLists,
                   'declareAttachEntities': this.attachLists,
                   'declareStaffInfoEntities': this.staffInfoLists,
-                  'declareAwardEntities': this.awardInfoLists
+                  'declareAwardEntities': this.awardInfoLists,
+                  'delAttachLists': this.delAttachLists
                 })
               }).then(({data}) => {
                 if (data && data.code === 0) {
@@ -635,30 +640,57 @@
           this.staffInfoLists.push(data)
         }
       },
+      // 文件上传
+      upLoadSubmit (file, fileList) {
+        this.$message({
+          showClose: true,
+          message: '文件正在上传请勿操作...',
+          type: 'warning'
+        });
+        let that = this
+        const formData = new FormData()
+        let filename = this.upLoadFileName(file.raw, fileList)
+        const copyFile = new File([file.raw], filename)
+        formData.append('file', copyFile)
+        formData.append('declareName', this.dataForm.declareName)
+        let url = this.$http.adornUrl(`/innovate/declare/attach/upload?token=${this.$cookie.get('token')}`)
+        that.$httpFile2.post(url, formData).then(response => {
+          if (response && response.data.code === 0) {
+            that.$refs.upload.submit()
+            that.attachLists.push(response.data.declareAttachEntity)
+            that.fileinit()
+            that.$message({
+              showClose: true,
+              message: '文件上传成功',
+              type: 'success'
+            });
+          } else {
+            that.$message.error(response.data.msg)
+          }
+        })
+      },
+      // 文件名处理
+      upLoadFileName (file, fileList) {
+        let filename = file.name
+        let finishFileName = file.name
+        let i = 0 // 文件重名次数
+        fileList.forEach((item) => {
+          if (filename === item.name) {
+            i++
+            let ii = finishFileName.lastIndexOf('.')
+            filename = finishFileName.substring(0, ii) + '(' + i + ')' + finishFileName.substring(ii, filename.length)
+          }
+          fileList.forEach((item) => {
+            if (filename === item.name) {
+              i++
+              let ii = finishFileName.lastIndexOf('.')
+              filename = finishFileName.substring(0, ii) + '(' + i + ')' + finishFileName.substring(ii, filename.length)
+            }
+          })
+        })
+        return filename
+      },
 
-      upLoadSubmit () {
-        this.$refs.upLoadFiles.submit()
-      },
-      upLoadChange () {
-        this.upLoadData = {
-          'declareName': this.dataForm.declareName,
-          'token': this.$cookie.get('token')
-        }
-        this.upLoadUrl = this.$http.adornUrl(`/innovate/declare/attach/upload`)
-      },
-      upLoadRemove (file, fileList) {
-        console.log(file, fileList)
-      },
-      upLoadPreview (file) {
-        console.log(file)
-      },
-      upLoadSuccess (data) {
-        if (data && data.code === 0) {
-          this.attachLists.push(data.declareAttachEntity)
-        } else {
-          this.$message.error(data.msg)
-        }
-      },
       closeDialog () {
         this.visible = false
         this.$emit('refreshDataList')
@@ -670,17 +702,20 @@
         for (var index = 0; index < this.attachLists.length; index++) {
           if (this.attachLists[index].attachName !== file.name) {
             tempFileList.push(this.attachLists[index])
+          } else {
+            this.delAttachLists.push(this.attachLists[index])
           }
         }
         this.attachLists = tempFileList
+        this.fileinit()
       },
-      // 上传成功
-      successHandle1 (response, file, fileList) {
-        if (response && response.code === 0) {
-          this.attachLists.push(response.declareAttachEntity)
-        } else {
-          this.$message.error(response.msg)
+      // 附件列表重置
+      fileinit(){
+        let tempDeclareAtta = []
+        for (var i = 0; i < this.attachLists.length; i++) {
+          tempDeclareAtta.push(new DeclareAttachment(this.attachLists[i]))
         }
+        this.fileList = tempDeclareAtta
       }
     }
   }

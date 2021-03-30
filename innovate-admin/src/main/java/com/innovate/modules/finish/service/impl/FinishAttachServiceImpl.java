@@ -28,7 +28,7 @@ public class FinishAttachServiceImpl extends ServiceImpl<FinishAttachDao, Finish
     @Autowired
     private InnovateEnterpriseAttachService innovateEnterpriseAttachService;
     @Autowired
-    private FinishAttachServiceImpl finishAttachService;
+    private FinishAttachService finishAttachService;
 
 
     @Override

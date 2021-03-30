@@ -3,7 +3,11 @@ package com.innovate.modules.declare.service.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.innovate.modules.declare.dao.DeclareAttachDao;
 import com.innovate.modules.declare.entity.DeclareAttachEntity;
+import com.innovate.modules.declare.entity.DeclareInfoModel;
 import com.innovate.modules.declare.service.DeclareAttachService;
+import com.innovate.modules.finish.entity.FinishAttachEntity;
+import com.innovate.modules.finish.entity.FinishInfoModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +23,10 @@ import java.util.Map;
  */
 @Service
 public class DeclareAttachServiceImpl extends ServiceImpl<DeclareAttachDao, DeclareAttachEntity> implements DeclareAttachService {
+
+    @Autowired
+    private DeclareAttachService declareAttachService;
+
     @Override
     public List<DeclareAttachEntity> queryAll(Map<String, Object> params) {
         return baseMapper.queryAll(params);
@@ -27,5 +35,18 @@ public class DeclareAttachServiceImpl extends ServiceImpl<DeclareAttachDao, Decl
     @Override
     public void remove(Map<String, Object> params) {
         baseMapper.remove(params);
+    }
+
+    @Override
+    public void delAttachLists(DeclareInfoModel declareInfoModel) {
+        if (declareInfoModel.getDelAttachLists() != null) {
+            for (DeclareAttachEntity a: declareInfoModel.getDelAttachLists()) {
+                if (a.getAttachId() != null) {
+                    a.setIsDel((long) 1);
+                    declareAttachService.updateById(a);
+                }
+            }
+
+        }
     }
 }

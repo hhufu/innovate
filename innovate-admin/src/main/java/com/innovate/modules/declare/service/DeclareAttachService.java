@@ -2,6 +2,7 @@ package com.innovate.modules.declare.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.innovate.modules.declare.entity.DeclareAttachEntity;
+import com.innovate.modules.declare.entity.DeclareInfoModel;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,5 @@ public interface DeclareAttachService extends IService<DeclareAttachEntity> {
 
     void remove(Map<String, Object> params);
 
+    void delAttachLists(DeclareInfoModel declareInfoModel);
 }

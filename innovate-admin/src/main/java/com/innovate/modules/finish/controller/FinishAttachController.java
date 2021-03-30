@@ -58,7 +58,7 @@ public class FinishAttachController extends AbstractController {
         FinishAttachEntity finishAttachEntity = null;
         for(MultipartFile file : files){
 
-            String fileName = System.currentTimeMillis()/1000 + "-" + file.getOriginalFilename();
+            String fileName = file.getOriginalFilename();
 //                result = FileUtils.upLoad(UPLOAD_FILES_PATH, fileName, file);
             OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
             UPLOAD_FILES_PATH += fileName;

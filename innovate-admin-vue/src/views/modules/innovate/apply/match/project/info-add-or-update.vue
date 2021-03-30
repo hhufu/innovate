@@ -147,16 +147,12 @@
         <el-col :span="24">
           <el-form-item label="文件上传">
             <el-upload
-              multiple
-              ref="upLoadFiles"
-              list-type="card"
-              :data="upLoadData"
-              :action="url"
-              :on-preview="upLoadPreview"
-              :on-remove="upLoadRemove"
-              :on-success="upLoadSuccess"
-              :on-change="upLoadChange"
-              :beforeUpload="beforeAvatarUpload"
+              ref="upload"
+              :data="{matchName : dataForm.matchName}"
+              action="#"
+              :on-remove="removeFileHandle"
+              :on-change="upLoadSubmit"
+              :auto-upload="false"
               :file-list="fileList">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
               <!--<el-button style="margin-left: 10px;" size="small" type="success" @click="upLoadSubmit">添加到附件上传列表</el-button>-->
@@ -231,6 +227,7 @@
         tempAttachLists: [],
         awardLists: [],
         staffInfoLists: [],
+        delAttachLists: [], // 删除附件
         eventLists: [],
         addLoading: false,
         dataListLoading: false,
@@ -456,7 +453,8 @@
                 'matchTeacherEntities': this.teacherLists,
                 'matchAttachEntities': this.attachLists,
                 'matchStaffInfoEntities': this.staffInfoLists,
-                'matchAwardEntities': this.awardLists
+                'matchAwardEntities': this.awardLists,
+                'delAttachLists': this.delAttachLists
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -580,68 +578,81 @@
           this.staffInfoLists.push(data)
         }
       },
-      upLoadSubmit() {
-        this.$refs.upLoadFiles.submit()
+      // 文件上传
+      upLoadSubmit (file, fileList) {
+        this.$message({
+          showClose: true,
+          message: '文件正在上传请勿操作...',
+          type: 'warning'
+        });
+        let that = this
+        const formData = new FormData()
+        let filename = this.upLoadFileName(file.raw, fileList)
+        const copyFile = new File([file.raw], filename)
+        formData.append('file', copyFile)
+        formData.append('matchName', this.dataForm.matchName)
+        let url = this.$http.adornUrl(`/innovate/match/attach/upload?token=${this.$cookie.get('token')}`)
+        that.$httpFile2.post(url, formData).then(response => {
+          if (response && response.data.code === 0) {
+            that.$refs.upload.submit()
+            that.attachLists.push(response.data.matchAttachEntity)
+            that.fileinit()
+            that.$message({
+              showClose: true,
+              message: '文件上传成功',
+              type: 'success'
+            });
+          } else {
+            that.$message.error(response.data.msg)
+          }
+        })
       },
-      upLoadChange() {
-        this.upLoadData = {
-          'matchName': this.dataForm.matchName,
-          'token': this.$cookie.get('token')
-        }
-        this.upLoadUrl = this.$http.adornUrl(`/innovate/match/attach/upload`)
-      },
-      // 移除文件
-      upLoadRemove(file, fileList) {
-        let tempFileList = []
-        for (var index = 0; index < fileList.length; index++) {
-          tempFileList.push(fileList[index].file)
-        }
-        this.fileList = fileList
-        if (this.dataForm.matchId === 0) { // 新增
-          this.deleteFileHandle(file)
-        } else {
-          this.attachLists = tempFileList // 修改
-        }
-        this.$message.success('已移除')
-      },
-      upLoadPreview(file) {
-        console.log(file)
-      },
-      // 上传成功
-      upLoadSuccess(data) {
-        if (data && data.code === 0) {
-          this.attachLists.push(data.matchAttachEntity)
-          this.tempAttachLists = this.attachLists // 临时存放
-        } else {
-          this.$message.error(data.msg)
-        }
-      },
-      beforeAvatarUpload(file) {
-        // 756907362
-        const isLt2M = file.size / 1000000 < 100
-        if (!isLt2M) {
-          this.$message({
-            message: '上传文件大小不能超过 100MB',
-            type: 'warning',
-            duration: 1500
+      // 文件名处理
+      upLoadFileName (file, fileList) {
+        let filename = file.name
+        let matchFileName = file.name
+        let i = 0 // 文件重名次数
+        this.fileList.forEach((item) => {
+          if (filename === item.name) {
+            i++
+            let ii = matchFileName.lastIndexOf('.')
+            filename = matchFileName.substring(0, ii) + '(' + i + ')' + matchFileName.substring(ii, filename.length)
+          }
+          fileList.forEach((item) => {
+            if (filename === item.name) {
+              i++
+              let ii = matchFileName.lastIndexOf('.')
+              filename = matchFileName.substring(0, ii) + '(' + i + ')' + matchFileName.substring(ii, filename.length)
+            }
           })
+        })
+        return filename
+      },
+      // 文件移除
+      removeFileHandle (file, fileList) {
+        // 移除attachList中的附件
+        let tempFileList = []
+        for (var index = 0; index < this.attachLists.length; index++) {
+          if (this.attachLists[index].attachName !== file.name) {
+            tempFileList.push(this.attachLists[index])
+          } else {
+            this.delAttachLists.push(this.attachLists[index])
+          }
         }
-        return isLt2M
+        this.attachLists = tempFileList
+        this.fileinit()
+      },
+      // 附件列表重置
+      fileinit(){
+        let tempDeclareAtta = []
+        for (var i = 0; i < this.attachLists.length; i++) {
+          tempDeclareAtta.push(new MatchAttachment(this.attachLists[i]))
+        }
+        this.fileList = tempDeclareAtta
       },
       closeDialog() {
         this.visible = false
         this.$emit('refreshDataList')
-      },
-      deleteFileHandle(file) {
-        var temp = []
-        for (var index = 0; index < this.tempAttachLists.length; index++) {
-          if (this.tempAttachLists[index].attachName === file.name) {
-            continue
-          }
-          temp.push(this.tempAttachLists[index])
-        }
-        this.tempAttachLists = temp
-        this.attachLists = temp
       },
       fileAskContentHandler(event) {
         this.fileAskContent = this.eventLists[event - 1].fileAskContent

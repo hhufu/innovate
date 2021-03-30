@@ -106,10 +106,12 @@
           <el-form-item label="相关附件" prop="reportSalesName">
             <el-upload
               class="upload-demo"
-              :action="url"
+              ref="upload"
+              action="#"
               :data="{finishName: dataForm.finishName}"
-              :on-success="successHandle1"
               :on-remove="fileRemoveHandler"
+              :on-change="upLoadSubmit"
+              :auto-upload="false"
               :file-list="fileList">
               <el-button size="small" type="primary">点击上传</el-button>
               <span v-if="fileIsNull" style="color: crimson">*请上传相关附件</span>
@@ -397,6 +399,7 @@
                 })
               } else {
                 this.$message.error(data.msg)
+                this.addLoading = false
               }
             })
           }
@@ -540,19 +543,70 @@
       //   }
       // },
 
+      // 文件上传
+      upLoadSubmit (file, fileList) {
+        this.$message({
+          showClose: true,
+          message: '文件正在上传请勿操作...',
+          type: 'warning'
+        });
+        let that = this
+        const formData = new FormData()
+        let filename = this.upLoadFileName(file.raw, fileList)
+        const copyFile = new File([file.raw], filename)
+        formData.append('file', copyFile)
+        formData.append('finishName', this.dataForm.finishName)
+        let url = this.$http.adornUrl(`/innovate/finish/attach/upload?token=${this.$cookie.get('token')}`)
+        that.$httpFile2.post(url, formData).then(response => {
+          if (response && response.data.code === 0) {
+            that.$refs.upload.submit()
+            that.attachLists.push(response.data.finishAttachEntity)
+            that.fileinit()
+            that.$message({
+              showClose: true,
+              message: '文件上传成功',
+              type: 'success'
+            });
+          } else {
+            that.$message.error(response.data.msg)
+          }
+        })
+      },
+      // 文件名处理
+      upLoadFileName (file, fileList) {
+        let filename = file.name
+        let finishFileName = file.name
+        let i = 0 // 文件重名次数
+        this.fileList.forEach((item) => {
+          if (filename === item.name) {
+            i++
+            let ii = finishFileName.lastIndexOf('.')
+            filename = finishFileName.substring(0, ii) + '(' + i + ')' + finishFileName.substring(ii, filename.length)
+          }
+          fileList.forEach((item) => {
+            if (filename === item.name) {
+              i++
+              let ii = finishFileName.lastIndexOf('.')
+              filename = finishFileName.substring(0, ii) + '(' + i + ')' + finishFileName.substring(ii, filename.length)
+            }
+          })
+        })
+        return filename
+      },
+
       closeDialog () {
         this.visible = false
         this.$emit('refreshDataList')
       },
-      // 上传成功
-      successHandle1 (response, file, fileList) {
-        if (response && response.code === 0) {
-          this.attachLists.push(response.finishAttachEntity)
-          this.fileIsNull = false
-        } else {
-          this.$message.error(response.msg)
+      // 附件列表重置
+      fileinit(){
+        let tempDeclareAtta = []
+        for (var i = 0; i < this.attachLists.length; i++) {
+          tempDeclareAtta.push(new FinishAttachment(this.attachLists[i]))
         }
+        this.fileList = tempDeclareAtta
       },
+      // 文件移除
       fileRemoveHandler (file, fileList) {
         // 移除attachList中的附件
         let tempFileList = []
@@ -564,6 +618,7 @@
           }
         }
         this.attachLists = tempFileList
+        this.fileinit()
       }
     }
   }

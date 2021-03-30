@@ -193,6 +193,7 @@ public class DeclareInfoModelServiceImpl implements DeclareInfoModelService {
             declareStaffInfoEntity.setDeclareId(declareId);
             declareStaffInfoService.insertOrUpdate(declareStaffInfoEntity);
         }
+        declareAttachService.delAttachLists(declareInfoModel);
         for (DeclareAwardEntity declareAwardEntity : declareInfoModel.getDeclareAwardEntities()) {
             declareAwardEntity.setDeclareId(declareId);
             declareAwardService.insertOrUpdate(declareAwardEntity);
