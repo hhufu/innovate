@@ -48,4 +48,5 @@ public interface DeclareReviewService extends IService<DeclareReviewEntity> {
      * 查询未评分评委信息
      */
     List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params);
+
 }

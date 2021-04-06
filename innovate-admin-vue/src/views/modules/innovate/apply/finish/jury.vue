@@ -128,7 +128,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:finish:list')" type="text" size="small" @click="detailHandle(scope.row.finishInfoEntity.finishId)">详情</el-button>
-          <el-button v-if="applyIsVisible(scope.row.finishInfoEntity) && !isAuth('innovate:finish:juryPerson')" type="text" size="small" @click="applyHandle(scope.row.finishInfoEntity.finishId)">评分</el-button>
+          <el-button v-if="applyIsVisible(scope.row.finishInfoEntity) && !isAuth('innovate:finish:juryPerson')" type="text" size="small" @click="applyHandle(scope.row.finishInfoEntity.finishId, scope.row.finishInfoEntity)">评分</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -323,10 +323,10 @@
         })
       },
       // 审批
-      applyHandle (id) {
+      applyHandle (id, e) {
         this.scoreVisible = true
         this.$nextTick(() => {
-          this.$refs.score.init(id)
+          this.$refs.score.init(id, e)
         })
       }
     }

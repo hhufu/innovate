@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.modules.innovate.entity.InnovateDeclarationProcessSettingEntity;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -22,5 +23,7 @@ public interface InnovateDeclarationProcessSettingService extends IService<Innov
     int queryStartTime(Map<String, Object> params);
 
     int queryEndTime(Map<String, Object> params);
+
+    InnovateDeclarationProcessSettingEntity selectByTime(Map<String, Object> params);
 }
 

@@ -48,5 +48,13 @@ public class InnovateDeclarationProcessSettingEntity implements Serializable {
 	 * 备注
 	 */
 	private String remark;
+	/**
+	 * 评分细则名称
+	 */
+	private String attachName;
+	/**
+	 * 评分细则路径
+	 */
+	private String attachPath;
 
 }

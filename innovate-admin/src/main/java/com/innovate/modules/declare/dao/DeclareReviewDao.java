@@ -36,4 +36,6 @@ public interface DeclareReviewDao extends BaseMapper<DeclareReviewEntity> {
      * 查询未评分评委信息
      */
     List<MatchUnScoreTeacherEntity> queryTeacher(Map<String, Object> params);
+
+    DeclareReviewEntity selectByTime(Map<String, Object> params);
 }

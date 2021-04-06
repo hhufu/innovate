@@ -10,6 +10,8 @@
         <result property="startTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
         <result property="remark" column="remark"/>
+        <result property="attachName" column="attach_name"/>
+        <result property="attachPath" column="attach_path"/>
     </resultMap>
 
     <select id="queryCount" parameterType="map" resultType="int">
@@ -27,6 +29,12 @@
         select count(*) from innovate_declaration_process_setting
         where declare_process_name = #{declareProcessName}
         and UNIX_TIMESTAMP(NOW()) &gt; UNIX_TIMESTAMP(end_time)
+    </select>
+
+    <select id="selectByTime" parameterType="map" resultMap="innovateDeclarationProcessSettingMap">
+        select * from innovate_declaration_process_setting
+        where declare_process_name = #{declareProcessName}
+        and #{time} between start_time and end_time
     </select>
 
 </mapper>

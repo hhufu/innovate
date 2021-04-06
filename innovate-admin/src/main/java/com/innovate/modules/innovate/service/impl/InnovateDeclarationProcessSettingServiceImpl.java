@@ -1,6 +1,8 @@
 package com.innovate.modules.innovate.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -42,6 +44,11 @@ public class InnovateDeclarationProcessSettingServiceImpl extends ServiceImpl<In
     @Override
     public int queryEndTime(Map<String, Object> params) {
         return baseMapper.queryEndTime(params);
+    }
+
+    @Override
+    public InnovateDeclarationProcessSettingEntity selectByTime(Map<String, Object> params) {
+        return baseMapper.selectByTime(params);
     }
 
 }

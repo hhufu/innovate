@@ -116,7 +116,7 @@ public class FinishReviewServiceImpl extends ServiceImpl<FinishReviewDao, Finish
         List<InnovateReviewGroupUserEntity> innovateReviewGroupUserEntities = innovateReviewGroupUserService.queryAllGroupUser(groupId);
         finishReviewService.remove(params);
         FinishReviewEntity finishReviewEntity = null;
-        Set<FinishReviewEntity> tempSet = new HashSet<FinishReviewEntity>();
+        List<FinishReviewEntity> tempSet = new ArrayList<>();
         for (int index = 0; index < innovateReviewGroupUserEntities.size(); index++) {
             for (int indexJ = 0; indexJ < finishTeacherEntities.size(); indexJ++) {
                 if (innovateReviewGroupUserEntities.get(index).getUserId() != finishTeacherEntities.get(indexJ).getUserId()) {
@@ -131,7 +131,7 @@ public class FinishReviewServiceImpl extends ServiceImpl<FinishReviewDao, Finish
                 }
             }
         }
-        baseMapper.insertBatch(new ArrayList(tempSet));
+        baseMapper.insertBatch(tempSet);
         if (reApply.equals("false")) {
             //更新状态
             finishApplyService.apply(params);

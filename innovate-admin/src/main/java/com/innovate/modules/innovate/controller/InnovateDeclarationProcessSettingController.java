@@ -1,23 +1,21 @@
 package com.innovate.modules.innovate.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.innovate.modules.profess.entity.InnovateProfessAchieveEntity;
+import com.innovate.common.utils.OSSUtils;
+import com.innovate.modules.util.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.innovate.modules.innovate.entity.InnovateDeclarationProcessSettingEntity;
 import com.innovate.modules.innovate.service.InnovateDeclarationProcessSettingService;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -77,6 +75,16 @@ public class InnovateDeclarationProcessSettingController {
     }
 
     /**
+     * 查询
+     */
+    @RequestMapping("/queryByTime")
+    public R info(@RequestParam Map<String, Object> params){
+		InnovateDeclarationProcessSettingEntity declarationProcessSetting = innovateDeclarationProcessSettingService.selectByTime(params);
+
+        return R.ok().put("declarationProcessSetting", declarationProcessSetting);
+    }
+
+    /**
      * 保存
      */
     @RequestMapping("/save")
@@ -107,6 +115,36 @@ public class InnovateDeclarationProcessSettingController {
 		innovateDeclarationProcessSettingService.deleteBatchIds(Arrays.asList(dpsIds));
 
         return R.ok();
+    }
+
+    /**
+     * 文件上传
+     * @param files
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/upload")
+    @RequiresPermissions("innovate:innovatedeclarationprocesssetting:save")
+    public Object uploadFile(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
+        String declareProcessName = request.getParameter("declareProcessName");
+        if (declareProcessName==null||declareProcessName.equals(""))declareProcessName="declareProcessNameISNull";
+//        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + matchName + "/" + RandomUtils.getRandomNums() + "/";
+        String UPLOAD_FILES_PATH = "declareProcessName"+ File.separator + Calendar.getInstance().get(Calendar.YEAR) + File.separator+ File.separator + declareProcessName + "/" + RandomUtils.getRandomNums() + "/";
+        if (Objects.isNull(files) || files.isEmpty()) {
+            return R.error("文件为空，请重新上传");
+        }
+        InnovateDeclarationProcessSettingEntity innovateDeclarationProcessSetting = null;
+        for(MultipartFile file : files){
+            String fileName = file.getOriginalFilename();
+//                result = FileUtils.upLoad(UPLOAD_FILES_PATH, fileName, file);
+            OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
+            UPLOAD_FILES_PATH += fileName;
+            innovateDeclarationProcessSetting = new InnovateDeclarationProcessSettingEntity();
+            innovateDeclarationProcessSetting.setAttachPath(UPLOAD_FILES_PATH);
+            innovateDeclarationProcessSetting.setAttachName(fileName);
+        }
+        return R.ok("文件上传成功")
+                .put("innovateDeclarationProcessSetting", innovateDeclarationProcessSetting);
     }
 
 }

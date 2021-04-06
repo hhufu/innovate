@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增申报流程' : '修改申报流程'"
+    :title="!dataForm.dpsId ? '新增申报流程' : '修改申报流程'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="150px">
@@ -29,6 +29,22 @@
     <el-form-item label="备注" prop="">
       <el-input v-model="dataForm.remark" type="textarea" placeholder="备注"></el-input>
     </el-form-item>
+      <el-col :span="24">
+        <el-form-item label="评分规则" prop="reportSalesName">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            :action="url"
+            :data="{declareProcessName: dataForm.declareProcessName}"
+            :on-success="successHandle"
+            :on-remove="fileRemoveHandler"
+            :on-exceed="fileExceed"
+            :limit="1"
+            :file-list="fileList">
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-col>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -38,17 +54,31 @@
 </template>
 
 <script>
+
+class DpsAttachment {
+  // innovateDeclarationProcessSetting
+  constructor (file) {
+    this.name = file.attachName
+    this.url = file.attachPath
+    this.file = file
+  }
+}
+
   export default {
     data () {
       return {
+        url: '',
         visible: false,
+        fileList: [],
         dataForm: {
           dpsId: 0,
-          declareProcessName: '',
+          declareProcessName: 1,
           startTime: '',
           endTime: '',
           remark: '',
-          dateTimeRange: []
+          dateTimeRange: [],
+          attachName: '',
+          attachPath: '',
         },
         dataRule: {
           declareProcessName: [
@@ -75,10 +105,12 @@
     },
     methods: {
       init (id) {
+        this.url = this.$http.adornUrl(`/innovate/innovatedeclarationprocesssetting/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.dpsId = id || 0
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
+          this.$refs.upload.clearFiles()
           if (this.dataForm.dpsId) {
             this.$http({
               url: this.$http.adornUrl(`/innovate/innovatedeclarationprocesssetting/info/${this.dataForm.dpsId}`),
@@ -91,6 +123,11 @@
                 this.dataForm.endTime = data.innovateDeclarationProcessSetting.endTime
                 this.dataForm.remark = data.innovateDeclarationProcessSetting.remark
                 this.dataForm.dateTimeRange = [this.dataForm.startTime, this.dataForm.endTime]
+                if (data.innovateDeclarationProcessSetting.attachName !== null) {
+                  var tempFile = []
+                  tempFile.push(new DpsAttachment(data.innovateDeclarationProcessSetting))
+                  this.fileList = tempFile
+                }
               }
             })
           }
@@ -99,6 +136,11 @@
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
+          this.dataForm.dpsId = this.id || undefined
+          if (this.dataForm.attachPath === '' || this.dataForm.attachName === '') {
+            this.$message.error('请上传评分规则')
+            return
+          }
           if (valid) {
             this.$http({
               url: this.$http.adornUrl(`/innovate/innovatedeclarationprocesssetting/${!this.dataForm.dpsId ? 'save' : 'update'}`),
@@ -108,7 +150,9 @@
                 'declareProcessName': this.dataForm.declareProcessName,
                 'startTime': this.dataForm.dateTimeRange[0],
                 'endTime': this.dataForm.dateTimeRange[1],
-                'remark': this.dataForm.remark
+                'remark': this.dataForm.remark,
+                'attachName': this.dataForm.attachName,
+                'attachPath': this.dataForm.attachPath,
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -127,6 +171,22 @@
             })
           }
         })
+      },
+      // 上传成功
+      successHandle (response, file, fileList) {
+        if (response && response.code === 0) {
+          this.dataForm.attachName = response.innovateDeclarationProcessSetting.attachName
+          this.dataForm.attachPath = response.innovateDeclarationProcessSetting.attachPath
+        } else {
+          this.$message.error(response.msg)
+        }
+      },
+      fileRemoveHandler (file, fileList) {
+        this.dataForm.attachName = ''
+        this.dataForm.attachPath = ''
+      },
+      fileExceed (files, fileList) {
+        this.$message.error('文件超出个数限制')
       }
     }
   }

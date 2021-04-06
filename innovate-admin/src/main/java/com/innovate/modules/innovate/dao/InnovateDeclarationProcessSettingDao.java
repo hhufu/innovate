@@ -4,6 +4,7 @@ import com.innovate.modules.innovate.entity.InnovateDeclarationProcessSettingEnt
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -21,4 +22,6 @@ public interface InnovateDeclarationProcessSettingDao extends BaseMapper<Innovat
     int queryStartTime(Map<String, Object> params);
 
     int queryEndTime(Map<String, Object> params);
+
+    InnovateDeclarationProcessSettingEntity selectByTime(Map<String, Object> params);
 }

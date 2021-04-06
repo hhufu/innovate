@@ -4,6 +4,7 @@ import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
 import com.innovate.modules.declare.entity.DeclareReviewEntity;
 import com.innovate.modules.declare.service.DeclareReviewService;
+import com.innovate.modules.innovate.entity.InnovateDeclarationProcessSettingEntity;
 import com.innovate.modules.match.entity.MatchUnScoreTeacherEntity;
 import com.innovate.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -83,5 +84,6 @@ public class DeclareReviewController extends AbstractController {
         declareReviewService.updateAllColumnById(declareReviewEntity);
         return R.ok();
     }
+
 
 }
