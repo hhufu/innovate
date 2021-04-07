@@ -674,13 +674,13 @@
         let filename = file.name
         let finishFileName = file.name
         let i = 0 // 文件重名次数
-        fileList.forEach((item) => {
+        this.fileList.forEach((item) => {
           if (filename === item.name) {
             i++
             let ii = finishFileName.lastIndexOf('.')
             filename = finishFileName.substring(0, ii) + '(' + i + ')' + finishFileName.substring(ii, filename.length)
           }
-          fileList.forEach((item) => {
+          this.fileList.forEach((item) => {
             if (filename === item.name) {
               i++
               let ii = finishFileName.lastIndexOf('.')

@@ -583,7 +583,7 @@
             let ii = finishFileName.lastIndexOf('.')
             filename = finishFileName.substring(0, ii) + '(' + i + ')' + finishFileName.substring(ii, filename.length)
           }
-          fileList.forEach((item) => {
+          this.fileList.forEach((item) => {
             if (filename === item.name) {
               i++
               let ii = finishFileName.lastIndexOf('.')
