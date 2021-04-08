@@ -10,7 +10,12 @@
 
     <!--筛选满足当前条件的项目总条数-->
     <select id="queryCountPage" resultType="Integer" parameterType="map">
-        select count(*) from innovate_finish_info a
+        <if test="hasReview != null and hasReview != ''">
+        select count(DISTINCT a.finish_id) from innovate_finish_info a
+        </if>
+        <if test="hasReview == null or hasReview == ''">
+            select count(*) from innovate_finish_info a
+        </if>
 
         <if test="isTeacher != null and isTeacher != ''">
             inner join innovate_finish_teacher b on a.finish_id = b.finish_id
@@ -127,7 +132,13 @@
 
     <!--筛选满足当前条件的项目-->
     <select id="queryPage" resultType="FinishInfoEntity" parameterType="map">
-        select * from innovate_finish_info a
+
+        <if test="hasReview != null and hasReview != ''">
+            select DISTINCT a.finish_id from innovate_finish_info a
+        </if>
+        <if test="hasReview == null or hasReview == ''">
+            select * from innovate_finish_info a
+        </if>
 
         <if test="isTeacher != null and isTeacher != ''">
             inner join innovate_finish_teacher b on a.finish_id = b.finish_id
@@ -230,7 +241,9 @@
             and a.finish_name like CONCAT('%',#{projectName},'%')
         </if>
 
-        order by a.finish_score_avg desc
+        <if test="hasReview == null or hasReview == ''">
+            order by a.finish_score_avg desc
+        </if>
 
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}

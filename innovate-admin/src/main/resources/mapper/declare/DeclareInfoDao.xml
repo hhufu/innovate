@@ -11,8 +11,12 @@
     <!--筛选满足当前条件的项目总条数-->
     <select id="queryCountPage" resultType="Integer" parameterType="map">
 
-        select count(*) from innovate_declare_info a
-
+        <if test="hasReview != null and hasReview != ''">
+            select count(DISTINCT a.declare_id) from innovate_declare_info a
+        </if>
+        <if test="hasReview == null or hasReview == ''">
+            select count(*) from innovate_declare_info a
+        </if>
         <if test="isTeacher != null and isTeacher != ''">
             inner join innovate_declare_teacher b on a.declare_id = b.declare_id
         </if>
@@ -108,7 +112,7 @@
             and b.score is null
         </if>
 
-        --         评委
+
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}
         </if>
@@ -144,7 +148,12 @@
 
     <!--筛选满足当前条件的项目-->
     <select id="queryPage" resultType="DeclareInfoEntity" parameterType="map">
-        select * from innovate_declare_info a
+        <if test="hasReview != null and hasReview != ''">
+            select DISTINCT a.declare_id from innovate_declare_info a
+        </if>
+        <if test="hasReview == null or hasReview == ''">
+            select * from innovate_declare_info a
+        </if>
 
         <if test="isTeacher != null and isTeacher != ''">
             inner join innovate_declare_teacher b on a.declare_id = b.declare_id
@@ -241,7 +250,6 @@
             and b.score is null
         </if>
 
-        --         评委
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}
         </if>
@@ -269,7 +277,9 @@
             and a.declare_time like CONCAT('%',#{declareTime},'%')
         </if>
 
-        order by a.declare_score_avg desc
+        <if test="hasReview == null or hasReview == ''">
+            order by a.declare_score_avg desc
+        </if>
 
         <if test="startPage != null and endPage != null">
             limit #{startPage}, #{endPage}
