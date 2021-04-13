@@ -304,7 +304,7 @@
           params: this.$http.adornParams({
             'page': 1,
             'limit': 50,
-            'groupBy': 'raceGrade',
+            'groupBy': 'race_grade',
             'parentId': this.parentId,
             'isDel': 0
           })
