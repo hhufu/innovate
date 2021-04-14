@@ -155,9 +155,10 @@ public class DeclareInfoModelServiceImpl implements DeclareInfoModelService {
         String ls = "";
         if (total < 100 && total >= 10){
             ls = "0" + total;
-        } else {
+        } else if (total < 10){
             ls = "00" + total;
         }
+        ls = total + "";
         //2021+ 5 位学校代码 + 3 位流水号。
         declareInfoModel.getDeclareInfoEntity().setDeclareNum(cal.get(Calendar.YEAR) + "11354" + ls);
 
