@@ -17,7 +17,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消审批</el-button>
-      <el-button type="primary" @click="dataFormSubmit()" :loading="submitLoading">确定并提交到二级学院</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="submitLoading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -33,6 +33,8 @@
         userMap: [],
         id: 0,
         // apply: '',
+        signType: 1, // 签署类别，1是指导老师签署意见2是二级学院
+        roleId: 3,
         dataForm: {
           sighingOpinion: ''
         },
@@ -47,12 +49,18 @@
       }
     },
     methods: {
-      init (index, apply) {
+      init (type, index) {
         // this.apply = apply
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           this.id = index || 0
+          this.signType = type
+          if(this.signType === 1){
+            this.roleId = 3
+          }else{
+            this.roleId = 4
+          }
           if (this.id) {
           }
         })
@@ -76,7 +84,8 @@
                   // 'signingOpinionTime': new Date(),
                   'sighingOpinion': this.dataForm.sighingOpinion,
                   'apply': 'project_audit_apply_status',
-                  'roleId': 3
+                  'roleId': this.roleId,
+                  'signType': this.signType // 1是指导老师签署意见2是二级学院
                 })
               }).then(({data}) => {
                 if (data && data.code === 0) {

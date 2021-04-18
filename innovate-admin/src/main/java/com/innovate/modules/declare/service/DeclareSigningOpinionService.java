@@ -27,7 +27,7 @@ public interface DeclareSigningOpinionService extends IService<DeclareSigningOpi
      * @param params
      * @return
      */
-     DeclareSigningOpinionEntity queryDeclareSigningOpinionByDeclareId(Map<String, Object> params);
+     DeclareSigningOpinionEntity queryDeclareSigningOpinionByDeclareIdAndType(Map<String, Object> params);
 
     /**签署意见
      * 删除

@@ -3,9 +3,14 @@
 
 <mapper namespace="com.innovate.modules.declare.dao.DeclareSigningOpinionDao">
 
-    <select id="queryDeclareSigningOpinionByDeclareId" parameterType="java.lang.Long" resultType="DeclareSigningOpinionEntity">
+    <select id="queryDeclareSigningOpinionByDeclareIdAndType" parameterType="java.lang.Long" resultType="DeclareSigningOpinionEntity">
         select  * from innovate_declare_signing_opinion
-        where declare_id = #{declareId}
+        <where>
+         <if test="declareId != null and declareId != ''"></if>
+            declare_id = #{declareId}
+         <if test="signType != null and signType != ''"></if>
+            and sign_type = #{signType}
+        </where>
             and is_del = 0
     </select>
 

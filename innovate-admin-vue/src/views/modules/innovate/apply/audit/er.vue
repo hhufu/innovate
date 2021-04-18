@@ -121,7 +121,8 @@
           <el-button v-if="addOrUpadate(scope.row.declareInfoEntity)" type="text" size="small" @click="addOrUpdateHandle(scope.row.declareInfoEntity.declareId)">修改</el-button>
           <el-button v-if="isDelete(scope.row.declareInfoEntity)" type="text" size="small" @click="deleteHandle(scope.row.declareInfoEntity.matchId)">删除</el-button>
           <br v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)">
-          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="applyDeclareHandle(scope.row.declareInfoEntity.declareId)">通过</el-button>
+<!--          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="applyDeclareHandle(scope.row.declareInfoEntity.declareId)">通过</el-button>-->
+          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="erSighingOpinionsHandle(2, scope.row.declareInfoEntity.declareId)">签署意见</el-button>
           <el-button v-if="retreatIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="retreatHandle(scope.row.declareInfoEntity)">不通过</el-button>
         </template>
       </el-table-column>
@@ -141,6 +142,7 @@
     <update-add-or-update v-if="isUpdateVisible" ref="isUpdate" @refreshDataList="getDataList"></update-add-or-update>
     <detail v-if="detailVisible" ref="detail" @refreshDataList="getDataList"></detail>
     <retreat-add-or-update v-if="retreatVisible" ref="retreat" @refreshDataList="getDataList"></retreat-add-or-update>
+    <sighing-opinions v-if="erSighingOpinionsVisible" ref="sighingOpinions" @refreshDataList="getDataList"></sighing-opinions>
   </div>
 </template>
 
@@ -150,6 +152,7 @@
   import UpdateAddOrUpdate from './operation/update-add-or-update'
   import UpdateHistory from './operation/update-history'
   import RetreatAddOrUpdate from './operation/retreat-add-or-update'
+  import SighingOpinions from "./operation/sighing-opinions";
 
   export default {
     data () {
@@ -188,10 +191,12 @@
         applyVisible: false,
         isUpdateVisible: false,
         retreatVisible: false,
-        isHistoyVisible: false
+        isHistoyVisible: false,
+        erSighingOpinionsVisible: false // 二级学院签署意见
       }
     },
     components: {
+      SighingOpinions,
       UpdateHistory,
       UpdateAddOrUpdate,
       RetreatAddOrUpdate,
@@ -231,6 +236,7 @@
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
+            console.log(data)
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
           } else {
@@ -311,6 +317,13 @@
         this.detailVisible = true
         this.$nextTick(() => {
           this.$refs.detail.init(id)
+        })
+      },
+      // 审批通过签署意见
+      erSighingOpinionsHandle (type, id) {
+        this.erSighingOpinionsVisible = true
+        this.$nextTick(() => {
+          this.$refs.sighingOpinions.init(type, id)
         })
       },
       // 不通过

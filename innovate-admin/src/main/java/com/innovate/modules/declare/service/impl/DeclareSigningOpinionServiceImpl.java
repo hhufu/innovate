@@ -41,6 +41,8 @@ public class DeclareSigningOpinionServiceImpl extends ServiceImpl<DeclareSigning
 
         declareSigningOpinionEntity.setUserId(Long.parseLong(params.get("userId").toString()));
 
+        declareSigningOpinionEntity.setSignType(Integer.parseInt(params.get("signType").toString()));
+
         declareSigningOpinionEntity.setSigningOpinionTime(new Date());
 
         this.insert(declareSigningOpinionEntity);
@@ -55,9 +57,9 @@ public class DeclareSigningOpinionServiceImpl extends ServiceImpl<DeclareSigning
      * @return
      */
     @Override
-    public DeclareSigningOpinionEntity queryDeclareSigningOpinionByDeclareId(Map<String, Object> params) {
+    public DeclareSigningOpinionEntity queryDeclareSigningOpinionByDeclareIdAndType(Map<String, Object> params) {
 
-        return baseMapper.queryDeclareSigningOpinionByDeclareId(Long.parseLong(params.get("declareId").toString()));
+        return baseMapper.queryDeclareSigningOpinionByDeclareIdAndType(Long.parseLong(params.get("declareId").toString()), Integer.parseInt(params.get("signType").toString()));
 
 
     }

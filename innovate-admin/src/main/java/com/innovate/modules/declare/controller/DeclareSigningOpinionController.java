@@ -47,7 +47,7 @@ public class DeclareSigningOpinionController {
     @RequiresPermissions("innovate:declare:info")
     public R queryByDeclareId(@RequestParam Map<String, Object> params){
 
-        return R.ok().put("sighingOpinion",declareSigningOpinionService.queryDeclareSigningOpinionByDeclareId(params));
+        return R.ok().put("sighingOpinion",declareSigningOpinionService.queryDeclareSigningOpinionByDeclareIdAndType(params));
 
     }
 

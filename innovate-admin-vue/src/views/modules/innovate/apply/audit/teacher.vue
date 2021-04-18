@@ -122,7 +122,7 @@
           <el-button v-if="isDelete(scope.row.declareInfoEntity)" type="text" size="small" @click="deleteHandle(scope.row.declareInfoEntity.matchId)">删除</el-button>
           <br v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)">
           <!--<el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="applyDeclareHandle(scope.row.declareInfoEntity.declareId)">通过</el-button>-->
-          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="sighingOpinionsHandle(scope.row.declareInfoEntity.declareId)">签署意见</el-button>
+          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="sighingOpinionsHandle(1, scope.row.declareInfoEntity.declareId)">签署意见</el-button>
           <el-button v-if="retreatIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="retreatHandle(scope.row.declareInfoEntity)">不通过</el-button>
         </template>
       </el-table-column>
@@ -315,10 +315,10 @@
         })
       },
       // 审批通过签署意见
-      sighingOpinionsHandle (id) {
+      sighingOpinionsHandle (type, id) {
         this.sighingOpinionsVisible = true
         this.$nextTick(() => {
-          this.$refs.sighingOpinions.init(id)
+          this.$refs.sighingOpinions.init(type, id)
         })
       },
       // 不通过

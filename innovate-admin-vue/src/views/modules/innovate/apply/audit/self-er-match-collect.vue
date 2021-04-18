@@ -204,7 +204,8 @@
             'isDel': 0,
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
-            'isEr': true
+            // 'isEr': true,
+            // 'userId': this.$store.state.user.id,
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -213,7 +214,9 @@
             this.totalPage = data.page.totalCount
             this.dataListLoading = false
           } else {
-            this.$message.error(data.msg)
+            // this.$message.error(data.msg)
+            this.dataList = []
+            this.totalPage = 0
           }
         })
       },

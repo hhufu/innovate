@@ -26,4 +26,6 @@ public interface DeclareSigningOpinionDao extends BaseMapper<DeclareSigningOpini
     DeclareSigningOpinionEntity queryDeclareSigningOpinionByDeclareId(Long declareId);
 
     void remove(Map<String, Object> params);
+
+    DeclareSigningOpinionEntity queryDeclareSigningOpinionByDeclareIdAndType(long declareId, int signType);
 }
