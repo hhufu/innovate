@@ -78,7 +78,7 @@
         </template>
         <template>
           <tr v-for="(item,index) in declareInfoList" align="center"
-              v-if="item.declareInfoEntity.projectAuditApplyStatus !==0 && item.declareInfoEntity.auditNoPass === 0">
+              v-if="item.declareInfoEntity.projectAuditApplyStatus !==0">
             <td v-text="index+1"></td>
             <td v-text="11354"></td>
             <td v-text="schoolname"></td>
@@ -317,12 +317,11 @@
       }
     },
     methods: {
-      init (instituteId, declareTime, p) {
+      init (instituteId, declareTime, p, noPass) {
         this.declareTime = declareTime
         this.visible = true
         this.dataListLoading = true
-        // this.dataForm.id = id || 0
-        // if (this.dataForm.id) {
+
         this.$http({
           url: this.$http.adornUrl('/innovate/declare/info/list'),
           method: 'get',
@@ -330,11 +329,12 @@
             'currPage': 1,
             'pageSize': 100000,
             'userId': this.$store.state.user.id,
-            'hasApply': 2,
-            'noPass': 'audit_no_pass',
-            'noPassStatus': 0,
-            'apply': 'project_audit_apply_status',
-            'project_audit_apply_status_more': p,
+            'noPass': noPass !== '' ? 'audit_no_pass' : '',
+            'noPassStatus':  noPass !== '' ? parseInt(noPass) : '',
+            'hasApply': '1',
+            'apply': p === 8 ? null:'project_audit_apply_status',
+            'applyStatus': p === 8 ? null: p,
+            'project_audit_apply_status_more': p === 8 ? 0: null,
             'isDel': 0,
             'declareTime': declareTime.getFullYear(),
             'instituteId': instituteId
@@ -357,7 +357,6 @@
         if (row.declareInfoEntity.auditNoPass == 1)
           return "已退回（" + arr[row.declareInfoEntity.projectAuditApplyStatus - 1] + "）"
         return arr[row.declareInfoEntity.projectAuditApplyStatus - 1]
-
       },
       // 导出
       exportDeclare () {

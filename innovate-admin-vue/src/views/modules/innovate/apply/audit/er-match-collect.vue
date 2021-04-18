@@ -1,8 +1,8 @@
 <template>
   <div class="mod-user">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item>
-        <el-select v-model="dataForm.instituteId" placeholder="请选择二级学院">
+      <el-form-item label="二级学院">
+        <el-select v-model="dataForm.instituteId" placeholder="请选择二级学院" clearable>
           <el-option
             v-for="inst in instituteList"
             :key="inst.instituteName"
@@ -11,7 +11,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="大于所选审核状态">
+      <el-form-item label="项目处于">
         <el-select v-model="processStatus" placeholder="请选择审核状态">
           <el-option
             v-for="item in processStatusList"
@@ -21,7 +21,17 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item label="项目状态">
+        <el-select v-model="noPass" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="item in noPassList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="年度">
         <!--年度 start-->
         <el-date-picker
           v-model="dataForm.declareTime"
@@ -33,7 +43,7 @@
         <el-form-item>
           <el-button @click="getDataList()">查询</el-button>
         </el-form-item>
-        <el-button type="primary" @click="allErMatchCollectDetail(dataForm.instituteId,dataForm.declareTime, processStatus)">导出</el-button>
+        <el-button type="primary" @click="allErMatchCollectDetail(dataForm.instituteId,dataForm.declareTime, processStatus, noPass)">导出</el-button>
         <!--<el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
       </el-form-item>
     </el-form>
@@ -189,7 +199,18 @@
           declareTime: new Date()
         },
         dataList: [],
-        processStatus: 0,
+        noPass:'0',
+        noPassList: [{
+          label: '正常',
+          value: '0'
+        },{
+          label: '已退回',
+          value: '1'
+        },{
+          label: '全部',
+          value: ''
+        }],
+        processStatus: 1,
         processStatusList: [{
           label: '项目负责人提交',
           value: 0
@@ -208,6 +229,9 @@
         }, {
           label: '管理员审批',
           value: 5
+        },{
+          label: '全部状态',
+          value: 8
         }
         ],// 流程下拉列表
         pageIndex: 1,
@@ -245,9 +269,12 @@
           params: this.$http.adornParams({
             'instituteId': this.dataForm.instituteId,
             'declareTime': this.dataForm.declareTime == null ? '' : this.dataForm.declareTime.getFullYear(),
-            'project_audit_apply_status_more': this.processStatus,// 审核状态大于0
-            'noPassStatus': 0,
-            'noPass': '',
+            'project_audit_apply_status_more': this.processStatus === 8 ? 0: null,// 审核状态大于0
+            'hasApply': '1',
+            'apply': this.processStatus === 8 ? null:'project_audit_apply_status',
+            'applyStatus': this.processStatus === 8 ? null: this.processStatus,
+            'noPass': this.noPass !== '' ? 'audit_no_pass' : '',
+            'noPassStatus':  this.noPass !== '' ? parseInt(this.noPass) : 0,
             'isDel': 0,
             'currPage': this.pageIndex,
             'pageSize': this.pageSize
@@ -294,10 +321,10 @@
           this.$refs.addOrUpdate.init(id)
         })
       },
-      allErMatchCollectDetail (instituteId, declareTime, p) {
+      allErMatchCollectDetail (instituteId, declareTime, p, n) {
         this.allErMatchCollectDetailVisible = true
         this.$nextTick(() => {
-          this.$refs.allErMatchCollectDetail.init(instituteId, declareTime, p)
+          this.$refs.allErMatchCollectDetail.init(instituteId, declareTime, p, n)
         })
       },
       // 新增 / 修改
