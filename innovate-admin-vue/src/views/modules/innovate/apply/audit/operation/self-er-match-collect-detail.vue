@@ -13,7 +13,7 @@
         </tr>
         <tr class="contents" align="center">
           <th colspan="21">
-            梧州学院“互联网+”大学生创新创业项目汇总表
+            梧州学院{{time}}年大学生创新创业项目汇总表
           </th>
         </tr>
         <tr align='center' style="height: 3.0rem">
@@ -397,6 +397,7 @@
     data () {
       return {
         visible: false,
+        time: '',
         dataListLoading: false,
         declareInfo: {},
         instituteList: this.$store.state.user.institute,
@@ -481,19 +482,25 @@
         this.visible = true
         this.dataListLoading = true
         this.dataForm.id = id || 0
+        this.time = time.getFullYear()
         if (this.dataForm.id) {
           this.$http({
             url: this.$http.adornUrl(`/innovate/declare/info/list`),
             method: 'get',
             params: this.$http.adornParams({
               'instituteId': this.dataForm.id,
-              'project_audit_apply_status_more': 2,
               'noPassStatus': 0,
               'noPass': 'audit_no_pass',
               'isDel': 0,
               'pageSize': 1000000,
               'currPage': 1,
-              'declareTime': time.getFullYear()
+              'declareTime': time.getFullYear(),
+              'userId': this.$store.state.user.id,
+              'hasApply': '1',
+              'erInstituteId': this.$store.state.user.instituteId,
+              'isEr': true,
+              'apply': 'project_audit_apply_status',
+              'applyStatus': 2,
             })
           }).then(({data}) => {
             if (data && data.code === 0) {

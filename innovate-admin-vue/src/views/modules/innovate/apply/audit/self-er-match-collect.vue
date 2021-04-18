@@ -192,24 +192,26 @@
     methods: {
       // 获取数据列表
       getDataList () {
+        this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl(`/innovate/declare/info/list`),
           method: 'get',
           params: this.$http.adornParams({
-            'instituteId': this.dataForm.instituteId,
             'declareTime': this.dataForm.declareTime == null ? '' : this.dataForm.declareTime.getFullYear(),
-            'project_audit_apply_status_more': 2,
-            'noPassStatus': 0,
-            'noPass': 'audit_no_pass',
-            'isDel': 0,
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
-            // 'isEr': true,
-            // 'userId': this.$store.state.user.id,
+            'userId': this.$store.state.user.id,
+            'hasApply': '1',
+            'noPass': 'audit_no_pass',
+            'noPassStatus': 0,
+            'erInstituteId': this.$store.state.user.instituteId,
+            'isEr': true,
+            'apply': 'project_audit_apply_status',
+            'applyStatus': 2,
+            'isDel': 0
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            console.log(data)
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
             this.dataListLoading = false
@@ -219,6 +221,14 @@
             this.totalPage = 0
           }
         })
+      },
+      // 转换流程进度名称
+      formatterProcess(row) {
+        var arr = ["项目负责人提交", "指导老师审批", "二级学院审批", "管理员分配评委组", "评委审批", "管理员审批"]
+        if (row.declareInfoEntity.auditNoPass == 1)
+          return "已退回（" + arr[row.declareInfoEntity.projectAuditApplyStatus - 1] + "）"
+        return arr[row.declareInfoEntity.projectAuditApplyStatus - 1]
+
       },
       // 每页数
       sizeChangeHandle (val) {

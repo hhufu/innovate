@@ -11,6 +11,16 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="大于所选审核状态">
+        <el-select v-model="processStatus" placeholder="请选择审核状态">
+          <el-option
+            v-for="item in processStatusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <!--年度 start-->
         <el-date-picker
@@ -125,6 +135,13 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="declareInfoEntity.projectAuditApplyStatus"
+        header-align="center"
+        :formatter="formatterProcess"
+        align="center"
+        label="审核状态">
+      </el-table-column>
+      <el-table-column
         prop="declareInfoEntity.declareScoreAvg"
         header-align="center"
         align="center"
@@ -172,6 +189,27 @@
           declareTime: new Date()
         },
         dataList: [],
+        processStatus: 0,
+        processStatusList: [{
+          label: '项目负责人提交',
+          value: 0
+        }, {
+          label: '指导老师审批',
+          value: 1
+        }, {
+          label: '二级学院审批',
+          value: 2
+        }, {
+          label: '管理员分配评委组',
+          value: 3
+        }, {
+          label: '评委审批',
+          value: 4
+        }, {
+          label: '管理员审批',
+          value: 5
+        }
+        ],// 流程下拉列表
         pageIndex: 1,
         pageSize: 10,
         totalPage: 0,
@@ -207,9 +245,9 @@
           params: this.$http.adornParams({
             'instituteId': this.dataForm.instituteId,
             'declareTime': this.dataForm.declareTime == null ? '' : this.dataForm.declareTime.getFullYear(),
-            'project_audit_apply_status_more': 2,
+            'project_audit_apply_status_more': this.processStatus,// 审核状态大于0
             'noPassStatus': 0,
-            'noPass': 'audit_no_pass',
+            'noPass': '',
             'isDel': 0,
             'currPage': this.pageIndex,
             'pageSize': this.pageSize
@@ -225,6 +263,14 @@
             this.dataListLoading = false
           }
         })
+      },
+      // 转换流程进度名称
+      formatterProcess(row) {
+        var arr = ["项目负责人提交", "指导老师审批", "二级学院审批", "管理员分配评委组", "评委审批", "管理员审批"]
+        if (row.declareInfoEntity.auditNoPass == 1)
+          return "已退回（" + arr[row.declareInfoEntity.projectAuditApplyStatus - 1] + "）"
+        return arr[row.declareInfoEntity.projectAuditApplyStatus - 1]
+
       },
       // 每页数
       sizeChangeHandle (val) {

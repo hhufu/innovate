@@ -9,10 +9,10 @@
     <el-row>
       <table border="1" cellspacing="0" width="100%" class="table" id="out-table">
         <tr align='center'>
-          <td colspan="23" style="height: 1.2rem"></td>
+          <td colspan="24" style="height: 1.2rem"></td>
         </tr>
         <tr class="contents" align="center">
-          <th colspan="23">
+          <th colspan="24">
             梧州学院2021年大学生创新创业项目汇总表
           </th>
         </tr>
@@ -47,6 +47,7 @@
           <th colspan="2">项目简介</th>
           <td>平均分</td>
           <td>所属学院</td>
+          <td>审核状态</td>
         </tr>
 
         <template>
@@ -71,6 +72,7 @@
             <td>暂无数据</td>
             <td>暂无数据</td>
             <td colspan="2">暂无数据</td>
+            <td>暂无数据</td>
             <td>暂无数据</td>
           </tr>
         </template>
@@ -137,7 +139,7 @@
                        v-if="teacher.userId === teacher2.userId">
                         <!--v-text="teacher.teacherTitle" align="center">-->
                    <!--teacherTitleList-->
-                     <span v-for="(temp,index2) in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text=" (index2 === 0? '': ',') + temp.titleName"></span>
+                     <span v-for="(temp,index3) in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text=" (index3 === 0? ' ': ' ') + temp.titleName"></span>
                   </span>
                 </span>
             </td>
@@ -168,6 +170,10 @@
             <td colspan="1">
               <!--二级学院-->
               <span v-for="inst in instituteList" v-if="item.declareInfoEntity.instituteId === inst.instituteId" v-text="inst.instituteName"></span>
+            </td>
+            <td colspan="1">
+              <!--审核状态-->
+              <span v-text="formatterProcess(item)"></span>
             </td>
           </tr>
         </template>
@@ -211,7 +217,7 @@
         </tr>
         <!--附件结束-->
         <tr align='center'>
-          <td colspan="23" style="height: 1.2rem"></td>
+          <td colspan="24" style="height: 1.2rem"></td>
         </tr>
       </table>
     </el-row>
@@ -344,6 +350,14 @@
           }
           this.dataListLoading = false
         })
+      },
+      // 转换流程进度名称
+      formatterProcess(row) {
+        var arr = ["项目负责人提交", "指导老师审批", "二级学院审批", "管理员分配评委组", "评委审批", "管理员审批"]
+        if (row.declareInfoEntity.auditNoPass == 1)
+          return "已退回（" + arr[row.declareInfoEntity.projectAuditApplyStatus - 1] + "）"
+        return arr[row.declareInfoEntity.projectAuditApplyStatus - 1]
+
       },
       // 导出
       exportDeclare () {
