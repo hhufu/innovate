@@ -317,7 +317,7 @@
       }
     },
     methods: {
-      init (instituteId, declareTime) {
+      init (instituteId, declareTime, p) {
         this.declareTime = declareTime
         this.visible = true
         this.dataListLoading = true
@@ -334,7 +334,7 @@
             'noPass': 'audit_no_pass',
             'noPassStatus': 0,
             'apply': 'project_audit_apply_status',
-            'project_audit_apply_status_more': 2,
+            'project_audit_apply_status_more': p,
             'isDel': 0,
             'declareTime': declareTime.getFullYear(),
             'instituteId': instituteId

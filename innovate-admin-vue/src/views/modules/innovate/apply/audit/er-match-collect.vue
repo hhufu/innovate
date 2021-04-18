@@ -33,7 +33,7 @@
         <el-form-item>
           <el-button @click="getDataList()">查询</el-button>
         </el-form-item>
-        <el-button type="primary" @click="allErMatchCollectDetail(dataForm.instituteId,dataForm.declareTime)">导出</el-button>
+        <el-button type="primary" @click="allErMatchCollectDetail(dataForm.instituteId,dataForm.declareTime, processStatus)">导出</el-button>
         <!--<el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
       </el-form-item>
     </el-form>
@@ -294,10 +294,10 @@
           this.$refs.addOrUpdate.init(id)
         })
       },
-      allErMatchCollectDetail (instituteId, declareTime) {
+      allErMatchCollectDetail (instituteId, declareTime, p) {
         this.allErMatchCollectDetailVisible = true
         this.$nextTick(() => {
-          this.$refs.allErMatchCollectDetail.init(instituteId, declareTime)
+          this.$refs.allErMatchCollectDetail.init(instituteId, declareTime, p)
         })
       },
       // 新增 / 修改
