@@ -16,7 +16,7 @@
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('innovate:declare:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('innovate:declare:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+<!--        <el-button v-if="isAuth('innovate:declare:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
       </el-form-item>
     </el-form>
     <el-table
@@ -260,7 +260,32 @@
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
-              this.addOrUpdatePage(id)
+              this.$http({
+                url: this.$http.adornUrl('/innovate/declare/info/list'),
+                method: 'get',
+                params: this.$http.adornParams({
+                  'declareTime': this.dataForm.declareTime == null ? '' : this.dataForm.declareTime.getFullYear(),
+                  'currPage': 1,
+                  'pageSize': 1,
+                  'userId': this.$store.state.user.id,
+                  'isDel': 0
+                })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  if(data.page.list.length == 0 ){
+                    this.addOrUpdatePage()
+                  }else {
+                    this.$message({
+                      message: '您今年已申报过大创项目了，请不要重复提交！',
+                      type: 'error',
+                      duration: 1500,
+                      onClose: () => {
+
+                      }
+                    })
+                  }
+                }
+              })
             } else {
               this.$message({
                 message: data.msg,
@@ -272,6 +297,8 @@
               })
             }
           })
+
+
         }
 
       },
