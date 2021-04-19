@@ -252,7 +252,7 @@
           <td colspan="10" style="height: 1.2rem"></td>
         </tr>
         <tr align="center" class="contents">
-          <th colspan="10">二级学院签署意见</th>
+          <th colspan="10">院系专家组签署意见</th>
         </tr>
         <tr align='center'>
           <td colspan="10" style="height: 1.2rem"></td>

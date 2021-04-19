@@ -6,8 +6,8 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="6rem">
-      <el-form-item label="签署意见" prop="sighingOpinion">
-        <div class="sub-title" style="color:#17a117;">温馨提示：指导老师审核意见200~300字之间，二级学院审核意见在100~200字之间</div>
+      <el-form-item :label="title" prop="sighingOpinion">
+        <div class="sub-title" style="color:#17a117;">温馨提示：指导老师审核意见200~300字之间，院系专家组意见在100~200字之间</div>
         <el-input
           type="textarea"
           :rows="5"
@@ -32,6 +32,7 @@
         loading: false,
         submitLoading: false,
         userMap: [],
+        title: '',
         id: 0,
         // apply: '',
         signType: 1, // 签署类别，1是指导老师签署意见2是二级学院
@@ -59,8 +60,10 @@
           this.signType = type
           if(this.signType === 1){
             this.roleId = 3
+            this.title = '指导老师签署意见'
           }else{
             this.roleId = 4
+            this.title = '院系专家组签署意见'
           }
           if (this.id) {
           }

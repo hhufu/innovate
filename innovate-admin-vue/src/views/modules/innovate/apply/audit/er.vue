@@ -118,12 +118,12 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="detailHandle(scope.row.declareInfoEntity.declareId)">详情</el-button>
-          <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="updateProjectEr(scope.row.declareInfoEntity)">修改所属二级学院</el-button>
+          <el-button v-if="addOrUpadate(scope.row.declareInfoEntity)" type="text" size="small" @click="updateProjectEr(scope.row.declareInfoEntity)">修改所属二级学院</el-button>
           <el-button v-if="addOrUpadate(scope.row.declareInfoEntity)" type="text" size="small" @click="addOrUpdateHandle(scope.row.declareInfoEntity.declareId)">修改</el-button>
           <el-button v-if="isDelete(scope.row.declareInfoEntity)" type="text" size="small" @click="deleteHandle(scope.row.declareInfoEntity.matchId)">删除</el-button>
           <br v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)">
 <!--          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="applyDeclareHandle(scope.row.declareInfoEntity.declareId)">通过</el-button>-->
-          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="erSighingOpinionsHandle(2, scope.row.declareInfoEntity.declareId)">签署意见</el-button>
+          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="erSighingOpinionsHandle(2, scope.row.declareInfoEntity.declareId)">院系专家组签署意见</el-button>
           <el-button v-if="retreatIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="retreatHandle(scope.row.declareInfoEntity)">不通过</el-button>
         </template>
       </el-table-column>
