@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 积分标准
@@ -17,4 +18,6 @@ import java.util.List;
 public interface InnovateSysPointsDao extends BaseMapper<InnovateSysPointsEntity> {
 
     int deleteList(List<Long> asList);
+
+    List selectPoints(Map<String, Object> params);
 }

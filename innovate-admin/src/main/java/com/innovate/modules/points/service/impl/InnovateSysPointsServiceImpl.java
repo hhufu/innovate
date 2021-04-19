@@ -1,7 +1,5 @@
 package com.innovate.modules.points.service.impl;
 
-import com.innovate.modules.innovate.entity.UserPersonInfoEntity;
-import com.innovate.modules.points.entity.InnovateStudentPointsEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +29,10 @@ public class InnovateSysPointsServiceImpl extends ServiceImpl<InnovateSysPointsD
         if (params.get("groupBy")!=null)entityWrapper.groupBy(params.get("groupBy").toString());
 //        entityWrapper.orderBy(true, "integral_id", false);
 
+//        Page<InnovateSysPointsEntity> page = this.selectPage(
+//                new Query<InnovateSysPointsEntity>(params).getPage(),
+//                entityWrapper
+//        );
         Page<InnovateSysPointsEntity> page = this.selectPage(
                 new Query<InnovateSysPointsEntity>(params).getPage(),
                 entityWrapper
@@ -43,6 +45,12 @@ public class InnovateSysPointsServiceImpl extends ServiceImpl<InnovateSysPointsD
     public int deleteList(List<Long> asList) {
 
         return baseMapper.deleteList(asList);
+    }
+
+    @Override
+    public List selectPoints(Map<String, Object> params) {
+
+        return baseMapper.selectPoints(params);
     }
 
 }

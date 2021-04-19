@@ -1,6 +1,7 @@
 package com.innovate.modules.points.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -39,6 +40,17 @@ public class InnovateSysPointsController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = innovateSysPointsService.queryPage(params);
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/newList")
+    @RequiresPermissions("points:innovatesyspoints:list")
+    public R newList(@RequestParam Map<String, Object> params){
+        List innovateSysPoints = (List) innovateSysPointsService.selectPoints(params);
+
+        return R.ok().put("innovateSysPoints", innovateSysPoints);
     }
 
 

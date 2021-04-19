@@ -19,5 +19,7 @@ public interface InnovateSysPointsService extends IService<InnovateSysPointsEnti
     PageUtils queryPage(Map<String, Object> params);
 
     int deleteList(List<Long> asList);
+
+    List selectPoints(Map<String, Object> params);
 }
 

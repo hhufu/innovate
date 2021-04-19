@@ -299,18 +299,18 @@
         this.prizeGradeList = []
         // 积分规则--项目名称
         this.$http({
-          url: this.$http.adornUrl('/points/innovatesyspoints/list'),
+          url: this.$http.adornUrl('/points/innovatesyspoints/newList'),
           method: 'get',
           params: this.$http.adornParams({
-            'page': 1,
-            'limit': 50,
-            'groupBy': 'race_grade',
+            // 'page': 1,
+            // 'limit': 50,
+            // 'groupBy': 'race_grade',
             'parentId': this.parentId,
             'isDel': 0
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            this.raceGradeList = data.page.list
+            this.raceGradeList = data.innovateSysPoints
           } else {
             this.raceGradeList = []
           }
@@ -324,23 +324,23 @@
         this.prizeGradeList = []
         // 积分规则--奖项等级
         this.$http({
-          url: this.$http.adornUrl('/points/innovatesyspoints/list'),
+          url: this.$http.adornUrl('/points/innovatesyspoints/newList'),
           method: 'get',
           params: this.$http.adornParams({
             'page': 1,
             'limit': 50,
             'key': 'race_grade',
-            'keyValue': e,
-            'groupBy': 'prizeGrade',
-            prizeGradeIsNull: 'true',
+            'raceGrade': e,
+            // 'groupBy': 'prizeGrade',
+            // prizeGradeIsNull: 'true',
             'parentId': this.parentId,
             'isDel': 0
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            this.prizeGradeList = data.page.list
+            this.prizeGradeList = data.innovateSysPoints
             // eslint-disable-next-line eqeqeq
-            if (data.page.list.length == 0) {
+            if (data.innovateSysPoints.length == 0) {
               this.prizeGradeList = []
               let list = this.raceGradeList.filter(item => {
                 // eslint-disable-next-line eqeqeq
