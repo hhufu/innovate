@@ -268,7 +268,8 @@
                   'currPage': 1,
                   'pageSize': 1,
                   'userId': this.$store.state.user.id,
-                  'isDel': 0
+                  'isDel': 0,
+                  'isStudent': true
                 })
               }).then(({data}) => {
                 if (data && data.code === 0) {
