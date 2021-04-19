@@ -118,6 +118,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="detailHandle(scope.row.declareInfoEntity.declareId)">详情</el-button>
+          <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="updateProjectEr(scope.row.declareInfoEntity)">修改所属二级学院</el-button>
           <el-button v-if="addOrUpadate(scope.row.declareInfoEntity)" type="text" size="small" @click="addOrUpdateHandle(scope.row.declareInfoEntity.declareId)">修改</el-button>
           <el-button v-if="isDelete(scope.row.declareInfoEntity)" type="text" size="small" @click="deleteHandle(scope.row.declareInfoEntity.matchId)">删除</el-button>
           <br v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)">
@@ -143,6 +144,7 @@
     <detail v-if="detailVisible" ref="detail" @refreshDataList="getDataList"></detail>
     <retreat-add-or-update v-if="retreatVisible" ref="retreat" @refreshDataList="getDataList"></retreat-add-or-update>
     <sighing-opinions v-if="erSighingOpinionsVisible" ref="sighingOpinions" @refreshDataList="getDataList"></sighing-opinions>
+    <project-er-add-or-update v-if="projectErAddOrUpdateVisible" ref="projectErAddOrUpdate" @refreshDataList="getDataList"></project-er-add-or-update>
   </div>
 </template>
 
@@ -153,10 +155,12 @@
   import UpdateHistory from './operation/update-history'
   import RetreatAddOrUpdate from './operation/retreat-add-or-update'
   import SighingOpinions from "./operation/sighing-opinions";
+  import ProjectErAddOrUpdate from "./project/project-er-add-or-update";
 
   export default {
     data () {
       return {
+        projectErAddOrUpdateVisible: false,
         projectList: [],
         // eventLists: [],
         userTeacherInfoEntities: this.$store.state.userTeacherInfoEntities,
@@ -196,6 +200,7 @@
       }
     },
     components: {
+      ProjectErAddOrUpdate,
       SighingOpinions,
       UpdateHistory,
       UpdateAddOrUpdate,
@@ -244,6 +249,13 @@
             this.totalPage = 0
           }
           this.dataListLoading = false
+        })
+      },
+      // 修改所属二级学院
+      updateProjectEr(row) {
+        this.projectErAddOrUpdateVisible = true
+        this.$nextTick(() => {
+          this.$refs.projectErAddOrUpdate.init(row)
         })
       },
       // 每页数
