@@ -64,7 +64,7 @@
 
         <!--该值为当前用户的所属部门-->
         <if test="isEr != null and isEr != ''">
-            and b.institute_id = #{erInstituteId}
+            and a.institute_id = #{erInstituteId}
         </if>
 
         <if test="isAdmin != null and isAdmin != ''">
@@ -202,7 +202,7 @@
 
         <!--该值为当前用户的所属部门-->
         <if test="isEr != null and isEr != ''">
-            and b.institute_id = #{erInstituteId}
+            and a.institute_id = #{erInstituteId}
         </if>
 
         <if test="isAdmin != null and isAdmin != ''">

@@ -118,7 +118,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:declare:list')" type="text" size="small" @click="detailHandle(scope.row.declareInfoEntity.declareId)">详情</el-button>
-          <el-button v-if="addOrUpadate(scope.row.declareInfoEntity)" type="text" size="small" @click="updateProjectEr(scope.row.declareInfoEntity)">修改所属二级学院</el-button>
+          <el-button v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)" type="text" size="small" @click="updateProjectEr(scope.row.declareInfoEntity)">修改所属二级学院</el-button>
           <el-button v-if="addOrUpadate(scope.row.declareInfoEntity)" type="text" size="small" @click="addOrUpdateHandle(scope.row.declareInfoEntity.declareId)">修改</el-button>
           <el-button v-if="isDelete(scope.row.declareInfoEntity)" type="text" size="small" @click="deleteHandle(scope.row.declareInfoEntity.matchId)">删除</el-button>
           <br v-if="applyDeclareIsVisible(scope.row.declareInfoEntity)">
