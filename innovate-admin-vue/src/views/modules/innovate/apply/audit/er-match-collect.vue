@@ -41,7 +41,7 @@
         </el-date-picker>
         <!--年度 end-->
         <el-form-item>
-          <el-button @click="getDataList()">查询</el-button>
+          <el-button @click="query()">查询</el-button>
         </el-form-item>
         <el-button type="primary" @click="allErMatchCollectDetail(dataForm.instituteId,dataForm.declareTime, processStatus, noPass)">导出</el-button>
         <!--<el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
@@ -260,6 +260,11 @@
       this.getDataList()
     },
     methods: {
+      query() {
+        this.pageIndex = 1
+        this.pageSize = 10
+        this.getDataList()
+      },
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
