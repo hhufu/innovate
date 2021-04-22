@@ -2,14 +2,14 @@
   <div class="mod-user">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-select v-model="dataForm.instituteId" placeholder="请选择二级学院" disabled="">
-          <el-option
-            v-for="inst in instituteList"
-            :key="inst.instituteName"
-            :label="inst.instituteName"
-            :value="inst.instituteId">
-          </el-option>
-        </el-select>
+<!--        <el-select v-model="dataForm.instituteId" placeholder="请选择二级学院" disabled="">-->
+<!--          <el-option-->
+<!--            v-for="inst in instituteList"-->
+<!--            :key="inst.instituteName"-->
+<!--            :label="inst.instituteName"-->
+<!--            :value="inst.instituteId">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
         <el-button v-if="isAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <!--年度 start-->
         <el-date-picker
@@ -207,7 +207,7 @@
             'erInstituteId': this.$store.state.user.instituteId,
             'isEr': true,
             'apply': 'project_audit_apply_status',
-            'applyStatus': 2,
+            'project_audit_apply_status_more': 1,// 审核状态大于0
             'isDel': 0
           })
         }).then(({data}) => {

@@ -500,7 +500,7 @@
               'erInstituteId': this.$store.state.user.instituteId,
               'isEr': true,
               'apply': 'project_audit_apply_status',
-              'applyStatus': 2,
+              'project_audit_apply_status_more': 1,// 审核状态大于0
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
