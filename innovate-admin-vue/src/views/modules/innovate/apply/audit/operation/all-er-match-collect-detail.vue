@@ -128,18 +128,18 @@
                 <span v-for="teacher in userTeacherInfoEntities">
                   <span v-for="(teacher2,index2) in item.declareTeacherEntities"
                         v-if="teacher.userId === teacher2.userId"
-                        v-text="(index2 === 0? ' ': ' ') + teacher.sysUserEntity.name" align="center">
+                        v-text=" (index2 >= 1? ',': '') + teacher.sysUserEntity.name" align="center">
                   </span>
                 </span>
             </td>
             <td>
               <!--指导老师职称-->
               <span v-for="teacher in userTeacherInfoEntities">
-                 <span v-for="teacher2 in item.declareTeacherEntities"
+                 <span v-for="(teacher2,index3) in item.declareTeacherEntities"
                        v-if="teacher.userId === teacher2.userId">
                         <!--v-text="teacher.teacherTitle" align="center">-->
                    <!--teacherTitleList-->
-                     <span v-for="(temp,index2) in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text=" (index2 === 0? '': ',') + temp.titleName"></span>
+                     <span v-for="temp in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text="temp.titleName + (index3 === 0? '': ',')"></span>
                   </span>
                 </span>
             </td>

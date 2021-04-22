@@ -72,15 +72,14 @@
       <!--独立附件start-->
       <el-form-item label="相关附件" prop="reportSalesName">
         <el-upload
-          ref="uploadF"
-          class="upload-demo"
-          :action="url"
-          :data="{stuNum: $store.state.user.username}"
-          :on-success="successHandle1"
+          ref="upload"
+          :data="{stuNum : dataForm.stuNum}"
+          action="#"
+          :on-remove="removeFileHandle"
+          :on-change="upLoadSubmit"
           :auto-upload="false"
-          :on-remove="fileRemoveHandler"
           :file-list="fileList">
-          <el-button size="small" type="primary">点击上传</el-button>
+          <el-button slot="trigger" size="small" type="primary">点击上传</el-button>
           <span v-if="attachLists.length === 0" style="color: crimson">*请上传相关附件</span>
         </el-upload>
       </el-form-item>
@@ -336,7 +335,7 @@
             'parentId': this.parentId,
             'isDel': 0
           })
-        }).then(({data}) => {
+        }).then(({data}) => {0
           if (data && data.code === 0) {
             this.prizeGradeList = data.innovateSysPoints
             // eslint-disable-next-line eqeqeq
@@ -395,29 +394,59 @@
           this.dataForm.applyIntegral = this.integral - this.integralTo
         }
       },
-      beforeUpload(file) {
-        console.log(1)
-        let ii = 0;
-        for (var index = 0; index < this.attachLists.length; index++) {
-          if (this.attachLists[index].attachName === file.name) {
-               ii++;
+      // 文件名处理
+      upLoadFileName (file, fileList) {
+        let filename = file.name
+        let matchFileName = file.name
+        let i = 0 // 文件重名次数
+        this.fileList.forEach((item) => {
+          if (filename === item.name) {
+            i++
+            let ii = matchFileName.lastIndexOf('.')
+            filename = matchFileName.substring(0, ii) + '(' + i + ')' + matchFileName.substring(ii, filename.length)
           }
-        }
-        // let fileName = file.name + (ii > 0 ? ("(" + ii + ")") : '');
-        // const copyFile = new File([file], fileName);
-        this.fileNameI = ii
-        this.$refs.uploadF.submit();
+          this.fileList.forEach((item) => {
+            if (filename === item.name) {
+              i++
+              let ii = matchFileName.lastIndexOf('.')
+              filename = matchFileName.substring(0, ii) + '(' + i + ')' + matchFileName.substring(ii, filename.length)
+            }
+          })
+        })
+        return filename
       },
-      // 上传成功
-      successHandle1(response, file, fileList) {
-        if (response && response.code === 0) {
-          this.attachLists.push(response.pointsAttachEntity)
-          this.fileIsNull = false
-        } else {
-          this.$message.error(response.msg)
-        }
+      // 文件上传
+      upLoadSubmit (file, fileList) {
+        this.$message({
+          showClose: true,
+          message: '文件正在上传请勿操作...',
+          type: 'warning'
+        });
+        let that = this
+        const formData = new FormData()
+        let filename = this.upLoadFileName(file.raw, fileList)
+        const copyFile = new File([file.raw], filename)
+        formData.append('file', copyFile)
+        formData.append('stuNum', this.dataForm.stuNum)
+        let url = this.$http.adornUrl(`/points/attach/upload?token=${this.$cookie.get('token')}`)
+        that.$httpFile2.post(url, formData).then(response => {
+          if (response && response.data.code === 0) {
+            that.$refs.upload.submit()
+            that.attachLists.push(response.data.pointsAttachEntity)
+            that.fileinit()
+            that.$message({
+              showClose: true,
+              message: '文件上传成功',
+              type: 'success'
+            });
+          } else {
+            that.$message.error(response.data.msg)
+          }
+        })
       },
-      fileRemoveHandler(file, fileList) {
+      // 文件移除
+      removeFileHandle (file, fileList) {
+        console.log(1111111)
         // 移除attachList中的附件
         let tempFileList = []
         for (var index = 0; index < this.attachLists.length; index++) {
@@ -428,6 +457,15 @@
           }
         }
         this.attachLists = tempFileList
+        this.fileinit()
+      },
+      // 附件列表重置
+      fileinit(){
+        let tempDeclareAtta = []
+        for (var i = 0; i < this.attachLists.length; i++) {
+          tempDeclareAtta.push(new FinishAttachment(this.attachLists[i]))
+        }
+        this.fileList = tempDeclareAtta
       }
     }
   }

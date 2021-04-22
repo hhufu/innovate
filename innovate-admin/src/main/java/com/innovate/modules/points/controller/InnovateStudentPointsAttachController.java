@@ -104,6 +104,7 @@ public class InnovateStudentPointsAttachController {
     @RequiresPermissions("points:innovatestudentpointsapply:save")
     public Object uploadFile(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
         String stuNum = request.getParameter("stuNum");
+        if (stuNum==null||stuNum.equals(""))stuNum="StuNumISNull";
 //        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + finishName + "/"+ RandomUtils.getRandomNums()+"/";
         String UPLOAD_FILES_PATH = "pointsApply"+ File.separator + Calendar.getInstance().get(Calendar.YEAR) + File.separator+stuNum + "/"+ RandomUtils.getRandomNums()+"/";
         if (Objects.isNull(files) || files.isEmpty()) {
@@ -112,7 +113,8 @@ public class InnovateStudentPointsAttachController {
         InnovateStudentPointsAttachEntity pointsAttachEntity = null;
         for(MultipartFile file : files){
 
-            String fileName = file.getOriginalFilename() + "(" +DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + ")";
+            String fileName = file.getOriginalFilename();
+//            String fileName = file.getOriginalFilename() + "(" +DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + ")";
 
 //                result = FileUtils.upLoad(UPLOAD_FILES_PATH, fileName, file);
             OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
