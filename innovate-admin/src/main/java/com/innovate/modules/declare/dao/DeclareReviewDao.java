@@ -29,7 +29,7 @@ public interface DeclareReviewDao extends BaseMapper<DeclareReviewEntity> {
     /**
      * 计算平均分
      */
-    Double queryScoreAvg(Map<String, Object> params);
+    Map<String, Object> queryScoreAvg(Map<String, Object> params);
     //查询分数
     DeclareReviewEntity queryScore(Map<String, Object> params);
     /**

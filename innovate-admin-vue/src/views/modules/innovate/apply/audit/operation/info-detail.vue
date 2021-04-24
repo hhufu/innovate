@@ -339,17 +339,22 @@
             <td colspan="10" style="height: 1.2rem"></td>
           </tr>
           <tr align='center'>
-            <td colspan="5">平均分</td>
+            <td colspan="5">项目平均分</td>
             <td colspan="5" v-text="declareInfo.declareScoreAvg + '分'"></td>
+          </tr>
+          <tr align='center'>
+            <td colspan="5">格式平均分</td>
+            <td colspan="5" v-text="declareInfo.gsScoreAvg + '分'"></td>
           </tr>
           <tr align='center'>
             <td colspan="10" style="height: 1.2rem"></td>
           </tr>
           <tr align='center'>
             <th colspan="2">评委</th>
-            <th colspan="3">流程</th>
-            <th colspan="2">分数</th>
-            <th colspan="3">建议</th>
+            <th colspan="2">流程</th>
+            <th colspan="2">项目分数</th>
+            <th colspan="2">格式分数</th>
+            <th colspan="2">建议</th>
           </tr>
           <template v-for="type in reviewTypeList">
             <template v-for="(item, index) in reviewList"
@@ -359,9 +364,10 @@
                   <td colspan="2" v-for="reviewName in reviewNameList"  v-if="reviewName.userId === item.userId" v-text="reviewName.name"></td>
                 </template>
                 <td colspan="2" v-if="!isAuth('sys:user:info', item.userId)" v-text="'评委:' + (index + 1)"></td>
-                <td colspan="3" v-text="type.label"></td>
-                <td colspan="2" v-text="item.score"></td>
-                <td colspan="3" v-text="item.opinion"></td>
+                <td colspan="2" v-text="type.label"></td>
+                <td colspan="2" v-text="item.score + '分'"></td>
+                <td colspan="2" v-text="item.gsScore + '分'"></td>
+                <td colspan="2" v-text="item.opinion"></td>
               </tr>
             </template>
           </template>
@@ -455,6 +461,8 @@
     },
     methods: {
       init (id) {
+        this.reviewNameList = []
+        this.reviewList = []
         this.visible = true
         this.dataListLoading = true
         this.id = id

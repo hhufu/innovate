@@ -9,10 +9,10 @@
     <el-row>
       <table border="1" cellspacing="0" width="100%" class="table" id="out-table">
           <tr align='center'>
-            <td colspan="20" style="height: 1.2rem"></td>
+            <td colspan="21" style="height: 1.2rem"></td>
           </tr>
           <tr class="contents" align="center">
-            <th colspan="20">
+            <th colspan="21">
               梧州学院2019“互联网+”大学生创新创业大创项目汇总表
             </th>
           </tr>
@@ -43,7 +43,8 @@
           <th>区财政(元)</th>
           <th>校拨(元)</th>
           <th colspan="2">项目简介</th>
-          <td>平均分</td>
+          <td>项目平均分</td>
+          <td>格式平均分</td>
         </tr>
 
         <template>
@@ -66,6 +67,7 @@
             <td>暂无数据</td>
             <td>暂无数据</td>
             <td colspan="2">暂无数据</td>
+            <td>暂无数据</td>
             <td>暂无数据</td>
           </tr>
         </template>
@@ -146,6 +148,9 @@
             <td>
               <span v-text="item.declareInfoEntity.declareScoreAvg"></span>
             </td>
+            <td>
+              <span v-text="item.declareInfoEntity.gsScoreAvg"></span>
+            </td>
           </tr>
         </template>
           <tr align='center'  style="height: 3.0rem">
@@ -156,7 +161,7 @@
           </tr>
           <!--附件结束-->
         <tr align='center'>
-          <td colspan="20" style="height: 1.2rem"></td>
+          <td colspan="21" style="height: 1.2rem"></td>
         </tr>
         </table>
     </el-row>

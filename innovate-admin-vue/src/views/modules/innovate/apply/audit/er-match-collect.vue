@@ -156,7 +156,14 @@
         header-align="center"
         align="center"
         width="80"
-        label="平均分">
+        label="项目平均分">
+      </el-table-column>
+      <el-table-column
+        prop="declareInfoEntity.gsScoreAvg"
+        header-align="center"
+        align="center"
+        width="80"
+        label="格式平均分">
       </el-table-column>
       <el-table-column
         fixed="right"

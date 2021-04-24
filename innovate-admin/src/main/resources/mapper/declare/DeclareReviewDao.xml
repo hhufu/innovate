@@ -49,9 +49,13 @@
         and is_del = 0
     </select>
 
+    <resultMap id="score" type="Map">
+        <result column="score" property="score"></result>
+        <result column="gs_score" property="gsScore"></result>
+    </resultMap>
     <!--计算平均分-->
-    <select id="queryScoreAvg" resultType="java.lang.Double" parameterType="map">
-        select avg(score) from innovate_declare_review
+    <select id="queryScoreAvg" resultType="map" parameterType="map">
+        select avg(score) AS score, avg(gs_score) AS gsScore from innovate_declare_review
         where is_del = 0
         <if test="apply != null and apply != ''">
             and apply = #{apply}

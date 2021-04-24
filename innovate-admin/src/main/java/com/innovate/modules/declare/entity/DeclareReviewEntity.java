@@ -26,6 +26,8 @@ public class DeclareReviewEntity implements Serializable {
     private Long refereeNo;
     @JsonSerialize(using=ToStringSerializer.class)
     private Double score;
+    @JsonSerialize(using=ToStringSerializer.class)
+    private Double gsScore;
     private String opinion;
     private Long reviewYear;
 

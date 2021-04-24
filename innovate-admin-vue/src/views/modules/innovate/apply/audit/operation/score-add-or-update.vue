@@ -20,8 +20,11 @@
     <br>
     <br>
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="8rem">
-      <el-form-item label="打分" prop="score">
+      <el-form-item label="项目打分" prop="score">
         <el-input v-model="dataForm.score" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="格式打分" prop="score">
+        <el-input v-model="dataForm.gsScore" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="反馈意见" prop="opinion">
         <el-input
@@ -63,13 +66,18 @@
           userId: this.$store.state.user.id,
           declareId: this.id,
           score: '',
-          opinion: ''
+          opinion: '',
+          gsScore: ''
         },
         pageIndex: 1,
         pageSize: 10,
         totalPage: 0,
         dataRule: {
           score: [
+            { required: true, message: '分数不能为空', trigger: 'blur' },
+            { validator: validateFloatNumber, trigger: 'blur' }
+          ],
+          gsScore: [
             { required: true, message: '分数不能为空', trigger: 'blur' },
             { validator: validateFloatNumber, trigger: 'blur' }
           ],
@@ -82,7 +90,6 @@
     methods: {
       init (index, e) {
         this.visible = true
-        console.log(e)
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           this.id = index || 0

@@ -41,7 +41,7 @@ public interface DeclareReviewService extends IService<DeclareReviewEntity> {
     /**
      * 计算平均分
      */
-    Double queryScoreAvg(Map<String, Object> params);
+    Map<String, Object> queryScoreAvg(Map<String, Object> params);
 
     PageUtils unReview(Map<String, Object> params);
     /**

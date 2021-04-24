@@ -34,6 +34,7 @@ public class DeclareInfoEntity implements Serializable {
     private Long auditNoPass;
     @JsonSerialize(using=ToStringSerializer.class)
     private Double declareScoreAvg;
+    private Double gsScoreAvg;
     private String declareRecommendLevel;
     private Long declareOrderNo;
     private String declareResult;

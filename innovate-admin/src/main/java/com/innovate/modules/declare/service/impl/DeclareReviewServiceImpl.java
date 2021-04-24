@@ -20,6 +20,7 @@ import com.innovate.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -64,7 +65,7 @@ public class DeclareReviewServiceImpl extends ServiceImpl<DeclareReviewDao, Decl
     }
 
     @Override
-    public Double queryScoreAvg(Map<String, Object> params) {
+    public Map<String, Object> queryScoreAvg(Map<String, Object> params) {
         return baseMapper.queryScoreAvg(params);
     }
 
@@ -155,10 +156,13 @@ public class DeclareReviewServiceImpl extends ServiceImpl<DeclareReviewDao, Decl
         Long count = declareReviewService.queryCount(params);
         if (count == 0L){
             declareApplyService.apply(params);
-            //计算平均分
-            Double scoreAvg = declareReviewService.queryScoreAvg(params);
+            //计算项目打分平均分
+            Map<String, Object> scoreAvg = declareReviewService.queryScoreAvg(params);
             DeclareInfoEntity declareInfoEntity = declareInfoService.selectById(declareId);
-            declareInfoEntity.setDeclareScoreAvg(scoreAvg);
+            // 设置项目打分平均分
+            declareInfoEntity.setDeclareScoreAvg(Double.parseDouble(scoreAvg.get("score").toString()));
+            declareInfoEntity.setGsScoreAvg(Double.parseDouble(scoreAvg.get("gsScore").toString()));
+            // 修改项目打分平均分
             declareInfoService.updateById(declareInfoEntity);
         }
     }

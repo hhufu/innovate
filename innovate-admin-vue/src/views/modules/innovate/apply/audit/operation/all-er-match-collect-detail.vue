@@ -9,10 +9,10 @@
     <el-row>
       <table border="1" cellspacing="0" width="100%" class="table" id="out-table">
         <tr align='center'>
-          <td colspan="24" style="height: 1.2rem"></td>
+          <td colspan="25" style="height: 1.2rem"></td>
         </tr>
         <tr class="contents" align="center">
-          <th colspan="24">
+          <th colspan="25">
             梧州学院2021年大学生创新创业项目汇总表
           </th>
         </tr>
@@ -20,7 +20,7 @@
           <th>二级学院名称(盖章)：</th>
           <td colspan="8" style="height: 1rem"></td>
           <th>联系人：</th>
-          <td colspan="5" style="height: 1rem"></td>
+          <td colspan="7" style="height: 1rem"></td>
           <th>联系电话：</th>
           <td colspan="7" style="height: 1rem"></td>
         </tr>
@@ -45,7 +45,8 @@
           <th>校拨(元)</th>
           <th>所属专业类</th>
           <th colspan="2">项目简介</th>
-          <td>平均分</td>
+          <td>项目平均分</td>
+          <td>格式平均分</td>
           <td>所属学院</td>
           <td>审核状态</td>
         </tr>
@@ -72,6 +73,8 @@
             <td>暂无数据</td>
             <td>暂无数据</td>
             <td colspan="2">暂无数据</td>
+            <td>暂无数据</td>
+            <td>暂无数据</td>
             <td>暂无数据</td>
             <td>暂无数据</td>
           </tr>
@@ -167,6 +170,10 @@
               <!-- 平均分 -->
               <span v-text="item.declareInfoEntity.declareScoreAvg"></span>
             </td>
+            <td>
+              <!-- 格式平均分 -->
+              <span v-text="item.declareInfoEntity.gsScoreAvg"></span>
+            </td>
             <td colspan="1">
               <!--二级学院-->
               <span v-for="inst in instituteList" v-if="item.declareInfoEntity.instituteId === inst.instituteId" v-text="inst.instituteName"></span>
@@ -213,11 +220,11 @@
           <th>备注：</th>
           <td colspan="9" style="height: 1.5rem">已核实所有参赛队员学籍信息，均符合参赛要求</td>
           <th>二级学院领导签名：</th>
-          <td colspan="12" style="height: 1.5rem"></td>
+          <td colspan="14" style="height: 1.5rem"></td>
         </tr>
         <!--附件结束-->
         <tr align='center'>
-          <td colspan="24" style="height: 1.2rem"></td>
+          <td colspan="25" style="height: 1.2rem"></td>
         </tr>
       </table>
     </el-row>
