@@ -340,11 +340,12 @@
           </tr>
           <tr align='center'>
             <td colspan="5">项目平均分</td>
-            <td colspan="5" v-text="declareInfo.declareScoreAvg + '分'"></td>
+            <td colspan="5" ><span v-if="declareInfo.declareScoreAvg != null" v-text="declareInfo.declareScoreAvg + '分'"></span></td>
           </tr>
           <tr align='center'>
             <td colspan="5">格式平均分</td>
-            <td colspan="5" v-text="declareInfo.gsScoreAvg + '分'"></td>
+            <td colspan="5" ><span v-if="declareInfo.gsScoreAvg != null" v-text="declareInfo.gsScoreAvg + '分'"></span></td>
+<!--            <td colspan="5" v-if="declareInfo.gsScoreAvg != null"  v-text="declareInfo.gsScoreAvg + '分'"></td>-->
           </tr>
           <tr align='center'>
             <td colspan="10" style="height: 1.2rem"></td>
@@ -482,6 +483,7 @@
                 this.userTeacherInfoEntities = data.userTeacherInfoEntities
               } else {
                 this.teacherList = []
+                this.userTeacherInfoEntities = []
               }
               if (data.declareInfo.userPersonInfoEntities.length > 0) {
                 this.perInfoList = data.declareInfo.userPersonInfoEntities
