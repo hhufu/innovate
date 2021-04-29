@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innovate.modules.match.dao.MatchSigningOpinionDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.innovate.modules.match.entity.MatchSigningOpinionEntity" id="innovateMatchSigningOpinionMap">
+        <result property="signingOpinionsId" column="signing_opinions_id"/>
+        <result property="matchId" column="match_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="signingOpinion" column="signing_opinion"/>
+        <result property="signingOpinionTime" column="signing_opinion_time"/>
+        <result property="isDel" column="is_del"/>
+        <result property="signType" column="sign_type"/>
+    </resultMap>
+
+    <select id="querySigningOpinionByMatchIdAndType" parameterType="java.lang.Long" resultType="MatchSigningOpinionEntity">
+        select  * from innovate_match_signing_opinion
+        <where>
+            <if test="matchId != null and matchId != ''"></if>
+            match_id = #{matchId}
+            <if test="signType != null and signType != ''"></if>
+            and sign_type = #{signType}
+        </where>
+        and is_del = 0
+    </select>
+
+
+</mapper>

@@ -239,6 +239,38 @@
         </template>
         <!--导师信息结束-->
 
+        <!--指导老师签署意见开始-->
+        <tr align='center'>
+          <td colspan="10" style="height: 1.2rem"></td>
+        </tr>
+        <tr align="center" class="contents">
+          <th colspan="10">指导老师签署意见</th>
+        </tr>
+        <tr align='center'>
+          <td colspan="10" style="height: 1.2rem"></td>
+        </tr>
+        <tr align='center'>
+          <th colspan="2">签署意见</th>
+          <th colspan="8" v-if="signingOpinionEntity.signingOpinion!==null" v-text="signingOpinionEntity.signingOpinion"></th>
+        </tr>
+        <!--指导老师签署意见结束-->
+
+        <!--二级学院签署意见开始-->
+        <tr align='center'>
+          <td colspan="10" style="height: 1.2rem"></td>
+        </tr>
+        <tr align="center" class="contents">
+          <th colspan="10">院系专家组签署意见</th>
+        </tr>
+        <tr align='center'>
+          <td colspan="10" style="height: 1.2rem"></td>
+        </tr>
+        <tr align='center'>
+          <th colspan="2">签署意见</th>
+          <th colspan="8" v-if="signingOpinionEntity.erSigningOpinion!==null" v-text="signingOpinionEntity.erSigningOpinion"></th>
+        </tr>
+        <!--二级学院签署意见结束-->
+
         <!--成果/奖项开始-->
         <tr align='center'>
           <td colspan="10" style="height: 1.2rem"></td>
@@ -381,6 +413,11 @@
         attachList: [],
         subList: [],
         perInfoList: [],
+        signingOpinionEntity: {
+          signingOpinion: '',
+          signingOpinionTime: '',
+          erSigningOpinion: '',
+        },
         reviewTypeList: [
           {value: 'project_audit_apply_status', label: '训练申请流程'},
           {value: 'project_base_apply_status', label: '中心申请流程'},
@@ -425,7 +462,11 @@
           teacherPhone: '',
           teacherJob: '',
           teacherInstinct: '',
-          baseId: ''
+          baseId: '',
+          signingOpinionEntity: {
+            signingOpinion: '',
+            signingOpinionTime: ''
+          },
         },
         staticList: [
           '在驻',
@@ -481,6 +522,32 @@
               } else {
                 this.reviewList = []
               }
+              // 获取指导老师签署意见
+              this.$http({
+                url: this.$http.adornUrl(`/innovate/match/signingopinion/info`),
+                method: 'get',
+                params: this.$http.adornParams({
+                  'matchId': this.dataForm.id,
+                  'signType': 1
+                })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.signingOpinionEntity.signingOpinion = data.sighingOpinion.signingOpinion
+                }
+              })
+              // 获取二级学院签署意见
+              this.$http({
+                url: this.$http.adornUrl(`/innovate/match/signingopinion/info`),
+                method: 'get',
+                params: this.$http.adornParams({
+                  'matchId': this.dataForm.id,
+                  'signType': 2
+                })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.signingOpinionEntity.erSigningOpinion = data.sighingOpinion.signingOpinion
+                }
+              })
               this.dataListLoading = false
             }
           })

@@ -119,7 +119,8 @@
           <el-button v-if="addOrUpadate(scope.row.matchInfoEntity)" type="text" size="small" @click="addOrUpdateHandle(scope.row.matchInfoEntity.matchId)">修改</el-button>
           <el-button v-if="isDelete(scope.row.matchInfoEntity)" type="text" size="small" @click="deleteHandle(scope.row.matchInfoEntity.matchId)">删除</el-button>
           <br v-if="applyMatchIsVisible(scope.row.matchInfoEntity)">
-          <el-button v-if="applyMatchIsVisible(scope.row.matchInfoEntity)" type="text" size="small" @click="applyMatchHandle(scope.row.matchInfoEntity.matchId)">通过</el-button>
+<!--          <el-button v-if="applyMatchIsVisible(scope.row.matchInfoEntity)" type="text" size="small" @click="applyMatchHandle(scope.row.matchInfoEntity.matchId)">通过</el-button>-->
+          <el-button v-if="applyMatchIsVisible(scope.row.matchInfoEntity)" type="text" size="small" @click="sighingOpinionsHandle(2, scope.row.matchInfoEntity.matchId)">签署意见</el-button>
           <el-button v-if="retreatIsVisible(scope.row.matchInfoEntity)" type="text" size="small" @click="retreatHandle(scope.row.matchInfoEntity)">不通过</el-button>
         </template>
       </el-table-column>
@@ -139,6 +140,7 @@
     <update-add-or-update v-if="isUpdateVisible" ref="isUpdate" @refreshDataList="getDataList"></update-add-or-update>
     <detail v-if="detailVisible" ref="detail" @refreshDataList="getDataList"></detail>
     <retreat-add-or-update v-if="retreatVisible" ref="retreat" @refreshDataList="getDataList"></retreat-add-or-update>
+    <sighing-opinions v-if="sighingOpinionsVisible" ref="sighingOpinions" @refreshDataList="getDataList"></sighing-opinions>
   </div>
 </template>
 
@@ -148,6 +150,7 @@
   import UpdateAddOrUpdate from './operation/update-add-or-update'
   import UpdateHistory from './operation/update-history'
   import RetreatAddOrUpdate from './operation/retreat-add-or-update'
+  import SighingOpinions from "../match/operation/sighing-opinions";
 
   export default {
     data () {
@@ -186,7 +189,8 @@
         applyVisible: false,
         isUpdateVisible: false,
         retreatVisible: false,
-        isHistoyVisible: false
+        isHistoyVisible: false,
+        sighingOpinionsVisible: false// 签署意见
       }
     },
     components: {
@@ -194,7 +198,8 @@
       UpdateAddOrUpdate,
       RetreatAddOrUpdate,
       AddOrUpdate,
-      Detail
+      Detail,
+      SighingOpinions
     },
     activated () {
       this.getDataList()
@@ -314,6 +319,13 @@
         this.retreatVisible = true
         this.$nextTick(() => {
           this.$refs.retreat.init(item.matchId, 'project_match_apply_status', item.projectMatchApplyStatus)
+        })
+      },
+      // 审批通过签署意见
+      sighingOpinionsHandle (type, id) {
+        this.sighingOpinionsVisible = true
+        this.$nextTick(() => {
+          this.$refs.sighingOpinions.init(type, id)
         })
       },
       // 审批
