@@ -5,9 +5,11 @@
     :title="!id ? '新增' : '审批'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="6rem">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="180px">
       <el-form-item :label="title" prop="sighingOpinion">
-        <div class="sub-title" style="color:#17a117;">温馨提示：指导老师审核意见200~300字之间，院系专家组意见在100~200字之间</div>
+        <div class="sub-title" style="color:#17a117;" v-if="roleId == 3">温馨提示：指导老师审核意见200~300字之间</div>
+        <div class="sub-title" style="color:#17a117;" v-if="roleId == 4">温馨提示：（1）签署：“经核查，该项目组全体成员均为本校全日制在校本科生或专科生（职教赛道）”，点击【通过】
+          <br>（2）签署：“经核查，该项目组成员有非本校全日制在校本科生或专科生（职教赛道）”，点击【不通过】</div>
         <el-input
           type="textarea"
           :rows="5"
@@ -63,7 +65,7 @@
             this.title = '指导老师签署意见'
           }else{
             this.roleId = 4
-            this.title = '院系专家组签署意见'
+            this.title = '二级学院签署意见'
           }
           if (this.id) {
           }
