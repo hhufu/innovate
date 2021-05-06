@@ -21,7 +21,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="比赛赛事名" prop="eventId">
-            <el-select style="width: 70%" v-model="dataForm.eventId" placeholder="请选择" @change="fileAskContentHandler($event)">
+            <el-select style="width: 70%" v-model="dataForm.eventId" placeholder="请选择" @change="fileAskContentHandler">
               <el-option v-for="item in eventLists" :key="item.eventId" :label="item.eventName" :value="item.eventId"
                          :disabled="item.optionDisable">
                 <span style="float: left;padding-left: 10px">{{ item.eventName }}</span>
@@ -654,8 +654,12 @@
         this.visible = false
         this.$emit('refreshDataList')
       },
-      fileAskContentHandler(event) {
-        this.fileAskContent = this.eventLists[event - 1].fileAskContent
+      fileAskContentHandler(eventID) {
+        this.eventLists.forEach(item => {
+          if (item.eventId == eventID)
+            this.fileAskContent = item.fileAskContent
+        })
+
       }
     }
   }
