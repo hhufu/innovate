@@ -9,11 +9,11 @@
     <el-row>
       <table border="1" cellspacing="0" width="100%" class="table" id="out-table">
           <tr align='center'>
-            <td colspan="12" style="height: 1.2rem"></td>
+            <td colspan="13" style="height: 1.2rem"></td>
           </tr>
           <tr class="contents" align="center">
-            <th colspan="12">
-              梧州学院2019“互联网+”大学生创新创业大赛项目汇总表
+            <th colspan="13">
+              梧州学院2021“互联网+”大学生创新创业大赛项目汇总表
             </th>
           </tr>
           <tr align='center' style="height: 3.0rem">
@@ -22,7 +22,7 @@
             <th>联系人：</th>
             <td colspan="1" style="height: 1rem"></td>
             <th>联系电话：</th>
-            <td colspan="4" style="height: 1rem"></td>
+            <td colspan="5" style="height: 1rem"></td>
           </tr>
 
           <tr align='center' v-if="">
@@ -36,6 +36,7 @@
             <th colspan="3">团队成员姓名</th>
             <th>指导老师</th>
             <th>平均得分</th>
+            <th>审核状态</th>
           </tr>
         <template>
         <tr align='center' v-if="matchInfoList.length === 0">
@@ -47,6 +48,7 @@
           <td>暂无数据</td>
           <td>暂无数据</td>
           <td colspan="3">暂无数据</td>
+          <td>暂无数据</td>
           <td>暂无数据</td>
           <td>暂无数据</td>
         </tr>
@@ -76,6 +78,7 @@
                 <span v-for="teacher in item.userTeacherInfoEntities" v-text="teacher.sysUserEntity.name+' '"></span>
               </td>
               <td><span v-text="item.matchInfoEntity.matchScoreAvg"></span></td>
+              <td><span v-text="formatterProcess(item)"></span></td>
             </tr>
           </template>
           <!--员工信息结束-->
@@ -83,11 +86,11 @@
             <th>备注：</th>
             <td colspan="5" style="height: 1.5rem">已核实所有参赛队员学籍信息，均符合参赛要求</td>
             <th>二级学院领导签名：</th>
-            <td colspan="5" style="height: 1.5rem"></td>
+            <td colspan="6" style="height: 1.5rem"></td>
           </tr>
           <!--附件结束-->
         <tr align='center'>
-          <td colspan="12" style="height: 1.2rem"></td>
+          <td colspan="13" style="height: 1.2rem"></td>
         </tr>
         </table>
     </el-row>
@@ -178,7 +181,7 @@
       }
     },
     methods: {
-      init (id, time) {
+      init (id, time, p, noPass) {
         this.visible = true
         this.dataListLoading = true
         this.dataForm.id = id || 0
@@ -188,9 +191,12 @@
             method: 'get',
             params: this.$http.adornParams({
               'instituteId': this.dataForm.id,
-              'project_audit_apply_status_more': 2,
-              'noPassStatus': 0,
-              'noPass': 'match_no_pass',
+              'hasApply': '1',
+              'apply': p === 8 ? null : 'project_match_apply_status',
+              'applyStatus': p === 8 ? null : p,
+              'project_match_apply_status_more': p === 8 ? 0: null,
+              'noPassStatus': noPass !== '' ? parseInt(noPass) : '',
+              'noPass': noPass !== '' ? 'match_no_pass' : '',
               'matchTime': time.getFullYear(),
               'isEr': true,
               'isDel': 0,
@@ -198,7 +204,6 @@
               'currPage': 1
             })
           }).then(({data}) => {
-            console.log(data)
             if (data && data.code === 0) {
               this.matchInfoList = data.page.list
               this.userTeacherInfoEntities = data.userTeacherInfoEntities
@@ -211,6 +216,13 @@
         } else {
           this.dataListLoading = false
         }
+      },
+      // 转换流程进度名称
+      formatterProcess(row) {
+        var arr = ["项目负责人提交", "指导老师审批", "二级学院审批", "管理员分配评委组", "评委审批", "管理员审批"]
+        if (row.matchInfoEntity.matchNoPass == 1)
+          return "已退回（" + arr[row.matchInfoEntity.projectMatchApplyStatus - 1] + "）"
+        return arr[row.matchInfoEntity.projectMatchApplyStatus - 1]
       },
       // 导出
       exportDeclare () {

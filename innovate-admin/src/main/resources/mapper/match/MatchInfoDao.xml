@@ -151,8 +151,6 @@
             and b.institute_id = #{erInstituteId}
         </if>
 
-
-
         <if test="isUpdate != null and isUpdate != ''">
             and a.is_update = #{isUpdate}
         </if>
@@ -163,6 +161,14 @@
 
         <if test="isDel != null and isDel != ''">
             and a.is_del = #{isDel}
+        </if>
+
+        <if test="project_match_apply_status != null and project_match_apply_status != ''">
+            and project_match_apply_status = #{project_match_apply_status}
+        </if>
+
+        <if test="project_match_apply_status_more != null and project_match_apply_status_more != ''">
+            and project_match_apply_status &gt; #{project_match_apply_status_more}
         </if>
 
         <if test="noPass != null and noPass != '' and noPassStatus != null and noPassStatus != ''">

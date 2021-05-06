@@ -13,7 +13,7 @@
           </tr>
           <tr class="contents" align="center">
             <th colspan="12">
-              梧州学院2019“互联网+”大学生创新创业大赛项目汇总表
+              梧州学院2021“互联网+”大学生创新创业大赛项目汇总表
             </th>
           </tr>
           <tr align='center' style="height: 3.0rem">
