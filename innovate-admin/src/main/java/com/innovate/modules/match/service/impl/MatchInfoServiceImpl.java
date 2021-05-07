@@ -59,4 +59,9 @@ public class MatchInfoServiceImpl extends ServiceImpl<MatchInfoDao, MatchInfoEnt
     public void remove(Map<String, Object> params) {
         baseMapper.remove(params);
     }
+
+    @Override
+    public int queryByYear(Map<String, Object> params) {
+        return baseMapper.queryByYear(params);
+    }
 }

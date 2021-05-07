@@ -53,4 +53,7 @@ public interface MatchInfoService extends IService<MatchInfoEntity> {
      * @param params
      */
     void remove(Map<String, Object> params);
+
+
+    int queryByYear(Map<String, Object> params);
 }

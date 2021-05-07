@@ -257,4 +257,16 @@
         </where>
     </select>
 
+    <!--查询当前年份是否有项目-->
+    <select id="queryByYear"  parameterType="map" resultType="Integer">
+        select count(*) from innovate_match_info
+        <where>
+            <if test="userId != '' and userId != null">
+                project_user_id = #{userId}
+                and Year(match_time) = Year(CurDate())
+                and is_del = 0
+            </if>
+        </where>
+    </select>
+
 </mapper>
