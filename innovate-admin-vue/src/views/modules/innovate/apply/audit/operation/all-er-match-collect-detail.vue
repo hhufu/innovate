@@ -128,21 +128,16 @@
             </td>
             <td>
               <!--指导老师姓名-->
-                <span v-for="teacher in userTeacherInfoEntities">
-                  <span v-for="(teacher2,index2) in item.declareTeacherEntities"
-                        v-if="teacher.userId === teacher2.userId"
-                        v-text=" (index2 >= 1? ',': '') + teacher.sysUserEntity.name" align="center">
+                <span>
+                  <span v-text="formatTeacher(item.declareTeacherEntities)" align="center">
                   </span>
                 </span>
             </td>
             <td>
               <!--指导老师职称-->
-              <span v-for="teacher in userTeacherInfoEntities">
-                 <span v-for="(teacher2,index3) in item.declareTeacherEntities"
-                       v-if="teacher.userId === teacher2.userId">
-                        <!--v-text="teacher.teacherTitle" align="center">-->
-                   <!--teacherTitleList-->
-                     <span v-for="temp in teacherTitleList" v-if="temp.titleId === teacher.teacherTitle" v-text="temp.titleName + (index3 === 0? '': ',')"></span>
+              <span>
+                 <span>
+                     <span v-text="formatTeacherTitle(item.declareTeacherEntities)"></span>
                   </span>
                 </span>
             </td>
@@ -357,6 +352,33 @@
           }
           this.dataListLoading = false
         })
+      },
+      //
+      formatTeacher(item){
+        let teacherName = ''
+          for(let index2 in item) {
+            for(let index in this.userTeacherInfoEntities){
+            if (this.userTeacherInfoEntities[index].userId === item[index2].userId) {
+              teacherName += (index2 >= 1? ',': '') + this.userTeacherInfoEntities[index].sysUserEntity.name
+          }
+          }
+        }
+          return teacherName;
+      },
+      //
+      formatTeacherTitle(item){
+        let teacherTitle = ''
+        for(let index2 in item) {
+          for (let index in this.userTeacherInfoEntities) {
+            if (this.userTeacherInfoEntities[index].userId === item[index2].userId) {
+              for (let temp in this.teacherTitleList){
+                if (this.userTeacherInfoEntities[index].teacherTitle === this.teacherTitleList[temp].titleId)
+                  teacherTitle += (index2 >= 1? ',': '') + this.teacherTitleList[temp].titleName
+              }
+            }
+          }
+        }
+          return teacherTitle;
       },
       // 转换流程进度名称
       formatterProcess(row) {
