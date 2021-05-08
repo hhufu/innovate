@@ -11,6 +11,26 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="项目处于">
+        <el-select v-model="processStatus" placeholder="请选择审核状态">
+          <el-option
+            v-for="item in processStatusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="项目状态">
+        <el-select v-model="noPass" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="item in noPassList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-date-picker
           v-model="dataForm.matchTime"
@@ -21,7 +41,7 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button type="primary" @click="allErMatchCollectDetail(dataForm.instituteId,dataForm.matchTime)">导出</el-button>
+        <el-button type="primary" @click="allErMatchCollectDetail(dataForm.instituteId,dataForm.matchTime, processStatus, noPass)">导出</el-button>
         <!--<el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
       </el-form-item>
     </el-form>
@@ -109,6 +129,13 @@
         <template slot-scope="scope">
           <span v-for="teacher in scope.row.userTeacherInfoEntities" v-text="teacher.sysUserEntity.name+' '"></span>
         </template>
+      </el-table-column>
+      <el-table-column
+        prop="matchInfoEntity.projectAuditApplyStatus"
+        header-align="center"
+        :formatter="formatterProcess"
+        align="center"
+        label="审核状态">
       </el-table-column>
       <el-table-column
         prop="matchInfoEntity.matchScoreAvg"
@@ -199,6 +226,41 @@
           instituteId: '',
           matchTime: new Date()
         },
+        noPass:'0',
+        noPassList: [{
+          label: '正常',
+          value: '0'
+        },{
+          label: '已退回',
+          value: '1'
+        },{
+          label: '全部',
+          value: ''
+        }],
+        processStatus: 1,
+        processStatusList: [{
+          label: '项目负责人提交',
+          value:1
+        }, {
+          label: '指导老师审批',
+          value: 2
+        }, {
+          label: '二级学院审批',
+          value: 3
+        }, {
+          label: '管理员分配评委组',
+          value: 4
+        }, {
+          label: '评委审批',
+          value: 5
+        }, {
+          label: '管理员审批',
+          value: 6
+        },{
+          label: '全部状态',
+          value: 8
+        }
+        ],// 流程下拉列表
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
@@ -232,6 +294,8 @@
     methods: {
       // 获取数据列表
       getDataList () {
+        console.log(this.processStatus)
+        console.log(this.noPass)
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl(`/innovate/match/info/list`),
@@ -239,12 +303,15 @@
           params: this.$http.adornParams({
             'instituteId': this.dataForm.instituteId,
             'matchTime': this.dataForm.matchTime == null ? '' : this.dataForm.matchTime.getFullYear(),
+            'hasApply': '1',
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
-            'project_audit_apply_status_more': 2,
-            'noPassStatus': 0,
-            'noPass': 'match_no_pass',
-            'isInstitute': true,
+            'apply': this.processStatus === 8 ? null:'project_match_apply_status',
+            'applyStatus': this.processStatus === 8 ? null: this.processStatus,
+            'project_match_apply_status_more': this.processStatus === 8 ? 0: null,// 审核状态大于0,
+            'noPassStatus': this.noPass !== '' ? parseInt(this.noPass) : 0,
+            'noPass': this.noPass !== '' ? 'match_no_pass' : '',
+            // 'isInstitute': true,
             'isDel': 0
           })
         }).then(({data}) => {
@@ -259,6 +326,13 @@
             this.dataListLoading = false
           }
         })
+      },
+      // 转换流程进度名称
+      formatterProcess(row) {
+        var arr = ["项目负责人提交", "指导老师审批", "二级学院审批", "管理员分配评委组", "评委审批", "管理员审批"]
+        if (row.matchInfoEntity.matchNoPass == 1)
+          return "已退回（" + arr[row.matchInfoEntity.projectMatchApplyStatus - 1] + "）"
+        return arr[row.matchInfoEntity.projectMatchApplyStatus - 1]
       },
       // 每页数
       sizeChangeHandle (val) {
@@ -282,10 +356,10 @@
           this.$refs.addOrUpdate.init(id)
         })
       },
-      allErMatchCollectDetail (instituteId, matchTime) {
+      allErMatchCollectDetail (instituteId, matchTime, processStatus, noPass) {
         this.allErMatchCollectDetailVisible = true
         this.$nextTick(() => {
-          this.$refs.allErMatchCollectDetail.init(instituteId, matchTime)
+          this.$refs.allErMatchCollectDetail.init(instituteId, matchTime, processStatus, noPass)
         })
       },
       // 新增 / 修改

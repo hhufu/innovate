@@ -151,8 +151,6 @@
             and b.institute_id = #{erInstituteId}
         </if>
 
-
-
         <if test="isUpdate != null and isUpdate != ''">
             and a.is_update = #{isUpdate}
         </if>
@@ -163,6 +161,14 @@
 
         <if test="isDel != null and isDel != ''">
             and a.is_del = #{isDel}
+        </if>
+
+        <if test="project_match_apply_status != null and project_match_apply_status != ''">
+            and project_match_apply_status = #{project_match_apply_status}
+        </if>
+
+        <if test="project_match_apply_status_more != null and project_match_apply_status_more != ''">
+            and project_match_apply_status &gt; #{project_match_apply_status_more}
         </if>
 
         <if test="noPass != null and noPass != '' and noPassStatus != null and noPassStatus != ''">
@@ -247,6 +253,18 @@
         <where>
             <if test="eventId != '' and eventId != null">
                 b.event_id = #{eventId}
+            </if>
+        </where>
+    </select>
+
+    <!--查询当前年份是否有项目-->
+    <select id="queryByYear"  parameterType="map" resultType="Integer">
+        select count(*) from innovate_match_info
+        <where>
+            <if test="userId != '' and userId != null">
+                project_user_id = #{userId}
+                and Year(match_time) = Year(CurDate())
+                and is_del = 0
             </if>
         </where>
     </select>

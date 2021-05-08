@@ -247,7 +247,36 @@
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {
+        if (id != null && id != "") {
+          this.addOrUpdatePage(id)
+        } else {
+          this.$http({
+            url: this.$http.adornUrl('/innovate/match/info/queryByYear'),
+            method: 'get',
+            params: this.$http.adornParams({
+              'userId': this.$store.state.user.id,
+              'isDel': 0,
+              'isStudent': true
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.addOrUpdatePage()
+            } else {
+                this.$message({
+                  message: data.msg,
+                  type: 'error',
+                  duration: 1500,
+                  onClose: () => {
+
+                  }
+                })
+              }
+          })
+        }
+      },
+      addOrUpdatePage(id) {
         this.addOrUpdateVisible = true
+        //this.$nextTick()将回调延迟到下次 DOM 更新循环之后执行
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
         })

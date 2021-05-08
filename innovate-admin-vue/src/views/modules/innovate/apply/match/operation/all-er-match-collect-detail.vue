@@ -9,10 +9,10 @@
     <el-row>
       <table border="1" cellspacing="0" width="100%" class="table" id="all-out-table">
           <tr align='center'>
-            <td colspan="12" style="height: 1.2rem"></td>
+            <td colspan="14" style="height: 1.2rem"></td>
           </tr>
           <tr class="contents" align="center">
-            <th colspan="12">
+            <th colspan="14">
               梧州学院“互联网+”大学生创新创业大赛项目汇总表
             </th>
           </tr>
@@ -37,6 +37,7 @@
             <th>指导老师</th>
             <th>平均得分</th>
             <th>所属二级学院</th>
+            <th>审核状态</th>
           </tr>
         <template>
         <tr align='center' v-if="matchInfoList.length === 0">
@@ -48,6 +49,7 @@
           <td>暂无数据</td>
           <td>暂无数据</td>
           <td colspan="3">暂无数据</td>
+          <td>暂无数据</td>
           <td>暂无数据</td>
           <td>暂无数据</td>
         </tr>
@@ -82,6 +84,7 @@
               </td>
               <td><span v-text="item.matchInfoEntity.matchScoreAvg"></span></td>
               <td><span v-text="item.userPersonInfoEntities.length > 0? fomatterInstitute(item.userPersonInfoEntities[0].sysUserEntity.instituteId): 0"></span></td>
+              <td><span v-text="formatterProcess(item)"></span></td>
             </tr>
           </template>
           <!--员工信息结束-->
@@ -93,7 +96,7 @@
           <!--</tr>-->
           <!--附件结束-->
         <tr align='center'>
-          <td colspan="12" style="height: 1.2rem"></td>
+          <td colspan="14" style="height: 1.2rem"></td>
         </tr>
         </table>
     </el-row>
@@ -184,7 +187,7 @@
       }
     },
     methods: {
-      init (instituteId, matchTime) {
+      init (instituteId, matchTime, p, noPass) {
         this.visible = true
         this.dataListLoading = true
         this.$http({
@@ -194,11 +197,14 @@
             'instituteId': instituteId,
             'matchTime': matchTime.getFullYear(),
             'currPage': 1,
+            'hasApply': '1',
             'pageSize': 100000,
-            'project_audit_apply_status_more': 2,
-            'noPassStatus': 0,
-            'noPass': 'match_no_pass',
-            'isInstitute': true,
+            'apply': p === 8 ? null:'project_match_apply_status',
+            'applyStatus': p === 8 ? null: p,
+            'project_match_apply_status_more':  p === 8 ? 0: null,
+            'noPassStatus': noPass !== '' ? parseInt(noPass) : '',
+            'noPass': noPass !== '' ? 'match_no_pass' : '',
+            // 'isInstitute': true,
             'isDel': 0
           })
         }).then(({data}) => {
@@ -212,6 +218,13 @@
             this.totalPage = 0
           }
         })
+      },
+      // 转换流程进度名称
+      formatterProcess(row) {
+        var arr = ["项目负责人提交", "指导老师审批", "二级学院审批", "管理员分配评委组", "评委审批", "管理员审批"]
+        if (row.matchInfoEntity.matchNoPass == 1)
+          return "已退回（" + arr[row.matchInfoEntity.projectMatchApplyStatus - 1] + "）"
+        return arr[row.matchInfoEntity.projectMatchApplyStatus - 1]
       },
       // 格式化学院名称
       fomatterInstitute (instituteId) {

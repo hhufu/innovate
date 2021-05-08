@@ -41,4 +41,6 @@ public interface MatchInfoDao extends BaseMapper<MatchInfoEntity> {
 
     void remove(Map<String, Object> params);
 
+    int queryByYear(Map<String, Object> params);
+
 }
