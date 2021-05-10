@@ -95,7 +95,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="项目参与者信息" prop="staffInfoLists">
+          <el-form-item label="项目参与者信息(包括负责人)" prop="staffInfoLists">
             <el-button size="mini"
                        v-if="addVisible(staffInfoLists)" type="primary" plain @click="addStaff()">添加
             </el-button>
@@ -306,10 +306,10 @@
             {required: true, message: '项目简介不能为空', trigger: 'blur'}
           ],
           matchBrightSpot: [
-            {required: true, message: '项目创新之处和亮点不能为空', trigger: 'blur'}
+            {required: true, message: '项目所获投资情况不能为空', trigger: 'blur'}
           ],
           matchExpect: [
-            {required: true, message: '项目预期或已取得的成果不能为空', trigger: 'blur'}
+            {required: true, message: '项目所获专利情况不能为空', trigger: 'blur'}
           ],
           teacherLists: [
             {validator: validateTeacher, trigger: 'blur'}
