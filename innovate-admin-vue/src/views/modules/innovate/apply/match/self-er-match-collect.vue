@@ -100,7 +100,7 @@
         align="center"
         label="申报组别">
         <template slot-scope="scope">
-          <span v-for="type in matchTypeList" v-if="type.value === scope.row.matchInfoEntity.matchGroupType" v-text="type.label"></span>
+          <span v-for="type in matchGroupTypeList" v-if="type.value === scope.row.matchInfoEntity.matchGroupType" v-text="type.label"></span>
         </template>
       </el-table-column>
       <el-table-column
