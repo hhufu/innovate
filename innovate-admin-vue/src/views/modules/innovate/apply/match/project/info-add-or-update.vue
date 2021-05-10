@@ -389,6 +389,7 @@
                 }
                 this.fileList = tempMatchAtta
                 this.dataListLoading = false
+                this.fileAskContentHandler(this.dataForm.eventId)
               }
             })
           } else {

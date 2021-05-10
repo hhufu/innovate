@@ -85,6 +85,14 @@
             and c.user_id = #{userId}
         </if>
 
+        <if test="project_match_apply_status != null and project_match_apply_status != ''">
+            and project_match_apply_status = #{project_match_apply_status}
+        </if>
+
+        <if test="project_match_apply_status_more != null and project_match_apply_status_more != ''">
+            and project_match_apply_status &gt; #{project_match_apply_status_more}
+        </if>
+
         <if test="apply != null and apply != '' and applyStatus != null and hasReview == 1">
             and a.${apply} = #{applyStatus}
             and c.score is null
@@ -104,9 +112,9 @@
             and a.match_time like CONCAT('%',#{matchTime},'%')
         </if>
 
-        <if test="startPage != null and endPage != null">
-            limit #{startPage}, #{endPage}
-        </if>
+<!--        <if test="startPage != null and endPage != null">-->
+<!--            limit #{startPage}, #{endPage}-->
+<!--        </if>-->
 
     </select>
     <!--筛选满足当前条件的项目-->
