@@ -205,6 +205,7 @@
             'noPassStatus': noPass !== '' ? parseInt(noPass) : '',
             'noPass': noPass !== '' ? 'match_no_pass' : '',
             // 'isInstitute': true,
+            'isAdmin': true,
             'isDel': 0
           })
         }).then(({data}) => {

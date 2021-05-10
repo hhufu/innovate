@@ -26,6 +26,12 @@
             inner join innovate_user_person_info c on c.user_id = b.user_id
             and b.institute_id = #{instituteId}
         </if>
+        <!--与isEr为独立事件-->
+        <if test="isAdmin != null and isAdmin != '' and instituteId != null and instituteId != '' ">
+            inner join sys_user b on a.project_user_id = b.user_id
+            inner join innovate_user_person_info c on c.user_id = b.user_id
+            and b.institute_id = #{instituteId}
+        </if>
 
         <if test="hasReview != null and hasReview != ''">
             inner join innovate_match_review c on a.match_id = c.match_id
@@ -134,6 +140,13 @@
             inner join innovate_user_person_info c on c.user_id = b.user_id
             and b.institute_id = #{instituteId}
         </if>
+
+        <if test="isAdmin != null and isAdmin != '' and instituteId != null and instituteId != '' ">
+            inner join sys_user b on a.project_user_id = b.user_id
+            inner join innovate_user_person_info c on c.user_id = b.user_id
+            and b.institute_id = #{instituteId}
+        </if>
+
         <if test="hasReview != null and hasReview != ''">
             inner join innovate_match_review c on a.match_id = c.match_id
             and a.is_del = c.is_del
@@ -272,6 +285,7 @@
             <if test="userId != '' and userId != null">
                 project_user_id = #{userId}
                 and Year(match_time) = Year(CurDate())
+                and event_id = #{eventID}
                 and is_del = 0
             </if>
         </where>

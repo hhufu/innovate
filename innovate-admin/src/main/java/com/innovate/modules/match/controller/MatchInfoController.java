@@ -143,7 +143,7 @@ public class MatchInfoController extends AbstractController {
     public R queryByYear(@RequestParam Map<String, Object> params){
         int i = innovatematchInfoService.queryByYear(params);
         if (i == 1){
-            return R.error().put("msg", "您今年已申报过双创项目了，请不要重复提交！");
+            return R.error().put("msg", "您今年已申报过该赛事了，请不要重复提交！");
         }
         return R.ok();
     }

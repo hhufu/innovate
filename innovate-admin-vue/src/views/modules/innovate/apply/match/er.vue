@@ -116,6 +116,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button v-if="isAuth('innovate:match:list')" type="text" size="small" @click="detailHandle(scope.row.matchInfoEntity.matchId)">详情</el-button>
+<!--          <el-button v-if="applyMatchIsVisible(scope.row.matchInfoEntity)" type="text" size="small" @click="updateProjectEr(scope.row.matchInfoEntity)">修改所属二级学院</el-button>-->
           <el-button v-if="addOrUpadate(scope.row.matchInfoEntity)" type="text" size="small" @click="addOrUpdateHandle(scope.row.matchInfoEntity.matchId)">修改</el-button>
           <el-button v-if="isDelete(scope.row.matchInfoEntity)" type="text" size="small" @click="deleteHandle(scope.row.matchInfoEntity.matchId)">删除</el-button>
           <br v-if="applyMatchIsVisible(scope.row.matchInfoEntity)">
@@ -141,6 +142,7 @@
     <detail v-if="detailVisible" ref="detail" @refreshDataList="getDataList"></detail>
     <retreat-add-or-update v-if="retreatVisible" ref="retreat" @refreshDataList="getDataList"></retreat-add-or-update>
     <sighing-opinions v-if="sighingOpinionsVisible" ref="sighingOpinions" @refreshDataList="getDataList"></sighing-opinions>
+<!--    <project-er-add-or-update v-if="projectErAddOrUpdateVisible" ref="projectErAddOrUpdate" @refreshDataList="getDataList"></project-er-add-or-update>-->
   </div>
 </template>
 
@@ -155,6 +157,7 @@
   export default {
     data () {
       return {
+        projectErAddOrUpdateVisible: false,
         projectList: [],
         eventLists: this.$store.state.eventLists,
         userTeacherInfoEntities: this.$store.state.userTeacherInfoEntities,
@@ -241,6 +244,13 @@
           this.dataListLoading = false
         })
       },
+      // // 修改所属二级学院
+      // updateProjectEr(row) {
+      //   this.projectErAddOrUpdateVisible = true
+      //   this.$nextTick(() => {
+      //     this.$refs.projectErAddOrUpdate.init(row)
+      //   })
+      // },
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val

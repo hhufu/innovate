@@ -312,6 +312,7 @@
             'noPassStatus': this.noPass !== '' ? parseInt(this.noPass) : 0,
             'noPass': this.noPass !== '' ? 'match_no_pass' : '',
             // 'isInstitute': true,
+            'isAdmin': true,
             'isDel': 0
           })
         }).then(({data}) => {

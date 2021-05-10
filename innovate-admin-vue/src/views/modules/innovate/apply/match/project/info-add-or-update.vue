@@ -95,7 +95,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="项目参与者信息(包括负责人)" prop="staffInfoLists">
+          <el-form-item label="项目参与者信息" prop="staffInfoLists">
             <el-button size="mini"
                        v-if="addVisible(staffInfoLists)" type="primary" plain @click="addStaff()">添加
             </el-button>
@@ -165,7 +165,7 @@
     </el-row>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()" :loading="addLoading">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :disabled="addDisabled" :loading="addLoading">确定</el-button>
     </span>
     <teacher-add-or-update v-if="teacherAddOrUpdateVisible" ref="teacherAddOrUpdate"
                            @refreshDataList="teacherRef"></teacher-add-or-update>
@@ -230,6 +230,7 @@
         delAttachLists: [], // 删除附件
         eventLists: [],
         addLoading: false,
+        addDisabled: false,
         dataListLoading: false,
         teacherAddOrUpdateVisible: false,
         isTeacherInfoNullVisible: false,
@@ -323,9 +324,7 @@
         this.eventLists = this.$store.state.eventLists
         /** 获取当前日期 */
         let newCurDate = this.dateFormat("YYYY-mm-dd HH:MM:SS", new Date())
-        console.log(newCurDate)
         this.eventLists.forEach(item => {
-          console.log("活动截止日期："+item.eventStopTime)
           let curTime = new Date(newCurDate).getTime()
           let startTime = new Date(item.eventStartTime).getTime()
           let stopTime = new Date(item.eventStopTime).getTime()
@@ -660,7 +659,31 @@
           if (item.eventId == eventID)
             this.fileAskContent = item.fileAskContent
         })
+        if (this.dataForm.matchId == 0 && this.dataForm.matchId == '')
+        this.$http({
+          url: this.$http.adornUrl('/innovate/match/info/queryByYear'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'userId': this.$store.state.user.id,
+            'isDel': 0,
+            'eventID': eventID,
+            'isStudent': true
+          })
+        }).then(({data}) => {
+          if (data && data.code !== 0) {
+            // this.addOrUpdatePage()
+          // } else {
+            this.addDisabled = true
+            this.$message({
+              message: data.msg,
+              type: 'error',
+              duration: 1500,
+              onClose: () => {
 
+              }
+            })
+          }
+        })
       }
     }
   }
