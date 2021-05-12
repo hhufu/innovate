@@ -3,10 +3,7 @@ package com.innovate.modules.points.controller;
 import java.io.File;
 import java.util.*;
 
-import com.innovate.common.utils.DateUtils;
 import com.innovate.common.utils.OSSUtils;
-import com.innovate.modules.finish.entity.FinishAttachEntity;
-import com.innovate.modules.points.entity.InnovateStudentActivityEntity;
 import com.innovate.modules.util.FileUtils;
 import com.innovate.modules.util.RandomUtils;
 import lombok.extern.slf4j.Slf4j;

@@ -1,54 +1,59 @@
 package com.innovate.modules.oss.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.innovate.common.exception.RRException;
-import com.innovate.common.utils.ConfigConstant;
-import com.innovate.common.utils.Constant;
-import com.innovate.common.utils.PageUtils;
-import com.innovate.common.utils.R;
+import com.innovate.common.utils.*;
 import com.innovate.common.validator.ValidatorUtils;
 import com.innovate.common.validator.group.AliyunGroup;
 import com.innovate.common.validator.group.QcloudGroup;
 import com.innovate.common.validator.group.QiniuGroup;
 import com.innovate.modules.innovate.config.ConfigApi;
+import com.innovate.modules.match.entity.MatchAttachEntity;
+import com.innovate.modules.match.service.MatchAttachService;
 import com.innovate.modules.oss.cloud.CloudStorageConfig;
 import com.innovate.modules.oss.cloud.OSSFactory;
 import com.innovate.modules.oss.entity.SysOssEntity;
 import com.innovate.modules.oss.service.SysOssService;
+import com.innovate.modules.sys.controller.AbstractController;
 import com.innovate.modules.sys.service.SysConfigService;
 import com.innovate.modules.util.FileUtils;
+import com.innovate.common.utils.OSSUtils;
 import com.innovate.modules.util.ZipUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 文件上传
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-25 12:13:26
  */
 @RestController
 @RequestMapping("sys/oss")
-public class SysOssController {
+public class SysOssController{
 	@Autowired
 	private SysOssService sysOssService;
     @Autowired
     private SysConfigService sysConfigService;
+    @Autowired
+	private MatchAttachService matchAttachService;
 
     private final static String KEY = ConfigConstant.CLOUD_STORAGE_CONFIG_KEY;
-
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -100,7 +105,7 @@ public class SysOssController {
 
 		return R.ok();
 	}
-	
+
 
 	/**
 	 * 上传文件
@@ -145,8 +150,45 @@ public class SysOssController {
 	@PostMapping(value = "/download")
 	@RequiresPermissions("sys:oss:all")
 	public void downloadFile(final HttpServletResponse response, final HttpServletRequest request) {
+
 		try {
-			ZipUtils.toZip(ConfigApi.UPLOAD_URL,response.getOutputStream(),true);
+			List<File> fileList = new ArrayList<>();
+			List<MatchAttachEntity> matchAttachEntities = new ArrayList<>();
+			Map<String, Object> params = new HashMap<>();
+			matchAttachEntities = matchAttachService.queryAll(params);
+			int i = 0;
+			for (MatchAttachEntity m: matchAttachEntities) {
+				fileList.add(OSSUtils.downloadFileFromOSS(m.getAttachPath(), m.getAttachName()));
+			}
+			ZipUtils.toZip(fileList, response.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 下载服务器所有附件
+	 * @param response
+	 * @param request
+	 */
+	@PostMapping(value = "/downloadFile")
+	@RequiresPermissions("sys:oss:all")
+	public void downloadFile2(final HttpServletResponse response, final HttpServletRequest request, @RequestParam("matchTime") String matchTime) {
+		try {
+			List<File> fileList = new ArrayList<>();
+			List<MatchAttachEntity> matchAttachEntities = new ArrayList<>();
+			Map<String, Object> params = new HashMap<>();
+			System.out.println(matchTime);
+			params.put("matchTime", matchTime);
+			matchAttachEntities = matchAttachService.queryAll(params);
+			if (matchAttachEntities.size() == 0){
+				throw new IOException() ;
+			}
+			for (MatchAttachEntity mm: matchAttachEntities) {
+				fileList.add(OSSUtils.downloadFileFromOSS(mm.getAttachPath()));
+			}
+			int i = 0;
+			ZipUtils.toZip2(matchAttachEntities, response.getOutputStream(), ShiroUtils.getSession());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -165,5 +207,22 @@ public class SysOssController {
 
 		return R.ok();
 	}
+
+
+	@PostMapping(value = "/flushProgress")
+	public R flushProgress(){
+		int percent = 0;
+		int totalFile = 0;
+//		System.out.println("percent============" + ShiroUtils.getSession().getAttribute("percent"));
+//		System.out.println("totalFile===========" + ShiroUtils.getSession().getAttribute("totalFile") );
+		if(null!=ShiroUtils.getSession().getAttribute("percent")){
+			percent = (Integer)ShiroUtils.getSession().getAttribute("percent") ;
+			totalFile = (Integer)ShiroUtils.getSession().getAttribute("totalFile") ;
+		}
+
+		return R.ok().put("percent",percent).put("totalFile", totalFile);
+
+	}
+
 
 }

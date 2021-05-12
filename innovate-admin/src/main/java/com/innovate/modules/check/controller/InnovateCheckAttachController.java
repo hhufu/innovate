@@ -1,13 +1,11 @@
 package com.innovate.modules.check.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 import com.innovate.common.utils.OSSUtils;
 import com.innovate.modules.declare.entity.DeclareInfoEntity;
 import com.innovate.modules.declare.service.DeclareInfoService;
-import com.innovate.modules.innovate.config.ConfigApi;
 import com.innovate.modules.util.FileUtils;
 import com.innovate.modules.util.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

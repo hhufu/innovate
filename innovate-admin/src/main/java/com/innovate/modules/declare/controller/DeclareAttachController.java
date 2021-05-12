@@ -4,7 +4,6 @@ import com.innovate.common.utils.OSSUtils;
 import com.innovate.common.utils.R;
 import com.innovate.modules.declare.entity.DeclareAttachEntity;
 import com.innovate.modules.declare.service.DeclareAttachService;
-import com.innovate.modules.innovate.config.ConfigApi;
 import com.innovate.modules.sys.controller.AbstractController;
 import com.innovate.modules.util.FileUtils;
 import com.innovate.modules.util.RandomUtils;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 

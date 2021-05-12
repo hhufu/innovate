@@ -3,11 +3,30 @@
 
 <mapper namespace="com.innovate.modules.match.dao.MatchAttachDao">
 
-    <select id="queryAll" resultType="MatchAttachEntity" parameterType="map">
-        select * from innovate_match_attach
-        where match_id = #{matchId}
-            and is_del = 0
+
+    <select id="queryAll" resultType="com.innovate.modules.match.entity.MatchAttachEntity" parameterType="map">
+        SELECT
+        i.institute_name AS instituteName,
+        b.match_name AS matchName,
+        a.*
+        FROM
+        innovate_match_attach AS a left join
+        innovate_match_info AS b on a.match_id = b.match_id,
+        innovate_sys_institute AS i LEFT JOIN
+        sys_user d on i.institute_id = d.institute_id
+        <where>
+            1 = 1
+            <if test="matchId != null and matchId != ''">and a.match_id = #{matchId}</if>
+           <if test="matchTime != null and matchTime != ''">
+                and b.match_time like CONCAT('%','2021','%')
+                and b.match_no_pass = 0
+                and b.project_match_apply_status > 0
+           </if>
+            and b.project_user_id = d.user_id
+            and a.is_del = 0
+        </where>
     </select>
+
 
     <update id="remove" parameterType="map">
         update innovate_match_attach

@@ -10,11 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Date;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class FileUtils {
 
@@ -68,6 +64,9 @@ public class FileUtils {
         generatePresignedUrlRequest.setExpiration(expiration);
         URL url = ossClient.generatePresignedUrl(generatePresignedUrlRequest);
         return url.toString();
+    }
+    public static void delFile(String key){
+        OSSUtils.delFile(key);
     }
 
     /**

@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.innovate.common.utils.Constant;
 import com.innovate.common.utils.OSSUtils;
-import com.innovate.modules.points.utils.QRCodeUtil;
 import com.innovate.modules.util.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +23,12 @@ import com.innovate.common.utils.PageUtils;
 import com.innovate.common.utils.R;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * 
+ *
  *
  * @author Mikey
  * @email biaogejiushibiao@outlook.com

@@ -1,9 +1,6 @@
 package com.innovate.common.utils;
 
-import com.aliyun.oss.ClientException;
-import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.OSSException;
+import com.aliyun.oss.*;
 import com.aliyun.oss.model.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -205,5 +202,50 @@ public class OSSUtils {
         }
 
         return file;
+    }
+
+    /**
+     * 从OBS下载文件
+     *
+     * @param objectName
+     * @return
+     */
+    public static File downloadFileFromOSS(String objectName, String fileName) {
+
+        File file = null;
+
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+
+        try {
+            // 临时文件
+            file = File.createTempFile(objectName, ".tmp");
+            // 下载OSS文件到本地文件。如果指定的本地文件存在会覆盖，不存在则新建。
+            ossClient.getObject(new GetObjectRequest(bucketName, objectName), file);
+            //
+        } catch (OSSException oe) {
+            oe.printStackTrace();
+        } catch (ClientException ce) {
+            ce.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ossClient.shutdown();
+        }
+
+        return file;
+    }
+
+    /**
+     * 从OSS删除文件
+     */
+    public static void delFile(String objectName){
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+
+        // 删除文件。如需删除文件夹，请将ObjectName设置为对应的文件夹名称。如果文件夹非空，则需要将文件夹下的所有object删除后才能删除该文件夹。
+        ossClient.deleteObject(bucketName, objectName);
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
     }
 }

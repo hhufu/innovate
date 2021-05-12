@@ -53,6 +53,7 @@ matrix:
 notifications:
   email:
     - 437213666@qq.com
+    - 1275986528@qq.com
   on_success: change
   on_failure: always
 before_install:

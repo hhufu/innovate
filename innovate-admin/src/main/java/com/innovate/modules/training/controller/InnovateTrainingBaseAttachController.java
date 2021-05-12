@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.*;
 
 import com.innovate.common.utils.OSSUtils;
-import com.innovate.modules.cooperation.entity.InnovateCooperationMaterialsEntity;
 import com.innovate.modules.util.FileUtils;
 import com.innovate.modules.util.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

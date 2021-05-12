@@ -1,5 +1,6 @@
 package com.innovate.modules.match.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
@@ -20,4 +21,8 @@ public class MatchAttachEntity implements Serializable {
     private String attachName;
     private String attachPath;
     private Long isDel;
+    @TableField(exist = false)
+    private String matchName;
+    @TableField(exist = false)
+    private String instituteName;
 }

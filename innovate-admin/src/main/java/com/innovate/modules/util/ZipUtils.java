@@ -1,5 +1,9 @@
 package com.innovate.modules.util;
 
+import com.innovate.common.utils.OSSUtils;
+import com.innovate.modules.match.entity.MatchAttachEntity;
+import org.apache.shiro.session.Session;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -51,10 +55,51 @@ public class ZipUtils {
     }
         /**
          * 压缩成ZIP 方法2
-         * @param srcFiles 需要压缩的文件列表
          * @param out 压缩文件输出流
          * @throws RuntimeException 压缩失败会抛出运行时异常
          */
+    public static void toZip2(List<MatchAttachEntity> m,  OutputStream out, Session session)throws RuntimeException {
+        long start = System.currentTimeMillis();
+        ZipOutputStream zos = null ;
+        session.setAttribute("totalFile", m.size());
+        try {
+            zos = new ZipOutputStream(out);
+            int i = 0;
+            for (MatchAttachEntity mm: m) {
+                session.setAttribute("percent", i);
+                File file = OSSUtils.downloadFileFromOSS(mm.getAttachPath(), mm.getAttachName());
+                i++;
+                byte[] buf = new byte[BUFFER_SIZE];
+                zos.putNextEntry(new ZipEntry(mm.getInstituteName() + "/" + mm.getMatchName() + "/" + mm.getAttachName()));
+                int len;
+                FileInputStream in = new FileInputStream(file);
+                while ((len = in.read(buf)) != -1){
+                    zos.write(buf, 0, len);
+                }
+                zos.closeEntry();
+                in.close();
+            }
+            long end = System.currentTimeMillis();
+            System.out.println("压缩完成，耗时：" + (end - start) +" ms");
+        } catch (Exception e) {
+            throw new RuntimeException("zip error from ZipUtils",e);
+        }finally{
+            if(zos != null){
+                try {
+                    zos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 压缩成ZIP 方法2
+     * @param srcFiles 需要压缩的文件列表
+     * @param out 压缩文件输出流
+     * @throws RuntimeException 压缩失败会抛出运行时异常
+     */
     public static void toZip(List<File> srcFiles , OutputStream out)throws RuntimeException {
         long start = System.currentTimeMillis();
         ZipOutputStream zos = null ;

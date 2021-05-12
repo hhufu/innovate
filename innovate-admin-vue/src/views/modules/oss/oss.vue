@@ -188,7 +188,7 @@
           let link = document.createElement('a')
           link.style.display = 'none'
           link.href = url
-          link.setAttribute('download', '服务器备份文件')
+          link.setAttribute('download', '服务器备份文件.zip')
           document.body.appendChild(link)
           link.click()
           this.downloadLoading = false

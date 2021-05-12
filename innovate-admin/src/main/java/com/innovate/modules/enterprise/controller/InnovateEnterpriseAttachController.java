@@ -5,8 +5,6 @@ import java.util.*;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.innovate.common.utils.OSSUtils;
-import com.innovate.modules.finish.entity.FinishAttachEntity;
-import com.innovate.modules.innovate.config.ConfigApi;
 import com.innovate.modules.util.FileUtils;
 import com.innovate.modules.util.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
