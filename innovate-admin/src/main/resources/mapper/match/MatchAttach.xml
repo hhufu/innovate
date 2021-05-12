@@ -18,13 +18,16 @@
             1 = 1
             <if test="matchId != null and matchId != ''">and a.match_id = #{matchId}</if>
            <if test="matchTime != null and matchTime != ''">
-                and b.match_time like CONCAT('%','2021','%')
+                and b.match_time like CONCAT('%',#{matchTime},'%')
                 and b.match_no_pass = 0
                 and b.project_match_apply_status > 0
            </if>
             and b.project_user_id = d.user_id
             and a.is_del = 0
         </where>
+        <if test="pageSize != null and pageSize != ''">
+            limit #{pageIndex},#{pageSize}
+        </if>
     </select>
 
 

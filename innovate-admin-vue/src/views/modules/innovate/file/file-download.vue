@@ -16,6 +16,12 @@
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
       </el-form-item>
+      <el-form-item label="下载x~y个文件">
+        <el-input-number v-model="pageI" :step="1" step-strictly></el-input-number>
+      </el-form-item>
+      <el-form-item label="">
+        <el-input-number v-model="pageS" :step="10" step-strictly></el-input-number>
+      </el-form-item>
       <el-form-item>
         <el-button @click="attachDownAll()">下载全部文件</el-button>
       </el-form-item>
@@ -154,6 +160,8 @@ export default {
       reApplyButtonVisible: 'false',
       totalFile: 0,//下载文件个数
       percent: 0, // 已下载个数
+      pageI: 1,
+      pageS: 10,
     }
   },
   components: {
@@ -309,7 +317,9 @@ export default {
         url: this.$http.adornUrl(`/sys/oss/downloadFile`),
         method: 'post',
         params: this.$httpFile.adornParams({
-          matchTime: this.dataForm.matchTime.getFullYear()
+          matchTime: this.dataForm.matchTime.getFullYear(),
+          pageIndex: this.pageI,
+          pageSize: this.pageS
         })
       }).then(response => {
 
