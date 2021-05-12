@@ -171,17 +171,15 @@ public class SysOssController{
 	 * @param response
 	 * @param request
 	 */
-	@PostMapping(value = "/downloadFile")
+	@GetMapping(value = "/downloadFile")
 	@RequiresPermissions("sys:oss:all")
-	public void downloadFile2(final HttpServletResponse response, final HttpServletRequest request, @RequestParam("matchTime") String matchTime, @RequestParam("pageSize") String pageSize, @RequestParam("pageIndex") String pageIndex) {
+	public void downloadFile2(final HttpServletResponse response, final HttpServletRequest request, String matchTime) {
 		try {
 			List<File> fileList = new ArrayList<>();
 			List<MatchAttachEntity> matchAttachEntities = new ArrayList<>();
 			Map<String, Object> params = new HashMap<>();
 			System.out.println(matchTime);
 			params.put("matchTime", matchTime);
-			params.put("pageIndex", Integer.valueOf(pageIndex) - 1);
-			params.put("pageSize", Integer.valueOf(pageSize));
 			matchAttachEntities = matchAttachService.queryAll(params);
 			if (matchAttachEntities.size() == 0){
 				return;

@@ -2,8 +2,40 @@
   <div class="mod-user">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-input v-model="dataForm.projectName" placeholder="项目名" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.instituteId" placeholder="请选择二级学院" clearable>
+          <el-option
+            v-for="inst in instituteList"
+            :key="inst.instituteName"
+            :label="inst.instituteName"
+            :value="inst.instituteId">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="项目处于">
+        <el-select v-model="processStatus" placeholder="请选择审核状态">
+          <el-option
+            v-for="item in processStatusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="项目状态">
+        <el-select v-model="noPass" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="item in noPassList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
         <el-date-picker
-          @change="getDataList"
           v-model="dataForm.matchTime"
           align="right"
           type="year"
@@ -11,17 +43,14 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="dataForm.projectName" placeholder="项目名" clearable></el-input>
-      </el-form-item>
-      <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
       </el-form-item>
-      <el-form-item :label="'文件总数：' + attachTotal + '个  下载第x~y个文件'">
-        <el-input-number v-model="pageI" :step="1" step-strictly></el-input-number>
-      </el-form-item>
-      <el-form-item label="">
-        <el-input-number v-model="pageS" :step="10" step-strictly></el-input-number>
-      </el-form-item>
+<!--      <el-form-item :label="'文件总数：' + attachTotal + '个  下载文件开始处：'">-->
+<!--        <el-input-number v-model="pageI" :step="1" step-strictly></el-input-number>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="下载文件个数：">-->
+<!--        <el-input-number v-model="pageS" :step="10" step-strictly></el-input-number>-->
+<!--      </el-form-item>-->
       <el-form-item>
         <el-button @click="attachDownAll()">下载全部文件</el-button>
       </el-form-item>
@@ -78,11 +107,19 @@
 <!--          <el-tag v-if="scope.row.matchInfoEntity.matchGroupType === 6" size="small">其它</el-tag>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
+<!--      <el-table-column-->
+<!--        prop="matchInfoEntity.matchDescribe"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="项目概述">-->
+<!--      </el-table-column>-->
       <el-table-column
-        prop="matchInfoEntity.matchDescribe"
+        prop="matchInfoEntity.projectAuditApplyStatus"
         header-align="center"
+        :formatter="formatterProcess"
         align="center"
-        label="项目概述">
+        width="200"
+        label="审核状态">
       </el-table-column>
       <el-table-column
         header-align="center"
@@ -91,8 +128,8 @@
         <template slot-scope="props">
           <el-row>
             <el-col :span="21" v-for="item in props.row.matchAttachEntities">
+              <el-button size="mini" @click="attachDown(item.attachPath)">下载</el-button>
               <el-tag>{{ item.attachName }}</el-tag>
-              <el-button @click="attachDown(item.attachPath)">下载</el-button>
             </el-col>
           </el-row>
         </template>
@@ -127,8 +164,44 @@ export default {
       dataForm: {
         baseId: '',
         projectName: '',
-        matchTime: new Date()
+        matchTime: new Date(),
+        instituteId: null
       },
+      noPass:'0',
+      noPassList: [{
+        label: '正常',
+        value: '0'
+      },{
+        label: '已退回',
+        value: '1'
+      },{
+        label: '全部',
+        value: ''
+      }],
+      processStatus: 1,
+      processStatusList: [{
+        label: '项目负责人提交',
+        value:1
+      }, {
+        label: '指导老师审批',
+        value: 2
+      }, {
+        label: '二级学院审批',
+        value: 3
+      }, {
+        label: '管理员分配评委组',
+        value: 4
+      }, {
+        label: '评委审批',
+        value: 5
+      }, {
+        label: '管理员审批',
+        value: 6
+      },{
+        label: '全部状态',
+        value: 8
+      }
+      ],// 流程下拉列表
       statusList: [
         {value: 1, label: '农、林、牧、渔业'}, {value: 2, label: '采矿业'},
         {value: 3, label: '制造业'}, {value: 4, label: '电力、热力、燃气及水的生产和供应业'},
@@ -149,6 +222,7 @@ export default {
       ],
       dataList: [],
       pageIndex: 1,
+      instituteList: this.$store.state.user.institute,
       pageSize: 10,
       totalPage: 0,
       dataListLoading: false,
@@ -179,16 +253,23 @@ export default {
       this.reviewAddOrUpdateVisible = false
       this.reApplyButtonVisible = 'false'
 
-
       this.$nextTick(() => {
         this.$http({
           url: this.$http.adornUrl('/innovate/match/info/list'),
           method: 'get',
           params: this.$http.adornParams({
             'projectName': this.dataForm.projectName,
+            'instituteId': this.dataForm.instituteId,
             'matchTime': this.dataForm.matchTime == null ? '' : this.dataForm.matchTime.getFullYear(),
+            'hasApply': '1',
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
+            'apply': this.processStatus === 8 ? null:'project_match_apply_status',
+            'applyStatus': this.processStatus === 8 ? null: this.processStatus,
+            'project_match_apply_status_more': this.processStatus === 8 ? 0: null,// 审核状态大于0,
+            'noPassStatus': this.noPass !== '' ? parseInt(this.noPass) : 0,
+            'noPass': this.noPass !== '' ? 'match_no_pass' : '',
+            'isAdmin': true,
             'isDel': 0
           })
         }).then(({data}) => {
@@ -204,6 +285,13 @@ export default {
           this.dataListLoading = false
         })
       })
+    },
+    // 转换流程进度名称
+    formatterProcess(row) {
+      var arr = ["项目负责人提交", "指导老师审批", "二级学院审批", "管理员分配评委组", "评委审批", "管理员审批"]
+      if (row.matchInfoEntity.matchNoPass == 1)
+        return "已退回（" + arr[row.matchInfoEntity.projectMatchApplyStatus - 1] + "）"
+      return arr[row.matchInfoEntity.projectMatchApplyStatus - 1]
     },
     // 每页数
     sizeChangeHandle (val) {
@@ -286,12 +374,12 @@ export default {
     // 下载全部文件
     attachDownAll () {
       // let timer = new Function();
-      this.$notify({
-        title: '文件正在下载中...',
-        message: `下载进度：${this.totalFile}/${this.percent}`,
-        duration: 0,
-        type: 'info'
-      })
+      // this.$notify({
+      //   title: '文件正在下载中...',
+      //   message: `下载进度：${this.totalFile}/${this.percent}`,
+      //   duration: 0,
+      //   type: 'info'
+      // })
       // timer = setInterval(()=> {
       //   this.$http({
       //     url: this.$http.adornUrl(`/sys/oss/flushProgress`),
@@ -303,44 +391,46 @@ export default {
       //   })
       //
       // }, 1500)
-
-      this.$httpFile({
-        url: this.$http.adornUrl(`/sys/oss/downloadFile`),
-        method: 'post',
-        params: this.$httpFile.adornParams({
-          matchTime: this.dataForm.matchTime.getFullYear(),
-          pageIndex: this.pageI,
-          pageSize: this.pageS
-        })
-      }).then(response => {
-
-        if (!response) {
-          this.$notify({
-            title: '下载提示',
-            message: '下载失败',
-            duration: 0,
-            type: 'error'
-          })
-          this.downloadLoading = false
-          return
-        }
-        let url = window.URL.createObjectURL(new Blob([response.data]))
-        let link = document.createElement('a')
-        link.style.display = 'none'
-        link.href = url
-        link.setAttribute('download', '项目文件.zip')
-        document.body.appendChild(link)
-        link.click()
-        this.$notify({
-          title: '下载成功',
-          message: '后台文件下载成功',
-          duration: 0,
-          type: 'success'
-        })
-      }).catch(err => {
-        clearInterval(timer);
-        console.log(err)
-      })
+      window.location.href = this.$http.adornUrl(
+        `/sys/oss/downloadFile?token=${this.$cookie.get('token')}&matchTime=${this.dataForm.matchTime.getFullYear()}`
+      )
+      // this.$httpFile({
+      //   url: this.$http.adornUrl(`/sys/oss/downloadFile`),
+      //   method: 'post',
+      //   params: this.$httpFile.adornParams({
+      //     matchTime: this.dataForm.matchTime.getFullYear(),
+      //     pageIndex: this.pageI,
+      //     pageSize: this.pageS
+      //   })
+      // }).then(response => {
+      //
+      //   if (!response) {
+      //     this.$notify({
+      //       title: '下载提示',
+      //       message: '下载失败',
+      //       duration: 0,
+      //       type: 'error'
+      //     })
+      //     this.downloadLoading = false
+      //     return
+      //   }
+      //   let url = window.URL.createObjectURL(new Blob([response.data]))
+      //   let link = document.createElement('a')
+      //   link.style.display = 'none'
+      //   link.href = url
+      //   link.setAttribute('download', '项目文件.zip')
+      //   document.body.appendChild(link)
+      //   link.click()
+      //   this.$notify({
+      //     title: '下载成功',
+      //     message: '后台文件下载成功',
+      //     duration: 0,
+      //     type: 'success'
+      //   })
+      // }).catch(err => {
+      //   clearInterval(timer);
+      //   console.log(err)
+      // })
 
     },
     // 详情
