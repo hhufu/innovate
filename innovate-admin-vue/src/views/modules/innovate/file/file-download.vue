@@ -16,7 +16,7 @@
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
       </el-form-item>
-      <el-form-item label="下载x~y个文件">
+      <el-form-item :label="'文件总数：' + attachTotal + '个  下载第x~y个文件'">
         <el-input-number v-model="pageI" :step="1" step-strictly></el-input-number>
       </el-form-item>
       <el-form-item label="">
@@ -162,6 +162,7 @@ export default {
       percent: 0, // 已下载个数
       pageI: 1,
       pageS: 10,
+      attachTotal: 0// 文件总数
     }
   },
   components: {
@@ -177,18 +178,7 @@ export default {
       this.detailVisible = false
       this.reviewAddOrUpdateVisible = false
       this.reApplyButtonVisible = 'false'
-      this.$http({
-        url: this.$http.adornUrl(`/innovate/use/teacher/teacher`),
-        method: 'get',
-        params: this.$http.adornParams({
-          'like': ''
-        })
-      }).then(({data}) => {
-        if (data && data.code === 0) {
-          this.sysTeacherEntities = data.sysTeacherEntities
-          this.$store.state.sysTeacherEntities = data.sysTeacherEntities
-        }
-      })
+
 
       this.$nextTick(() => {
         this.$http({
@@ -205,6 +195,7 @@ export default {
           if (data && data.code === 0) {
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
+            this.attachTotal  = data.attachTotal
           } else {
             this.dataList = []
             this.totalPage = 0

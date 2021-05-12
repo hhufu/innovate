@@ -8,6 +8,7 @@
         SELECT
         i.institute_name AS instituteName,
         b.match_name AS matchName,
+        b.match_group_type AS matchGroupType,
         a.*
         FROM
         innovate_match_attach AS a left join
@@ -37,4 +38,19 @@
         where match_id = #{matchId}
     </update>
 
+    <select id="queryTotal" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM
+        innovate_match_attach AS a left join
+        innovate_match_info AS b on a.match_id = b.match_id
+        <where>
+            1 = 1
+            <if test="matchTime != null and matchTime != ''">
+                and b.match_time like CONCAT('%',#{matchTime},'%')
+                and b.match_no_pass = 0
+                and b.project_match_apply_status > 0
+            </if>
+            and a.is_del = 0
+        </where>
+    </select>
 </mapper>

@@ -8,6 +8,7 @@ import com.innovate.modules.innovate.entity.*;
 import com.innovate.modules.innovate.service.*;
 import com.innovate.modules.match.entity.MatchInfoEntity;
 import com.innovate.modules.match.entity.MatchInfoModel;
+import com.innovate.modules.match.service.MatchAttachService;
 import com.innovate.modules.match.service.MatchInfoModelService;
 import com.innovate.modules.match.service.MatchInfoService;
 import com.innovate.modules.match.service.MatchReviewService;
@@ -45,7 +46,8 @@ public class MatchInfoController extends AbstractController {
     private MatchReviewService matchReviewService;
 
     private MatchInfoEntity tempMatchInfoEntity;
-
+    @Autowired
+    private MatchAttachService matchAttachService;
     /**
      * 所有列表
      */
@@ -60,9 +62,11 @@ public class MatchInfoController extends AbstractController {
 
         List<InnovateInstituteEntity> institute = innovateInstituteService.queryAllInstitute();
         List<InnovateGradeEntity> grade = innovateGradeService.queryAllGrade();
+        Integer attachTotal = matchAttachService.queryTotal(params);
         return R.ok().put("page", page)
                 .put("institute", institute)
-                .put("grade", grade);
+                .put("grade", grade)
+                .put("attachTotal", attachTotal);
     }
 
     /**

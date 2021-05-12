@@ -22,4 +22,5 @@ public interface MatchAttachDao extends BaseMapper<MatchAttachEntity> {
 
     void remove(Map<String, Object> params);
 
+    Integer queryTotal(Map<String, Object> params);
 }

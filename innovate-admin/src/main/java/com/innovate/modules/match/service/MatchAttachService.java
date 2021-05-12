@@ -20,4 +20,5 @@ public interface MatchAttachService extends IService<MatchAttachEntity> {
 
     void remove(Map<String, Object> params);
 
+    Integer queryTotal(Map<String, Object> params);
 }

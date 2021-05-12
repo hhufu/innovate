@@ -28,4 +28,9 @@ public class MatchAttachServiceImpl extends ServiceImpl<MatchAttachDao, MatchAtt
     public void remove(Map<String, Object> params) {
         baseMapper.remove(params);
     }
+
+    @Override
+    public Integer queryTotal(Map<String, Object> params) {
+        return baseMapper.queryTotal(params);
+    }
 }

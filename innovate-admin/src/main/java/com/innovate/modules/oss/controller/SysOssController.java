@@ -184,12 +184,8 @@ public class SysOssController{
 			params.put("pageSize", Integer.valueOf(pageSize));
 			matchAttachEntities = matchAttachService.queryAll(params);
 			if (matchAttachEntities.size() == 0){
-				throw new IOException() ;
+				return;
 			}
-			for (MatchAttachEntity mm: matchAttachEntities) {
-				fileList.add(OSSUtils.downloadFileFromOSS(mm.getAttachPath()));
-			}
-			int i = 0;
 			ZipUtils.toZip2(matchAttachEntities, response.getOutputStream(), ShiroUtils.getSession());
 		} catch (IOException e) {
 			e.printStackTrace();

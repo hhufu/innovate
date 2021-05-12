@@ -25,4 +25,6 @@ public class MatchAttachEntity implements Serializable {
     private String matchName;
     @TableField(exist = false)
     private String instituteName;
+    @TableField(exist = false)
+    private Integer matchGroupType;
 }

@@ -70,7 +70,7 @@ public class ZipUtils {
                 File file = OSSUtils.downloadFileFromOSS(mm.getAttachPath(), mm.getAttachName());
                 i++;
                 byte[] buf = new byte[BUFFER_SIZE];
-                zos.putNextEntry(new ZipEntry(mm.getInstituteName() + "/" + mm.getMatchName() + "/" + mm.getAttachName()));
+                zos.putNextEntry(new ZipEntry(mm.getInstituteName() + "/" + forTy(mm.getMatchGroupType()) + "/" + mm.getMatchName() + "/" + mm.getAttachName()));
                 int len;
                 FileInputStream in = new FileInputStream(file);
                 while ((len = in.read(buf)) != -1){
@@ -92,6 +92,19 @@ public class ZipUtils {
                 }
             }
         }
+    }
+
+    public static String forTy(Integer type) {
+        String name = "";
+        switch (type){
+            case 1: name = "创意组";break;
+            case 2: name = "初创组";break;
+            case 3: name = "成长组";break;
+            case 4: name = "师生共创组";break;
+            case 5: name = "\"青年红色梦之旅\"赛道";break;
+            case 6: name = "其它";break;
+        }
+        return name;
     }
 
     /**
