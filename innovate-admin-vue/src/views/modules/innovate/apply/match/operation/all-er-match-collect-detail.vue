@@ -9,10 +9,10 @@
     <el-row>
       <table border="1" cellspacing="0" width="100%" class="table" id="all-out-table">
           <tr align='center'>
-            <td colspan="15" style="height: 1.2rem"></td>
+            <td colspan="16" style="height: 1.2rem"></td>
           </tr>
           <tr class="contents" align="center">
-            <th colspan="15">
+            <th colspan="16">
               梧州学院“互联网+”大学生创新创业大赛项目汇总表
             </th>
           </tr>
@@ -31,6 +31,7 @@
             <th>项目简介</th>
             <th>团队名称</th>
             <th>项目负责人姓名</th>
+            <th>项目负责人联系电话</th>
             <th>申报类型</th>
             <th>申报组别</th>
             <th>团队人数</th>
@@ -42,6 +43,7 @@
           </tr>
         <template>
         <tr align='center' v-if="matchInfoList.length === 0">
+          <td>暂无数据</td>
           <td>暂无数据</td>
           <td>暂无数据</td>
           <td>暂无数据</td>
@@ -67,6 +69,11 @@
               <td>
                 <span v-for="user in item.userPersonInfoEntities" >
                   <span v-text="user.sysUserEntity.name"></span>
+                </span>
+              </td>
+              <td>
+                <span v-for="user in item.userPersonInfoEntities" >
+                  <span v-text="user.sysUserEntity.mobile"></span>
                 </span>
               </td>
               <td>
@@ -100,7 +107,7 @@
           <!--</tr>-->
           <!--附件结束-->
         <tr align='center'>
-          <td colspan="15" style="height: 1.2rem"></td>
+          <td colspan="16" style="height: 1.2rem"></td>
         </tr>
         </table>
     </el-row>
