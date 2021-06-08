@@ -38,7 +38,7 @@
         <if test="raceGrade != null and raceGrade != ''">
             and race_grade = #{raceGrade} and prize_grade IS NOT NULL
         </if>
-        )GROUP BY race_grade ) TOTAL
+        )) TOTAL
     </select>
 
 </mapper>

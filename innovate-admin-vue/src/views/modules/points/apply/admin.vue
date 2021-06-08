@@ -124,9 +124,9 @@
           <el-button type="text" size="small" v-if="$store.state.user.id === scope.row.applyUserId"
                      @click="deleteHandle(scope.row.integralApplyId)">删除
           </el-button>
-          <el-button type="text" size="small" v-if="scope.row.applyStatus === 1" @click="clickApplyStatus(scope.row, 0)">
-            驳回
-          </el-button>
+<!--          <el-button type="text" size="small" v-if="scope.row.applyStatus === 1" @click="clickApplyStatus(scope.row, 0)">-->
+<!--            驳回-->
+<!--          </el-button>-->
           <el-button type="text" size="small" v-if="scope.row.applyStatus === 1" @click="clickApplyStatus(scope.row, 3)">
             通过
           </el-button>
