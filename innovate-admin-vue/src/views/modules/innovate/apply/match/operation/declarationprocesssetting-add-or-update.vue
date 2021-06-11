@@ -100,6 +100,9 @@ class DpsAttachment {
         }, {
           value: 2,
           label: '大创项目结题'
+        }, {
+          value: 3,
+          label: '创新创业实践积分申请'
         }]
       }
     },

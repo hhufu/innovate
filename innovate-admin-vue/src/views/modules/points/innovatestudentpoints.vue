@@ -1,8 +1,27 @@
 <template>
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+      <el-form-item v-if="this.isAuth('points:export:admin')" prop="instituteId">
+        <el-select v-model="dataForm.instituteId" placeholder="请选择二级学院" clearable>
+          <el-option
+            v-for="item in instituteList"
+            :key="item.instituteId"
+            :label="item.instituteName"
+            :value="item.instituteId">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-date-picker
+          v-model="dataForm.operationTime"
+          @change="getDataList"
+          align="right"
+          type="year"
+          placeholder="请选择年度">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="dataForm.key" placeholder="请输入学号" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -125,8 +144,11 @@
   export default {
     data () {
       return {
+        instituteList: this.$store.state.user.institute,
         dataForm: {
-          key: ''
+          key: '',
+          instituteId: null,
+          operationTime: new Date()
         },
         fileList: [],
         inputUrl: this.$http.adornUrl(`/points/innovatestudentpoints/input?token=${this.$cookie.get('token')}`),
@@ -158,7 +180,8 @@
             'pageSize': this.pageSize,
             'key': this.dataForm.key,
             'userId': this.isAuth('points:innovatestudentpoints:save') === true ? null : this.$store.state.user.id,
-            'instituteId': this.isAuth('points:export:admin') === true ? null : this.$store.state.user.instituteId
+            'instituteId': this.isAuth("points:export:admin") ? this.dataForm.instituteId : this.isAuth('points:export:erAdmin') ? this.$store.state.user.instituteId : null,
+            'operationTime': this.dataForm.operationTime == null ? '' : this.dataForm.operationTime.getFullYear(),
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

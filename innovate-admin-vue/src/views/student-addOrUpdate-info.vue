@@ -87,7 +87,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业职务" prop="perPost">
-            <el-input  v-model="dataForm.perPost"></el-input>
+            <el-input  v-model="dataForm.perPost" placeholder="如没有可填“无”"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -97,7 +97,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="在校职务" prop="perSchoolPost">
-            <el-input  v-model="dataForm.perSchoolPost"></el-input>
+            <el-input  v-model="dataForm.perSchoolPost" placeholder="如没有可填“无”"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24">

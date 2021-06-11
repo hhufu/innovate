@@ -231,10 +231,36 @@
       },
       // 新增 / 修改
       addOrUpdateHandle(id) {
-        this.addOrUpdateVisible = true
-        this.$nextTick(() => {
-          this.$refs.addOrUpdate.init(id)
-        })
+        if (id != null && id != "") {
+          this.addOrUpdateVisible = true
+          this.$nextTick(() => {
+            this.$refs.addOrUpdate.init(id)
+          })
+        } else {
+          this.$http({
+            url: this.$http.adornUrl(`/innovate/innovatedeclarationprocesssetting/queryCount`),
+            method: 'post',
+            data: this.$http.adornData({
+              'declareProcessName': 3,
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.addOrUpdateVisible = true
+              this.$nextTick(() => {
+                this.$refs.addOrUpdate.init(id)
+              })
+            }else {
+              this.$message({
+                message: data.msg,
+                type: 'error',
+                duration: 1500,
+                onClose: () => {
+
+                }
+              })
+            }
+          })
+        }
       },
       // 查看
       detailInfo(id) {
