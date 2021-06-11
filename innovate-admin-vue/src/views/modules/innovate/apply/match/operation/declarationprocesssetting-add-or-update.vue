@@ -29,7 +29,7 @@
     <el-form-item label="备注" prop="">
       <el-input v-model="dataForm.remark" type="textarea" placeholder="备注"></el-input>
     </el-form-item>
-      <el-col :span="24">
+      <el-col :span="24" v-if="dataForm.declareProcessName !== 3">
         <el-form-item label="评分规则" prop="reportSalesName">
           <el-upload
             class="upload-demo"
@@ -42,6 +42,7 @@
             :limit="1"
             :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
+            <span v-if="Object.keys(dataForm.attachName).length === 0" style="color: crimson">*请上传评分规则</span>
           </el-upload>
         </el-form-item>
       </el-col>
@@ -110,6 +111,10 @@ class DpsAttachment {
       init (id) {
         this.url = this.$http.adornUrl(`/innovate/innovatedeclarationprocesssetting/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.dpsId = id || 0
+        if (id !== null){
+          this.dataForm.attachPath = ''
+          this.dataForm.attachName = ''
+        }
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
@@ -126,6 +131,8 @@ class DpsAttachment {
                 this.dataForm.endTime = data.innovateDeclarationProcessSetting.endTime
                 this.dataForm.remark = data.innovateDeclarationProcessSetting.remark
                 this.dataForm.dateTimeRange = [this.dataForm.startTime, this.dataForm.endTime]
+                this.dataForm.attachName = data.innovateDeclarationProcessSetting.attachName
+                this.dataForm.attachPath = data.innovateDeclarationProcessSetting.attachPath
                 if (data.innovateDeclarationProcessSetting.attachName !== null) {
                   var tempFile = []
                   tempFile.push(new DpsAttachment(data.innovateDeclarationProcessSetting))
@@ -177,6 +184,11 @@ class DpsAttachment {
       // 上传成功
       successHandle (response, file, fileList) {
         if (response && response.code === 0) {
+          this.$message({
+            showClose: true,
+            message: '文件上传成功',
+            type: 'success'
+          });
           this.dataForm.attachName = response.innovateDeclarationProcessSetting.attachName
           this.dataForm.attachPath = response.innovateDeclarationProcessSetting.attachPath
         } else {
