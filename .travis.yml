@@ -9,13 +9,13 @@ matrix:
       install:
         - npm install
       script:
+        - docker login -u=$DOCKER_NAME -p="$DOCKER_PWD"
         - npm run build
         - docker build . -t "$DOCKER_NAME/innovate-admin-vue:latest"
       addons:
         ssh_known_hosts:
           - "$SERVER_IP"
       after_success:
-        - docker login -u=$DOCKER_NAME -p="$DOCKER_PWD"
         - docker push $DOCKER_NAME/innovate-admin-vue:latest
         - chmod 600 ~/.ssh/id_rsa
         - rsync -az --delete ./docker-compose.yml root@$SERVER_IP:$DOCKER_NAME/innovate-admin-vue-$DOCKER_NAME/
