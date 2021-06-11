@@ -9,6 +9,7 @@
         <result property="stuNum" column="stu_num"/>
         <result property="points" column="points"/>
         <result property="pointsReason" column="points_reason"/>
+        <result property="operationTime" column="operation_time"/>
     </resultMap>
 
     <select id="selectPointsIds" parameterType="map" resultType="InnovateStudentPointsEntity">
@@ -43,6 +44,9 @@
         <if test="key != null and key != ''">
             and p.stu_num like concat('%',#{key}, '%')
         </if>
+        <if test="operationTime != null and operationTime != ''">
+            and YEAR(p.operation_time) = #{operationTime}
+        </if>
     </select>
 
     <select id="queryPageByMap" parameterType="map" resultType="InnovateStudentPointsEntity">
@@ -57,6 +61,9 @@
         </if>
         <if test="instituteId != null">
             and u.institute_id = #{instituteId}
+        </if>
+        <if test="operationTime != null and operationTime != ''">
+            and YEAR(p.operation_time) = #{operationTime}
         </if>
 
         <if test="startPage != null and endPage != null">

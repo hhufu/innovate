@@ -139,7 +139,6 @@ class DpsAttachment {
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
-          this.dataForm.dpsId = this.id || undefined
           if (this.dataForm.attachPath === '' || this.dataForm.attachName === '') {
             this.$message.error('请上传评分规则')
             return
