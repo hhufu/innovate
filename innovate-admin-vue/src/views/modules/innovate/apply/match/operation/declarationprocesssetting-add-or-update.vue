@@ -29,6 +29,22 @@
     <el-form-item label="备注" prop="">
       <el-input v-model="dataForm.remark" type="textarea" placeholder="备注"></el-input>
     </el-form-item>
+      <el-col :span="24">
+        <el-form-item label="评分规则" prop="reportSalesName">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            :action="url"
+            :data="{declareProcessName: dataForm.declareProcessName}"
+            :on-success="successHandle"
+            :on-remove="fileRemoveHandler"
+            :on-exceed="fileExceed"
+            :limit="1"
+            :file-list="fileList">
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-col>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
