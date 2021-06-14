@@ -111,6 +111,7 @@ class DpsAttachment {
       init (id) {
         this.url = this.$http.adornUrl(`/innovate/innovatedeclarationprocesssetting/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.dpsId = id || 0
+        //修改不同流程，先清空
         if (id !== null){
           this.dataForm.attachPath = ''
           this.dataForm.attachName = ''

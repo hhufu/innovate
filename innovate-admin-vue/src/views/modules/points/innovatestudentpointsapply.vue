@@ -201,7 +201,7 @@
             'applyStatus': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? 1 : null,
             'apply_user_id': this.isAuth('points:innovatestudentpointsapply:adminApply') === true ? null : this.$store.state.user.id,
             // 如果为管理员 则不根据学院查询
-            'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
+            'instituteId': this.isAuth('points:applyFind:adminApply') === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

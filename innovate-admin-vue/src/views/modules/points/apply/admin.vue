@@ -12,7 +12,7 @@
       </el-form-item>
     </el-form>
     <el-card>
-      <el-radio-group v-model="dataForm.applyStatus" @change="getDataList">
+      <el-radio-group v-model="dataForm.applyStatus" @change="changeList">
         <el-radio :label="1">未审核</el-radio>
         <el-radio :label="3">已审核</el-radio>
         <el-radio :label="-1">未通过</el-radio>
@@ -216,6 +216,11 @@
       this.getDataList()
     },
     methods: {
+      // 切换菜单栏
+      changeList() {
+        this.pageIndex = 1
+        this.getDataList()
+      },
       // 获取数据列表
       getDataList() {
         this.remarkFrom.remark = ''
