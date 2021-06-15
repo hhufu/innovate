@@ -233,7 +233,7 @@
             'limit': this.pageSize,
             'stuNum': this.dataForm.stuNum,
             'applyStatus': this.dataForm.applyStatus,
-            'instituteId': this.isAuth('points:pointsApply:adminApply') === true ? null : this.$store.state.user.instituteId
+            'instituteId': this.isAuth('points:applyFind:adminApply') === true ? null : this.$store.state.user.instituteId
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
