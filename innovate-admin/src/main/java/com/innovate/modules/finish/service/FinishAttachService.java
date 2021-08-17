@@ -25,4 +25,6 @@ public interface FinishAttachService extends IService<FinishAttachEntity> {
     void delAttachLists(InnovateEnterpriseInfoModel innovateEnterpriseInfoModel);
 
     void delAttachLists(FinishInfoModel finishInfoModel);
+
+    List<FinishAttachEntity> queryAllAttach(Map<String, Object> params);
 }

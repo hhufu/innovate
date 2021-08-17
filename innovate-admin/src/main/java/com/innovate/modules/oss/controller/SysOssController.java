@@ -8,6 +8,10 @@ import com.innovate.common.validator.ValidatorUtils;
 import com.innovate.common.validator.group.AliyunGroup;
 import com.innovate.common.validator.group.QcloudGroup;
 import com.innovate.common.validator.group.QiniuGroup;
+import com.innovate.modules.declare.entity.DeclareAttachEntity;
+import com.innovate.modules.declare.service.DeclareAttachService;
+import com.innovate.modules.finish.entity.FinishAttachEntity;
+import com.innovate.modules.finish.service.FinishAttachService;
 import com.innovate.modules.innovate.config.ConfigApi;
 import com.innovate.modules.match.entity.MatchAttachEntity;
 import com.innovate.modules.match.service.MatchAttachService;
@@ -52,6 +56,10 @@ public class SysOssController{
     private SysConfigService sysConfigService;
     @Autowired
 	private MatchAttachService matchAttachService;
+    @Autowired
+	private DeclareAttachService declareAttachService;
+	@Autowired
+	private FinishAttachService finishAttachService;
 
     private final static String KEY = ConfigConstant.CLOUD_STORAGE_CONFIG_KEY;
 
@@ -173,18 +181,37 @@ public class SysOssController{
 	 */
 	@GetMapping(value = "/downloadFile")
 	@RequiresPermissions("sys:oss:all")
-	public void downloadFile2(final HttpServletResponse response, final HttpServletRequest request, String matchTime) {
+	public void downloadFile2(final HttpServletResponse response, final HttpServletRequest request, String matchTime, String id) {
 		try {
-			List<File> fileList = new ArrayList<>();
-			List<MatchAttachEntity> matchAttachEntities = new ArrayList<>();
 			Map<String, Object> params = new HashMap<>();
-			System.out.println(matchTime);
 			params.put("matchTime", matchTime);
-			matchAttachEntities = matchAttachService.queryAll(params);
-			if (matchAttachEntities.size() == 0){
-				return;
+			switch (id){
+				case "1":
+					List<MatchAttachEntity> matchAttachEntities = new ArrayList<>();
+					matchAttachEntities = matchAttachService.queryAll(params);
+					if (matchAttachEntities.size() == 0){
+						return;
+					}
+					ZipUtils.toZip2(matchAttachEntities, response.getOutputStream(), ShiroUtils.getSession());
+					break;
+				case "2":
+					List<DeclareAttachEntity> declareAttachEntities = new ArrayList<>();
+					declareAttachEntities = declareAttachService.queryAllAttach(params);
+					if (declareAttachEntities.size() == 0){
+						return;
+					}
+					ZipUtils.toZip2(declareAttachEntities, response.getOutputStream(), ShiroUtils.getSession());
+					break;
+				case "3":
+					List<FinishAttachEntity> finishAttachEntities = new ArrayList<>();
+					finishAttachEntities = finishAttachService.queryAllAttach(params);
+					if (finishAttachEntities.size() == 0){
+						return;
+					}
+					ZipUtils.toZip2(finishAttachEntities, response.getOutputStream(), ShiroUtils.getSession());
+					break;
+				default:break;
 			}
-			ZipUtils.toZip2(matchAttachEntities, response.getOutputStream(), ShiroUtils.getSession());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

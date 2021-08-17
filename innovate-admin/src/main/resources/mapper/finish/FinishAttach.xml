@@ -9,6 +9,24 @@
             and is_del = 0
     </select>
 
+    <select id="queryAllAttach" resultType="FinishAttachEntity" parameterType="map">
+        SELECT
+        b.finish_name AS declareName,
+        b.finish_type AS declareGroupType,
+        a.*
+        FROM
+        innovate_finish_attach AS a left join
+        innovate_finish_info AS b on a.finish_id = b.finish_id
+        <where>
+            <if test="matchTime != null and matchTime != ''">
+                and b.finish_time like CONCAT('%',#{matchTime},'%')
+                and b.finish_no_pass = 0
+                and b.project_finish_apply_status > 0
+            </if>
+            and a.is_del = 0
+        </where>
+    </select>
+
     <update id="remove" parameterType="map">
         update innovate_finish_attach
         set is_del = 1

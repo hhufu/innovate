@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.innovate.modules.sys.dao.SysMailCodeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.innovate.modules.sys.entity.SysMailCodeEntity" id="sysMailCodeMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="mailCode" column="mail_code"/>
+        <result property="times" column="times"/>
+        <result property="invalid" column="invalid"/>
+    </resultMap>
+
+    <select id="queryMailCode" resultMap="sysMailCodeMap" parameterType="com.innovate.modules.sys.entity.SysMailCodeEntity">
+        select * from sys_mail_code where id =
+        (select max(id) from sys_mail_code where user_id = #{userId} and invalid = 0)
+    </select>
+
+</mapper>

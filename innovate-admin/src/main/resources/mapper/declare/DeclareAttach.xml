@@ -9,6 +9,26 @@
             and is_del = 0
     </select>
 
+    <select id="queryAllAttach" resultType="DeclareAttachEntity" parameterType="map">
+        SELECT
+        i.institute_name AS instituteName,
+        b.declare_name AS declareName,
+        b.declare_type AS declareGroupType,
+        a.*
+        FROM
+        innovate_declare_attach AS a left join
+        innovate_declare_info AS b on a.declare_id = b.declare_id
+        LEFT JOIN innovate_sys_institute AS i on i.institute_id = b.institute_id
+        <where>
+            <if test="matchTime != null and matchTime != ''">
+                and b.declare_time like CONCAT('%',#{matchTime},'%')
+                and b.audit_no_pass = 0
+                and b.project_audit_apply_status > 0
+            </if>
+            and a.is_del = 0
+        </where>
+    </select>
+
     <update id="remove" parameterType="map">
         update innovate_declare_attach
         set is_del = 1

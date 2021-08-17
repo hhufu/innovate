@@ -1,6 +1,8 @@
 package com.innovate.modules.util;
 
 import com.innovate.common.utils.OSSUtils;
+import com.innovate.modules.declare.entity.DeclareAttachEntity;
+import com.innovate.modules.finish.entity.FinishAttachEntity;
 import com.innovate.modules.match.entity.MatchAttachEntity;
 import org.apache.shiro.session.Session;
 
@@ -8,7 +10,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -20,7 +26,7 @@ import java.util.zip.ZipOutputStream;
  * @Version 1.0
  * @Description:
  **/
-
+@SuppressWarnings("unchecked")
 public class ZipUtils {
     private static final int  BUFFER_SIZE = 2 * 1024;
         /**
@@ -58,26 +64,62 @@ public class ZipUtils {
          * @param out 压缩文件输出流
          * @throws RuntimeException 压缩失败会抛出运行时异常
          */
-    public static void toZip2(List<MatchAttachEntity> m,  OutputStream out, Session session)throws RuntimeException {
+    public static void toZip2(List<?> m,  OutputStream out, Session session)throws RuntimeException {
         long start = System.currentTimeMillis();
         ZipOutputStream zos = null ;
         session.setAttribute("totalFile", m.size());
         try {
             zos = new ZipOutputStream(out);
             int i = 0;
-            for (MatchAttachEntity mm: m) {
-                session.setAttribute("percent", i);
-                File file = OSSUtils.downloadFileFromOSS(mm.getAttachPath(), mm.getAttachName());
-                i++;
-                byte[] buf = new byte[BUFFER_SIZE];
-                zos.putNextEntry(new ZipEntry(mm.getInstituteName() + "/" + forTy(mm.getMatchGroupType()) + "/" + mm.getMatchName() + "/" + mm.getAttachName()));
-                int len;
-                FileInputStream in = new FileInputStream(file);
-                while ((len = in.read(buf)) != -1){
-                    zos.write(buf, 0, len);
+            Type t= m.get(0).getClass();
+            if (t.equals(MatchAttachEntity.class)){
+                List<MatchAttachEntity> matchAttachEntities = (List<MatchAttachEntity>) m;
+                for (MatchAttachEntity mm: matchAttachEntities) {
+                    session.setAttribute("percent", i);
+                    File file = OSSUtils.downloadFileFromOSS(mm.getAttachPath(), mm.getAttachName());
+                    i++;
+                    byte[] buf = new byte[BUFFER_SIZE];
+                    zos.putNextEntry(new ZipEntry(mm.getInstituteName() + "/" + forTy(mm.getMatchGroupType()) + "/" + mm.getMatchName() + "/" + mm.getAttachName()));
+                    int len;
+                    FileInputStream in = new FileInputStream(file);
+                    while ((len = in.read(buf)) != -1){
+                        zos.write(buf, 0, len);
+                    }
+                    zos.closeEntry();
+                    in.close();
                 }
-                zos.closeEntry();
-                in.close();
+            }else if (t.equals(DeclareAttachEntity.class)){
+                List<DeclareAttachEntity> declareAttachEntities = (List<DeclareAttachEntity>) m;
+                for (DeclareAttachEntity mm: declareAttachEntities) {
+                    session.setAttribute("percent", i);
+                    File file = OSSUtils.downloadFileFromOSS(mm.getAttachPath(), mm.getAttachName());
+                    i++;
+                    byte[] buf = new byte[BUFFER_SIZE];
+                    zos.putNextEntry(new ZipEntry(mm.getInstituteName() + "/" + groupType(mm.getDeclareGroupType()) + "/" + mm.getDeclareName() + Math.floor(Math.random()*10) + "/" + mm.getAttachName()));
+                    int len;
+                    FileInputStream in = new FileInputStream(file);
+                    while ((len = in.read(buf)) != -1){
+                        zos.write(buf, 0, len);
+                    }
+                    zos.closeEntry();
+                    in.close();
+                }
+            }else if (t.equals(FinishAttachEntity.class)) {
+                List<FinishAttachEntity> finishAttachEntities = (List<FinishAttachEntity>) m;
+                for (FinishAttachEntity mm : finishAttachEntities) {
+                    session.setAttribute("percent", i);
+                    File file = OSSUtils.downloadFileFromOSS(mm.getAttachPath(), mm.getAttachName());
+                    i++;
+                    byte[] buf = new byte[BUFFER_SIZE];
+                    zos.putNextEntry(new ZipEntry( groupType(mm.getDeclareGroupType()) + "/" + mm.getDeclareName() + Math.floor(Math.random()*10) + "/" + mm.getAttachName()));
+                    int len;
+                    FileInputStream in = new FileInputStream(file);
+                    while ((len = in.read(buf)) != -1) {
+                        zos.write(buf, 0, len);
+                    }
+                    zos.closeEntry();
+                    in.close();
+                }
             }
             long end = System.currentTimeMillis();
             System.out.println("压缩完成，耗时：" + (end - start) +" ms");
@@ -94,6 +136,17 @@ public class ZipUtils {
         }
     }
 
+    public static String groupType(Integer type) {
+        String name = "";
+        switch (type){
+            case 1: name = "创新训练项目";break;
+            case 2: name = "创业训练项目";break;
+            case 3: name = "创业实践项目";break;
+            default:break;
+        }
+        return name;
+    }
+
     public static String forTy(Integer type) {
         String name = "";
         switch (type){
@@ -103,6 +156,7 @@ public class ZipUtils {
             case 4: name = "师生共创组";break;
             case 5: name = "\"青年红色梦之旅\"赛道";break;
             case 6: name = "其它";break;
+            default:break;
         }
         return name;
     }

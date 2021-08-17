@@ -1,5 +1,6 @@
 package com.innovate.modules.declare.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,4 +23,10 @@ public class DeclareAttachEntity implements Serializable {
     private String attachName;
     private String attachPath;
     private Long isDel;
+    @TableField(exist = false)
+    private String declareName;
+    @TableField(exist = false)
+    private String instituteName;
+    @TableField(exist = false)
+    private Integer declareGroupType;
 }

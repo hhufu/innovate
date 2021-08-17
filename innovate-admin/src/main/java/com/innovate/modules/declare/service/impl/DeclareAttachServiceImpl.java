@@ -49,4 +49,9 @@ public class DeclareAttachServiceImpl extends ServiceImpl<DeclareAttachDao, Decl
 
         }
     }
+
+    @Override
+    public List<DeclareAttachEntity> queryAllAttach(Map<String, Object> params) {
+        return baseMapper.queryAllAttach(params);
+    }
 }

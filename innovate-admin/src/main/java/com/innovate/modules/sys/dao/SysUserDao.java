@@ -61,4 +61,8 @@ public interface SysUserDao extends BaseMapper<SysUserEntity> {
 	 */
 	boolean updateState(Long userId, Integer status);
 
+	/**
+	 * 根据邮箱地址，查询系统用户
+	 */
+	SysUserEntity queryByEmail(String email);
 }

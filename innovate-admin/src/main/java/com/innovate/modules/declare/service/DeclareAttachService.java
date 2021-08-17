@@ -22,4 +22,6 @@ public interface DeclareAttachService extends IService<DeclareAttachEntity> {
     void remove(Map<String, Object> params);
 
     void delAttachLists(DeclareInfoModel declareInfoModel);
+
+    List<DeclareAttachEntity> queryAllAttach(Map<String, Object> params);
 }

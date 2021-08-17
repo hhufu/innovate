@@ -86,7 +86,7 @@
                 <span v-for="staff in item.matchStaffInfoEntities" v-text="staff.staffName+'  '" align="center"></span>
               </td>
               <td>
-                <span v-for="teacher in userTeacherInfoEntities">
+                <span v-for="teacher in item.userTeacherInfoEntities">
                   <span v-for="teacher2 in item.matchTeacherEntities"
                         v-if="teacher.userId === teacher2.userId"
                         v-text="teacher.sysUserEntity.name+'  '" align="center">

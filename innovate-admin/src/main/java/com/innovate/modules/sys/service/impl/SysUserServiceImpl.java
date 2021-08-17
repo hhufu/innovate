@@ -147,6 +147,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 		return baseMapper.updateState(userId, status);
 	}
 
+	@Override
+	public SysUserEntity queryByEmail(String email) {
+		return baseMapper.queryByEmail(email);
+	}
+
 	/**
 	 * 检查角色是否越权
 	 */

@@ -22,4 +22,5 @@ public interface FinishAttachDao extends BaseMapper<FinishAttachEntity> {
 
     void remove(Map<String, Object> params);
 
+    List<FinishAttachEntity> queryAllAttach(Map<String, Object> params);
 }

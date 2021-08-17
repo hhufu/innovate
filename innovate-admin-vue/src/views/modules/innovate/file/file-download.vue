@@ -17,7 +17,15 @@
       <el-form-item label="项目处于">
         <el-select v-model="processStatus" placeholder="请选择审核状态">
           <el-option
+            v-if="tabSelect === '1' || tabSelect === '2'"
             v-for="item in processStatusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+          <el-option
+            v-if="tabSelect === '3'"
+            v-for="item in finishStatusList"
             :key="item.value"
             :label="item.label"
             :value="item.value">
@@ -56,18 +64,17 @@
       </el-form-item>
     </el-form>
     <el-card>
-      <el-radio-group v-model="hasApply" >
-<!--        @change="getDataList"-->
+      <el-radio-group v-model="tabSelect" @change="getDataList">
         <el-radio label="1">双创赛事</el-radio>
-<!--        <el-radio label="2">大创立项</el-radio>-->
-<!--        <el-radio label="3">大创结题</el-radio>-->
+        <el-radio label="2">大创立项</el-radio>
+        <el-radio label="3">大创结题</el-radio>
       </el-radio-group>
     </el-card>
     <el-table
       :data="dataList"
       border
       v-loading="dataListLoading"
-      :default-sort="{prop: 'matchInfoEntity.matchId', order: 'ascending'}"
+      :default-sort="{prop: tabSelect === '1'?'matchInfoEntity.matchId': tabSelect === '2'?'declareInfoEntity.declareId':'finishInfoEntity.finishId', order: 'ascending'}"
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
@@ -87,7 +94,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="matchInfoEntity.matchName"
+        :prop="tabSelect === '1'?'matchInfoEntity.matchName': tabSelect === '2'?'declareInfoEntity.declareName':'finishInfoEntity.finishName'"
         header-align="center"
         align="center"
         label="项目名称">
@@ -114,7 +121,7 @@
 <!--        label="项目概述">-->
 <!--      </el-table-column>-->
       <el-table-column
-        prop="matchInfoEntity.projectAuditApplyStatus"
+        :prop="tabSelect === '1'?'matchInfoEntity.projectMatchApplyStatus': tabSelect === '2'?'declareInfoEntity.projectAuditApplyStatus':'finishInfoEntity.projectFinishApplyStatus'"
         header-align="center"
         :formatter="formatterProcess"
         align="center"
@@ -127,7 +134,7 @@
         label="文件">
         <template slot-scope="props">
           <el-row>
-            <el-col :span="21" v-for="item in props.row.matchAttachEntities">
+            <el-col :span="21" v-for="item in tabSelect === '1'?props.row.matchAttachEntities : tabSelect === '2'?props.row.declareAttachEntities : props.row.finishAttachEntities">
               <el-button size="mini" @click="attachDown(item.attachPath)">下载</el-button>
               <el-tag>{{ item.attachName }}</el-tag>
             </el-col>
@@ -161,6 +168,7 @@ export default {
       eventLists: this.$store.state.eventLists,
       sysTeacherEntities: [],
       hasApply: '1',
+      tabSelect: '1',// 菜单栏切换
       dataForm: {
         baseId: '',
         projectName: '',
@@ -179,6 +187,7 @@ export default {
         value: ''
       }],
       processStatus: 1,
+      // 双创赛事、大创立项的流程下拉列表
       processStatusList: [{
         label: '项目负责人提交',
         value:1
@@ -201,7 +210,30 @@ export default {
         label: '全部状态',
         value: 8
       }
-      ],// 流程下拉列表
+      ],
+      finishStatusList: [{
+        label: '项目负责人提交',
+        value:1
+      }, {
+        label: '指导老师审批',
+        value: 2
+      }, {
+        label: '二级学院审批',
+        value: 3
+      }, {
+        label: '管理员审批',
+        value: 4
+      }, {
+        label: '评委审批',
+        value: 5
+      }, {
+        label: '超级管理员审批',
+        value: 6
+      },{
+        label: '全部状态',
+        value: 8
+      }
+      ],// 大创结题流程下拉列表
       statusList: [
         {value: 1, label: '农、林、牧、渔业'}, {value: 2, label: '采矿业'},
         {value: 3, label: '制造业'}, {value: 4, label: '电力、热力、燃气及水的生产和供应业'},
@@ -254,44 +286,121 @@ export default {
       this.reApplyButtonVisible = 'false'
 
       this.$nextTick(() => {
-        this.$http({
-          url: this.$http.adornUrl('/innovate/match/info/list'),
-          method: 'get',
-          params: this.$http.adornParams({
-            'projectName': this.dataForm.projectName,
-            'instituteId': this.dataForm.instituteId,
-            'matchTime': this.dataForm.matchTime == null ? '' : this.dataForm.matchTime.getFullYear(),
-            'hasApply': '1',
-            'currPage': this.pageIndex,
-            'pageSize': this.pageSize,
-            'apply': this.processStatus === 8 ? null:'project_match_apply_status',
-            'applyStatus': this.processStatus === 8 ? null: this.processStatus,
-            'project_match_apply_status_more': this.processStatus === 8 ? 0: null,// 审核状态大于0,
-            'noPassStatus': this.noPass !== '' ? parseInt(this.noPass) : 0,
-            'noPass': this.noPass !== '' ? 'match_no_pass' : '',
-            'isAdmin': true,
-            'isDel': 0
-          })
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
-            this.attachTotal  = data.attachTotal
-          } else {
-            this.dataList = []
-            this.totalPage = 0
-          }
-          this.reApplyButtonVisible = 'false'
-          this.dataListLoading = false
-        })
+        switch (this.tabSelect) {
+            case '1':
+              this.$http({
+                url: this.$http.adornUrl('/innovate/match/info/list'),
+                method: 'get',
+                params: this.$http.adornParams({
+                  'projectName': this.dataForm.projectName,
+                  'instituteId': this.dataForm.instituteId,
+                  'matchTime': this.dataForm.matchTime == null ? '' : this.dataForm.matchTime.getFullYear(),
+                  'hasApply': '1',
+                  'currPage': this.pageIndex,
+                  'pageSize': this.pageSize,
+                  'apply': this.processStatus === 8 ? null:'project_match_apply_status',
+                  'applyStatus': this.processStatus === 8 ? null: this.processStatus,
+                  'project_match_apply_status_more': this.processStatus === 8 ? 0: null,// 审核状态大于0,
+                  'noPassStatus': this.noPass !== '' ? parseInt(this.noPass) : 0,
+                  'noPass': this.noPass !== '' ? 'match_no_pass' : '',
+                  'isAdmin': true,
+                  'isDel': 0
+                })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.dataList = data.page.list
+                  this.totalPage = data.page.totalCount
+                  this.attachTotal  = data.attachTotal
+                } else {
+                  this.dataList = []
+                  this.totalPage = 0
+                }
+                this.reApplyButtonVisible = 'false'
+                this.dataListLoading = false
+              })
+              break
+            case '2':
+              this.$http({
+                url: this.$http.adornUrl(`/innovate/declare/info/list`),
+                method: 'get',
+                params: this.$http.adornParams({
+                  'instituteId': this.dataForm.instituteId,
+                  'declareTime': this.dataForm.matchTime == null ? '' : this.dataForm.matchTime.getFullYear(),
+                  'project_audit_apply_status_more': this.processStatus === 8 ? 0: null,// 审核状态大于0
+                  'hasApply': '1',
+                  'apply': this.processStatus === 8 ? null:'project_audit_apply_status',
+                  'applyStatus': this.processStatus === 8 ? null: this.processStatus,
+                  'noPass': this.noPass !== '' ? 'audit_no_pass' : '',
+                  'noPassStatus':  this.noPass !== '' ? parseInt(this.noPass) : 0,
+                  'isDel': 0,
+                  'currPage': this.pageIndex,
+                  'pageSize': this.pageSize
+                  // 'isEr': true
+                })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.dataList = data.page.list
+                  this.totalPage = data.page.totalCount
+                  this.dataListLoading = false
+                } else {
+                  this.$message.error(data.msg)
+                  this.dataListLoading = false
+                }
+              })
+              break
+            case '3':
+              this.$http({
+                url: this.$http.adornUrl(`/innovate/finish/info/list`),
+                method: 'get',
+                params: this.$http.adornParams({
+                  'instituteId': this.dataForm.instituteId,
+                  'finishTime': this.dataForm.matchTime == null ? '' : this.dataForm.matchTime.getFullYear(),
+                  'currPage': this.pageIndex,
+                  'pageSize': this.pageSize,
+                  'userId': this.$store.state.user.id,
+                  'hasApply': 1,
+                  'noPass': 'finish_no_pass',
+                  'noPassStatus': this.noPass !== '' ? parseInt(this.noPass) : 0,
+                  'apply': 'project_finish_apply_status',
+                  'applyStatus': this.processStatus === 8 ? null: this.processStatus,
+                  'isDel': 0
+                })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.dataList = data.page.list
+                  this.totalPage = data.page.totalCount
+                  this.dataListLoading = false
+                  console.log(this.dataList)
+                } else {
+                  this.$message.error(data.msg)
+                }
+              })
+              break
+           default:
+             break
+        }
       })
     },
     // 转换流程进度名称
     formatterProcess(row) {
       var arr = ["项目负责人提交", "指导老师审批", "二级学院审批", "管理员分配评委组", "评委审批", "管理员审批"]
-      if (row.matchInfoEntity.matchNoPass == 1)
-        return "已退回（" + arr[row.matchInfoEntity.projectMatchApplyStatus - 1] + "）"
-      return arr[row.matchInfoEntity.projectMatchApplyStatus - 1]
+      var arr2 = ["项目负责人提交","指导老师审批", "二级学院审批", "管理员审批", "评委审批", "超级管理员审批"]
+      //双创赛事
+      if (row.matchInfoEntity != null){
+        if (row.matchInfoEntity.matchNoPass === 1)
+          return "已退回（" + arr[row.matchInfoEntity.projectMatchApplyStatus - 1] + "）"
+        return arr[row.matchInfoEntity.projectMatchApplyStatus - 1]
+      //大创立项
+      }else if (row.declareInfoEntity != null){
+        if (row.declareInfoEntity.auditNoPass === 1)
+          return "已退回（" + arr[row.declareInfoEntity.projectAuditApplyStatus - 1] + "）"
+        return arr[row.declareInfoEntity.projectAuditApplyStatus - 1]
+      //大创结题
+      }else {
+        if (row.finishInfoEntity.finishNoPass === 1)
+          return "已退回（" + arr2[row.finishInfoEntity.projectFinishApplyStatus - 1] + "）"
+        return arr2[row.finishInfoEntity.projectFinishApplyStatus - 1]
+      }
     },
     // 每页数
     sizeChangeHandle (val) {
@@ -391,9 +500,17 @@ export default {
       //   })
       //
       // }, 1500)
-      window.location.href = this.$http.adornUrl(
-        `/sys/oss/downloadFile?token=${this.$cookie.get('token')}&matchTime=${this.dataForm.matchTime.getFullYear()}`
-      )
+      let message = `确定对所有${this.tabSelect === '1'?'[双创赛事]':this.tabSelect === '2'?'[大创立项]':'[大创结题]'}附件进行导出操作?`
+      this.$confirm(message, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+            window.location.href = this.$http.adornUrl(
+              `/sys/oss/downloadFile?token=${this.$cookie.get('token')}&matchTime=${this.dataForm.matchTime.getFullYear()}&id=${this.tabSelect}`
+            )
+      })
+
       // this.$httpFile({
       //   url: this.$http.adornUrl(`/sys/oss/downloadFile`),
       //   method: 'post',

@@ -67,4 +67,9 @@ public class FinishAttachServiceImpl extends ServiceImpl<FinishAttachDao, Finish
 
         }
     }
+
+    @Override
+    public List<FinishAttachEntity> queryAllAttach(Map<String, Object> params) {
+        return baseMapper.queryAllAttach(params);
+    }
 }

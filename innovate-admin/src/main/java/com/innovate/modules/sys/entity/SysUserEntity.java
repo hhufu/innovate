@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * 系统用户
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:28:55
@@ -24,7 +24,7 @@ import java.util.List;
 @TableName("sys_user")
 public class SysUserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 用户ID
 	 */
@@ -75,13 +75,13 @@ public class SysUserEntity implements Serializable {
 	 * 所属部门
 	 * */
 	private Long instituteId;
-	
+
 	/**
 	 * 角色ID列表
 	 */
 	@TableField(exist=false)
 	private List<Long> roleIdList;
-	
+
 	/**
 	 * 创建者ID
 	 */
@@ -92,4 +92,9 @@ public class SysUserEntity implements Serializable {
 	 */
 	private Date createTime;
 
+	/**
+	 * 找回密码，邮箱验证码
+	 */
+	@TableField(exist=false)
+	private String captcha;
 }

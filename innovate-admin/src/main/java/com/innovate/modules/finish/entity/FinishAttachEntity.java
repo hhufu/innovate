@@ -1,5 +1,6 @@
 package com.innovate.modules.finish.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
@@ -20,4 +21,8 @@ public class FinishAttachEntity implements Serializable {
     private String attachName;
     private String attachPath;
     private Long isDel;
+    @TableField(exist = false)
+    private String declareName;
+    @TableField(exist = false)
+    private Integer declareGroupType;
 }

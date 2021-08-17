@@ -4,16 +4,16 @@
 <mapper namespace="com.innovate.modules.sys.dao.SysUserDao">
 	<!-- 查询用户的所有权限 -->
 	<select id="queryAllPerms" resultType="string">
-		select m.perms from sys_user_role ur 
-			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
-			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id 
+		select m.perms from sys_user_role ur
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
+			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id
 		where ur.user_id = #{userId}
 	</select>
 
 	<!-- 查询用户的所有菜单ID -->
 	<select id="queryAllMenuId" resultType="long">
-		select distinct rm.menu_id from sys_user_role ur 
-			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+		select distinct rm.menu_id from sys_user_role ur
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
 		where ur.user_id = #{userId}
 	</select>
 
@@ -75,6 +75,10 @@
 			</if>
 		</where>
 
+	</select>
+
+	<select id="queryByEmail" resultType="com.innovate.modules.sys.entity.SysUserEntity">
+		select * from sys_user where email = #{email}
 	</select>
 
 	<!-- 更新用户状态 -->

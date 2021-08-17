@@ -36,6 +36,19 @@ spring:
         max-wait: -1ms      # 连接池最大阻塞等待时间（使用负值表示没有限制）
         max-idle: 10      # 连接池中的最大空闲连接
         min-idle: 5       # 连接池中的最小空闲连接
+  # 邮件发送
+  mail:
+    username: gxuwz_edu@163.com
+    #邮箱授权码
+    password: MMLCMANZMUQSYGJH
+    host: smtp.163.com
+    default-encoding: utf-8
+    #开启加密验证
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: ture
   mvc:
     throw-exception-if-no-handler-found: true
     static-path-pattern: /static/**

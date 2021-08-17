@@ -22,4 +22,5 @@ public interface DeclareAttachDao extends BaseMapper<DeclareAttachEntity> {
 
     void remove(Map<String, Object> params);
 
+    List<DeclareAttachEntity> queryAllAttach(Map<String, Object> params);
 }
