@@ -29,24 +29,6 @@
         </where>
     </select>
 
-
-    <select id="queryDCByTime" resultType="DeclareAttachEntity" parameterType="map">
-        SELECT
-        i.institute_name AS instituteName,
-        b.declare_name AS declareName,
-        b.declare_type AS declareGroupType,
-        a.*
-        FROM innovate_declare_attach AS a left join innovate_declare_info AS b
-        on a.declare_id = b.declare_id
-        LEFT JOIN innovate_sys_institute AS i
-        on i.institute_id = b.institute_id
-        WHERE
-        b.audit_no_pass = 0 AND
-        b.project_audit_apply_status > 0 AND
-        b.declare_time >= #{beginTime} AND
-        b.declare_time &lt; #{endTime}
-    </select>
-
     <update id="remove" parameterType="map">
         update innovate_declare_attach
         set is_del = 1

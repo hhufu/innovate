@@ -11,11 +11,9 @@
         b.match_group_type AS matchGroupType,
         a.*
         FROM
-        innovate_match_attach AS a
-        LEFT JOIN
+        innovate_match_attach AS a left join
         innovate_match_info AS b on a.match_id = b.match_id,
-        innovate_sys_institute AS i
-        LEFT JOIN
+        innovate_sys_institute AS i LEFT JOIN
         sys_user d on i.institute_id = d.institute_id
         <where>
             1 = 1
@@ -33,25 +31,6 @@
         </if>
     </select>
 
-    <select id="queryMatchByTime" resultType="com.innovate.modules.match.entity.MatchAttachEntity" parameterType="map">
-        SELECT
-        i.institute_name AS instituteName,
-        b.match_name AS matchName,
-        b.match_group_type AS matchGroupType,
-        a.*
-        FROM
-        innovate_match_attach AS a LEFT JOIN innovate_match_info AS b
-        ON a.match_id = b.match_id,
-        innovate_sys_institute AS i LEFT JOIN sys_user d
-        ON i.institute_id = d.institute_id
-        WHERE
-        b.match_time >= #{beginTime}
-        AND b.match_time &lt;= #{endTime}
-        AND b.match_no_pass = 0
-        AND b.project_match_apply_status > 0
-        AND b.project_user_id = d.user_id
-        AND a.is_del = 0
-    </select>
 
     <update id="remove" parameterType="map">
         update innovate_match_attach
