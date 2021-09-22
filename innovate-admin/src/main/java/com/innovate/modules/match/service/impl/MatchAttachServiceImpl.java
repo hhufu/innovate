@@ -20,6 +20,11 @@ import java.util.Map;
 @Service
 public class MatchAttachServiceImpl extends ServiceImpl<MatchAttachDao, MatchAttachEntity> implements MatchAttachService {
     @Override
+    public List<MatchAttachEntity> queryMatchByTime(Map<String, Object> params) {
+        return baseMapper.queryMatchByTime(params);
+    }
+
+    @Override
     public List<MatchAttachEntity> queryAll(Map<String, Object> params) {
         return baseMapper.queryAll(params);
     }

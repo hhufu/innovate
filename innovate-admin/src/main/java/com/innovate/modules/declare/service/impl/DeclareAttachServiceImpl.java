@@ -54,4 +54,9 @@ public class DeclareAttachServiceImpl extends ServiceImpl<DeclareAttachDao, Decl
     public List<DeclareAttachEntity> queryAllAttach(Map<String, Object> params) {
         return baseMapper.queryAllAttach(params);
     }
+
+    @Override
+    public List<DeclareAttachEntity> queryDCByTime(Map<String, Object> params) {
+        return baseMapper.queryDCByTime(params);
+    }
 }

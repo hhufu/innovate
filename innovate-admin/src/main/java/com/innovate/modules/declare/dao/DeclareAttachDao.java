@@ -23,4 +23,7 @@ public interface DeclareAttachDao extends BaseMapper<DeclareAttachEntity> {
     void remove(Map<String, Object> params);
 
     List<DeclareAttachEntity> queryAllAttach(Map<String, Object> params);
+
+    //双创日期范围查询
+    List<DeclareAttachEntity> queryDCByTime(Map<String, Object> params);
 }

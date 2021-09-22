@@ -23,4 +23,7 @@ public interface FinishAttachDao extends BaseMapper<FinishAttachEntity> {
     void remove(Map<String, Object> params);
 
     List<FinishAttachEntity> queryAllAttach(Map<String, Object> params);
+
+    //查询范围内大创结题
+    List<FinishAttachEntity> queryDcConclusion(Map<String, Object> params);
 }

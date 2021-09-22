@@ -32,6 +32,7 @@
           </el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item label="项目状态">
         <el-select v-model="noPass" placeholder="请选择状态" clearable>
           <el-option
@@ -42,17 +43,24 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-date-picker
-          v-model="dataForm.matchTime"
-          align="right"
-          type="year"
-          placeholder="请选择年度">
-        </el-date-picker>
-      </el-form-item>
+
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
       </el-form-item>
+
+      <el-form-item>
+        <el-date-picker
+          v-model="SelectTime"
+          type="datetimerange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+          :default-time="['12:00:00']">
+        </el-date-picker>
+
+      </el-form-item>
+
+
 <!--      <el-form-item :label="'文件总数：' + attachTotal + '个  下载文件开始处：'">-->
 <!--        <el-input-number v-model="pageI" :step="1" step-strictly></el-input-number>-->
 <!--      </el-form-item>-->
@@ -162,13 +170,14 @@
 export default {
   data () {
     return {
+      SelectTime: null,  // 选择起始时间和结束时间
       canUpdateVisibles: false,
       retreatVisible: false,
       projectList: [],
       eventLists: this.$store.state.eventLists,
       sysTeacherEntities: [],
       hasApply: '1',
-      tabSelect: '1',// 菜单栏切换
+      tabSelect: '1', // 菜单栏切换
       dataForm: {
         baseId: '',
         projectName: '',
@@ -264,7 +273,7 @@ export default {
       applyVisible: false,
       reviewAddOrUpdateVisible: false,
       reApplyButtonVisible: 'false',
-      totalFile: 0,//下载文件个数
+      totalFile: 0, // 下载文件个数
       percent: 0, // 已下载个数
       pageI: 1,
       pageS: 10,
@@ -482,6 +491,7 @@ export default {
     },
     // 下载全部文件
     attachDownAll () {
+
       // let timer = new Function();
       // this.$notify({
       //   title: '文件正在下载中...',
@@ -500,6 +510,11 @@ export default {
       //   })
       //
       // }, 1500)
+      if (this.SelectTime === null) {
+        this.$message({ type: 'warning', message: '请选择日期范围!' })
+        return
+      }
+
       let message = `确定对所有${this.tabSelect === '1'?'[双创赛事]':this.tabSelect === '2'?'[大创立项]':'[大创结题]'}附件进行导出操作?`
       this.$confirm(message, '提示', {
         confirmButtonText: '确定',
@@ -507,10 +522,9 @@ export default {
         type: 'warning'
       }).then(() => {
             window.location.href = this.$http.adornUrl(
-              `/sys/oss/downloadFile?token=${this.$cookie.get('token')}&matchTime=${this.dataForm.matchTime.getFullYear()}&id=${this.tabSelect}`
+              `/sys/oss/downloadFile?token=${this.$cookie.get('token')}&matchTime=${this.dataForm.matchTime.getFullYear()}&id=${this.tabSelect}&beginTime=${this.SelectTime[0]}&endTime=${this.SelectTime[1]}`
             )
       })
-
       // this.$httpFile({
       //   url: this.$http.adornUrl(`/sys/oss/downloadFile`),
       //   method: 'post',
@@ -556,7 +570,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.detail.init(id)
       })
-    }
+    },
   }
 }
 </script>
