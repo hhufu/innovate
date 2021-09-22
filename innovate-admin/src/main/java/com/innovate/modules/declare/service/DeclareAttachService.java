@@ -24,4 +24,7 @@ public interface DeclareAttachService extends IService<DeclareAttachEntity> {
     void delAttachLists(DeclareInfoModel declareInfoModel);
 
     List<DeclareAttachEntity> queryAllAttach(Map<String, Object> params);
+
+    //双创日期范围查询
+    List<DeclareAttachEntity> queryDCByTime(Map<String, Object> params);
 }

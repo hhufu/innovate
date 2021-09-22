@@ -51,10 +51,15 @@ public class DeclareAttachController extends AbstractController {
 
 //        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + declareName + "/"+ RandomUtils.getRandomNums() + "/";
         String UPLOAD_FILES_PATH = "declare"+File.separator + Calendar.getInstance().get(Calendar.YEAR) + File.separator+declareName + "/"+ RandomUtils.getRandomNums() + "/";
+
         if (Objects.isNull(files) || files.isEmpty()) {
             return R.error("文件为空，请重新上传");
         }
+
+        System.out.println(UPLOAD_FILES_PATH);
+
         DeclareAttachEntity declareAttachEntity = null;
+
         for(MultipartFile file : files){
             String fileName = file.getOriginalFilename();
             OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
@@ -64,6 +69,7 @@ public class DeclareAttachController extends AbstractController {
             declareAttachEntity.setAttachName(fileName);
             declareAttachEntity.setIsDel(0L);
         }
+
         return R.ok("文件上传成功").put("declareAttachEntity", declareAttachEntity);
     }
 

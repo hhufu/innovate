@@ -3,7 +3,7 @@
 
 <mapper namespace="com.innovate.modules.innovate.dao.InnovateReviewGroupUserDao">
 
-    <select id="queryAllByGroupId" resultType="InnovateReviewGroupUserEntity">
+    <select id="queryAllByGroupId" resultType="com.innovate.modules.innovate.entity.InnovateReviewGroupUserEntity">
         select * from innovate_review_group_user
         where group_id = #{groupId}
     </select>

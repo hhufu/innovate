@@ -27,4 +27,7 @@ public interface FinishAttachService extends IService<FinishAttachEntity> {
     void delAttachLists(FinishInfoModel finishInfoModel);
 
     List<FinishAttachEntity> queryAllAttach(Map<String, Object> params);
+
+    //查询范围内大创结题
+    List<FinishAttachEntity> queryDcConclusion(Map<String, Object> params);
 }

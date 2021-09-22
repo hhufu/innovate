@@ -114,7 +114,6 @@ public class SysOssController{
 		return R.ok();
 	}
 
-
 	/**
 	 * 上传文件
 	 */
@@ -174,6 +173,7 @@ public class SysOssController{
 		}
 	}
 
+
 	/**
 	 * 下载服务器所有附件
 	 * @param response
@@ -181,30 +181,31 @@ public class SysOssController{
 	 */
 	@GetMapping(value = "/downloadFile")
 	@RequiresPermissions("sys:oss:all")
-	public void downloadFile2(final HttpServletResponse response, final HttpServletRequest request, String matchTime, String id) {
+	public void downloadFile2(final HttpServletResponse response, final HttpServletRequest request, String matchTime, String id, String beginTime,String endTime) throws Exception{
+
 		try {
 			Map<String, Object> params = new HashMap<>();
 			params.put("matchTime", matchTime);
+			params.put("beginTime",beginTime);
+			params.put("endTime",endTime);
+
 			switch (id){
 				case "1":
-					List<MatchAttachEntity> matchAttachEntities = new ArrayList<>();
-					matchAttachEntities = matchAttachService.queryAll(params);
+					List<MatchAttachEntity> matchAttachEntities = matchAttachService.queryMatchByTime(params);
 					if (matchAttachEntities.size() == 0){
 						return;
 					}
 					ZipUtils.toZip2(matchAttachEntities, response.getOutputStream(), ShiroUtils.getSession());
 					break;
 				case "2":
-					List<DeclareAttachEntity> declareAttachEntities = new ArrayList<>();
-					declareAttachEntities = declareAttachService.queryAllAttach(params);
+					List<DeclareAttachEntity> declareAttachEntities =  declareAttachService.queryDCByTime(params);
 					if (declareAttachEntities.size() == 0){
 						return;
 					}
 					ZipUtils.toZip2(declareAttachEntities, response.getOutputStream(), ShiroUtils.getSession());
 					break;
 				case "3":
-					List<FinishAttachEntity> finishAttachEntities = new ArrayList<>();
-					finishAttachEntities = finishAttachService.queryAllAttach(params);
+					List<FinishAttachEntity> finishAttachEntities =  finishAttachService.queryDcConclusion(params);
 					if (finishAttachEntities.size() == 0){
 						return;
 					}
@@ -216,6 +217,8 @@ public class SysOssController{
 			e.printStackTrace();
 		}
 	}
+
+
 	/**
 	 * 删除所有附件
 	 */
