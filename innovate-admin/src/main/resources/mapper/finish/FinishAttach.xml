@@ -27,6 +27,24 @@
         </where>
     </select>
 
+    <select id="queryDcConclusion" resultType="FinishAttachEntity" parameterType="map">
+        SELECT
+        b.finish_name AS declareName,
+        b.finish_type AS declareGroupType,
+        a.*
+        FROM
+        innovate_finish_attach AS a left join
+        innovate_finish_info AS b
+        on a.finish_id = b.finish_id
+        WHERE
+        b.finish_no_pass = 0 AND
+        b.project_finish_apply_status > 0 AND
+        b.finish_time>= #{beginTime}  AND
+        b.finish_time &gt; #{endTime}
+    </select>
+
+
+
     <update id="remove" parameterType="map">
         update innovate_finish_attach
         set is_del = 1

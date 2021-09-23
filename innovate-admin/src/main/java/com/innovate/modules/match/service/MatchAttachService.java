@@ -16,6 +16,8 @@ import java.util.Map;
  */
 public interface MatchAttachService extends IService<MatchAttachEntity> {
 
+    List<MatchAttachEntity> queryMatchByTime(Map<String, Object> params);
+
     List<MatchAttachEntity> queryAll(Map<String, Object> params);
 
     void remove(Map<String, Object> params);
