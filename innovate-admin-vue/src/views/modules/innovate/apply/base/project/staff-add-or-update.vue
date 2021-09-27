@@ -55,9 +55,9 @@
       <el-form-item label="企业职务" prop="staffPost">
         <el-input v-model="dataForm.staffPost" placeholder="请输入"></el-input>
       </el-form-item>
-<!--      <el-form-item label="身份证号" prop="staffIdentify">-->
-<!--        <el-input v-model="dataForm.staffIdentify" placeholder="请输入"></el-input>-->
-<!--      </el-form-item>-->
+      <el-form-item label="身份证号" prop="staffIdentify">
+        <el-input v-model="dataForm.staffIdentify" placeholder="请输入"></el-input>
+      </el-form-item>
       <el-form-item label="联系电话" prop="staffTel">
         <el-input v-model="dataForm.staffTel" placeholder="请输入"></el-input>
       </el-form-item>
@@ -135,6 +135,9 @@
           ],
           staffSex: [
             { required: true, message: '请选择性别', trigger: 'blur' }
+          ],
+          staffIdentify: [
+            { required: true, message: '身份证号不能为空', trigger: 'blur' }
           ],
           staffClassNo: [
             { required: true, message: '班级不能为空', trigger: 'blur' }
