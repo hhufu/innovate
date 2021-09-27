@@ -1,5 +1,6 @@
 package com.innovate.modules.innovate.controller;
 
+import com.innovate.common.utils.OSSUtils;
 import com.innovate.common.utils.R;
 import com.innovate.modules.innovate.config.ConfigApi;
 import com.innovate.modules.innovate.entity.ProjectAttachEntity;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -40,28 +42,19 @@ public class ProjectAttachController extends AbstractController {
     @RequiresPermissions("innovate:project:save")
     public Object uploadFile(@RequestParam("file") List<MultipartFile> files, final HttpServletRequest request) {
         String projectName = request.getParameter("projectName");
-        String UPLOAD_FILES_PATH = ConfigApi.UPLOAD_URL + projectName + "/" + RandomUtils.getRandomNums() + "/";
+        String UPLOAD_FILES_PATH = "project"+File.separator + Calendar.getInstance().get(Calendar.YEAR) + File.separator+projectName + "/"+ RandomUtils.getRandomNums() + "/";
         if (Objects.isNull(files) || files.isEmpty()) {
             return R.error("文件为空，请重新上传");
         }
         ProjectAttachEntity projectAttachEntity = null;
         for(MultipartFile file : files){
             String fileName = file.getOriginalFilename();
-            String result = null;
-            try {
-                result = FileUtils.upLoad(UPLOAD_FILES_PATH, fileName, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (!result.equals("true")) {
-                R.error(result);
-            }
+            OSSUtils.upload2OSS(file,UPLOAD_FILES_PATH+fileName);
             UPLOAD_FILES_PATH += fileName;
             projectAttachEntity = new ProjectAttachEntity();
             projectAttachEntity.setAttachPath(UPLOAD_FILES_PATH);
             projectAttachEntity.setAttachName(fileName);
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-            projectAttachEntity.setAttachTime(df.format(new Date()));// new Date()为获取当前系统时间
+            projectAttachEntity.setIsDel(0L);
         }
         return R.ok("文件上传成功")
                 .put("projectAttachEntity", projectAttachEntity);
