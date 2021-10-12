@@ -171,6 +171,10 @@
             and a.enterprise_type = #{enterpriseType}
         </if>
 
+        <if test="projectName != null and projectName != ''">
+            and a.project_name like concat('%', #{projectName}, '%')
+        </if>
+
 --         评委
         <if test="hasReview != null and hasReview != '' and apply != '' and apply != null">
             and c.apply = #{apply}

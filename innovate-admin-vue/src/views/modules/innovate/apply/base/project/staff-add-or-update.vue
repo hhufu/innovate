@@ -28,7 +28,10 @@
             class="upload-demo"
             :action="url"
             :data="{projectName: dataForm.projectName}"
-            :on-success="successHandle1">
+            :on-success="successHandle2"
+            :limit="1"
+            :file-list="compact"
+          >
             <el-tooltip class="item" effect="dark" content="以附件形式上传提交上传合同的扫描件" placement="bottom-end">
               <el-button size="small" type="primary">点击上传合同</el-button>
             </el-tooltip>
@@ -67,7 +70,10 @@
             class="upload-demo"
             :action="url"
             :data="{projectName: dataForm.projectName}"
-            :on-success="successHandle1">
+            :on-success="successHandle1"
+            :limit="1"
+            :file-list="stuCard"
+          >
           <el-tooltip class="item" effect="dark" content="以附件形式上传提交上传学生证的扫描件" placement="bottom-end">
             <el-button size="small" type="primary">点击上传学生证</el-button>
           </el-tooltip>
@@ -95,6 +101,10 @@
         }
       }
       return {
+        // 合同，需为数组
+        compact: [],
+        // 学生证,需为数组
+        stuCard: [],
         url: '',
         visible: false,
         typeList: [{
@@ -154,6 +164,9 @@
     },
     methods: {
       init (item, index) {
+        // 先清空
+        this.stuCard = []
+        this.compact = []
         this.url = this.$http.adornUrl(`/innovate/project/attach/upload?token=${this.$cookie.get('token')}`)
         this.visible = true
         this.id = index || 0
@@ -162,7 +175,17 @@
           this.$refs['dataForm'].resetFields()
           this.id = index || 0
           if (this.id) {
+            // 附件回显
+            this.stuCard.push({
+                name: item.staffStuCard.substring(item.staffStuCard.lastIndexOf('/') + 1),
+                url: item.staffStuCard,
+            })
+            this.compact.push({
+                name: item.staffCompact.substring(item.staffCompact.lastIndexOf('/') + 1),
+                url: item.staffCompact,
+            })
             this.dataForm = JSON.parse(JSON.stringify(item))
+            console.log(this.dataForm)
           }
         })
       },
@@ -181,7 +204,7 @@
       // 上传学生证成功
       successHandle1 (response, file, fileList) {
         if (response && response.code === 0) {
-          // this.staffStuCard = response.projectAttachEntity.attachPath;
+          this.dataForm.staffStuCard = response.projectAttachEntity.attachPath
         } else {
           this.$message.error(response.msg)
         }
@@ -189,7 +212,7 @@
       // 上传合同成功
       successHandle2 (response, file, fileList) {
         if (response && response.code === 0) {
-          // this.staffCompact = response.projectAttachEntity.attachPath
+          this.dataForm.staffCompact = response.projectAttachEntity.attachPath
         } else {
           this.$message.error(response.msg)
         }

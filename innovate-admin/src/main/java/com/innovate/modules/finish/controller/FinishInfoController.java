@@ -95,7 +95,7 @@ public class FinishInfoController extends AbstractController {
         int code = finishInfoModelService.saveEntity(finishInfoModel);
         return R.ok()
                 .put("code", code)
-                .put("msg", "今年您已结过题！");
+                .put("msg", "已有结题信息！");
     }
 
     /**

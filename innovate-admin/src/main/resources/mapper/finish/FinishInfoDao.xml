@@ -21,7 +21,7 @@
             inner join innovate_finish_teacher b on a.finish_id = b.finish_id
         </if>
 
-        <if test="isEr != null and isEr != ''">
+        <if test="isEr != null and isEr != '' or isAdmin == 1 ">
             inner join sys_user b on a.project_user_id = b.user_id
             inner join innovate_user_person_info c on c.user_id = b.user_id
         </if>
@@ -111,9 +111,9 @@
         <if test="hasApply != null and hasApply == 10">
             and b.score is null
         </if>
-        <!--年度-->
-        <if test="finishTime != null and finishTime != ''">
-            and a.finish_time like CONCAT('%',#{finishTime},'%')
+        <!--流程项目设置的时间-->
+        <if test="startTime != null and endTime != null">
+            and a.finish_time between #{startTime} and #{endTime}
         </if>
         <!--项目名称-->
         <if test="projectName != null and projectName != ''">
@@ -144,7 +144,7 @@
             inner join innovate_finish_teacher b on a.finish_id = b.finish_id
         </if>
 
-        <if test="isEr != null and isEr != ''">
+        <if test="isEr != null and isEr != '' or isAdmin == 1 ">
             inner join sys_user b on a.project_user_id = b.user_id
             inner join innovate_user_person_info c on c.user_id = b.user_id
         </if>

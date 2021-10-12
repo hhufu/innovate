@@ -266,8 +266,8 @@
             <td>{{item.staffPost}}</td>
             <td>{{item.staffTel}}</td>
             <td>{{item.staffClassNo}}</td>
-            <td><button v-if="item.staffStuCard!==''" @click="staffAttachDown(item.staffStuCard,item.staffName+'学生证')">下载</button></td>
-            <td><button v-if="item.staffCompact!==''" @click="staffAttachDown(item.staffCompact,item.staffName+'合同')">下载</button></td>
+            <td><button v-if="item.staffStuCard!==''" @click="staffAttachDown(item.staffStuCard)">下载</button></td>
+            <td><button v-if="item.staffCompact!==''" @click="staffAttachDown(item.staffCompact)">下载</button></td>
           </tr>
         </template>
         <!--员工信息结束-->
@@ -680,7 +680,9 @@
           console.log(err)
         })
       },
-      staffAttachDown (path, fileName) {
+      staffAttachDown (path) {
+        let fileName = path.substring(path.lastIndexOf('/') + 1)
+        console.log(fileName)
         this.$httpFile({
           url: this.$httpFile.adornUrl(`/innovate/project/attach/download`),
           method: 'post',

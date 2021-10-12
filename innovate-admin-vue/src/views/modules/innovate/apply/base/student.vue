@@ -2,7 +2,7 @@
   <div class="mod-user">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.userName" placeholder="项目名" clearable></el-input>
+        <el-input v-model="dataForm.projectName" placeholder="项目名" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -186,6 +186,7 @@
         projectList: [],
         userTeacherInfoEntities: [],
         dataForm: {
+          projectName: '',
           baseId: '',
           enterpriseType: 1,
           idDel: 0
@@ -248,13 +249,14 @@
           url: this.$http.adornUrl('/innovate/project/info/list'),
           method: 'get',
           params: this.$http.adornParams({
-            'username': this.dataForm.userName,
+            'projectName': this.dataForm.projectName,
             'currPage': this.pageIndex,
             'pageSize': this.pageSize,
             'userId': this.$store.state.user.id,
             'enterpriseType': this.dataForm.enterpriseType,
             // 'isTeacher': true
-            'isStudent': true,
+            // 管理员和超管则传空
+            'isStudent': this.isAuth('innovate:institute:list') ? null : true,
             // 'apply': 'project_audit_apply_status',
             // 'applyStatus': 3,
             'isDel': 0

@@ -64,7 +64,6 @@ public class ZipUtils {
      * @throws RuntimeException 压缩失败会抛出运行时异常
      */
     public static void toZip2(List<?> m, OutputStream out, Session session) throws Exception {
-        long start = System.currentTimeMillis();
         ZipOutputStream zos = null;
         session.setAttribute("totalFile", m.size());
 
@@ -87,7 +86,6 @@ public class ZipUtils {
 
                 session.setAttribute("percent", i);
                 File file = OSSUtils.downloadFileFromOSS(mm.getAttachPath(), mm.getAttachName());
-                System.out.println(file);
                 i++;
                 byte[] buf = new byte[BUFFER_SIZE];
 
@@ -156,9 +154,6 @@ public class ZipUtils {
                 in.close();
             }
         }
-        long end = System.currentTimeMillis();
-        System.out.println("压缩完成，耗时：" + (end - start) + " ms");
-
         try {
             zos.close();
         } catch (IOException e) {

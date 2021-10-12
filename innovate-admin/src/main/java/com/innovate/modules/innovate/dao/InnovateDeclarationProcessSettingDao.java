@@ -24,4 +24,6 @@ public interface InnovateDeclarationProcessSettingDao extends BaseMapper<Innovat
     int queryEndTime(Map<String, Object> params);
 
     InnovateDeclarationProcessSettingEntity selectByTime(Map<String, Object> params);
+
+    InnovateDeclarationProcessSettingEntity queryNew();
 }

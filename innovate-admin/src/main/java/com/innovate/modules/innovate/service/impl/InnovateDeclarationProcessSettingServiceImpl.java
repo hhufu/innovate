@@ -51,4 +51,14 @@ public class InnovateDeclarationProcessSettingServiceImpl extends ServiceImpl<In
         return baseMapper.selectByTime(params);
     }
 
+    /**
+     * 查询最新的大创结题申报流程时间
+     * @return 结果
+     */
+    @Override
+    public InnovateDeclarationProcessSettingEntity queryNew() {
+        return baseMapper.queryNew();
+    }
+
+
 }

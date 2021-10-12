@@ -25,5 +25,11 @@ public interface InnovateDeclarationProcessSettingService extends IService<Innov
     int queryEndTime(Map<String, Object> params);
 
     InnovateDeclarationProcessSettingEntity selectByTime(Map<String, Object> params);
+
+    /**
+     * 查询最新的大创结题申报流程时间
+     * @return 结果
+     */
+    InnovateDeclarationProcessSettingEntity queryNew();
 }
 

@@ -3,8 +3,10 @@ package com.innovate.modules.finish.service.impl;
 import com.innovate.common.utils.PageUtils;
 import com.innovate.modules.finish.entity.*;
 import com.innovate.modules.finish.service.*;
+import com.innovate.modules.innovate.entity.InnovateDeclarationProcessSettingEntity;
 import com.innovate.modules.innovate.entity.UserPersonInfoEntity;
 import com.innovate.modules.innovate.entity.UserTeacherInfoEntity;
+import com.innovate.modules.innovate.service.InnovateDeclarationProcessSettingService;
 import com.innovate.modules.innovate.service.UserPerInfoService;
 import com.innovate.modules.innovate.service.UserTeacherInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class FinishInfoModelServiceImpl implements FinishInfoModelService {
     private UserTeacherInfoService userTeacherInfoService;
     @Autowired
     private FinishReviewService finishReviewService;
+    @Autowired
+    private InnovateDeclarationProcessSettingService settingService;
 
     private List<FinishTeacherEntity> finishTeacherEntities;
     private List<UserTeacherInfoEntity> userTeacherInfoEntities;
@@ -114,8 +118,10 @@ public class FinishInfoModelServiceImpl implements FinishInfoModelService {
     public Integer saveEntity(FinishInfoModel finishInfoModel) {
         Calendar cal = Calendar.getInstance();
         Map<String, Object> param = new HashMap<>();
+        InnovateDeclarationProcessSettingEntity settingEntity = settingService.queryNew();
+        param.put("startTime",settingEntity.getStartTime());
+        param.put("endTime",settingEntity.getEndTime());
         param.put("declareId", finishInfoModel.getFinishInfoEntity().getDeclareId());
-        param.put("finishTime", cal.get(Calendar.YEAR));
         param.put("isDel", 0);
         int i = finishInfoService.queryCountPage(param);
         if(i == 0){

@@ -209,6 +209,8 @@
           url: this.$http.adornUrl(`/innovate/finish/info/list`),
           method: 'get',
           params: this.$http.adornParams({
+            // 管理员和超管
+            'isAdmin': this.isAuth('innovate:institute:list') ? 1 : 0,
             'instituteId': this.dataForm.instituteId,
             'finishTime': this.dataForm.finishTime == null ? '' : this.dataForm.finishTime.getFullYear(),
             'currPage': this.pageIndex,

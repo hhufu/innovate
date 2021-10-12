@@ -37,4 +37,9 @@
         and #{time} between start_time and end_time
     </select>
 
+    <select id="queryNew"
+            resultType="innovateDeclarationProcessSettingEntity">
+        select max(start_time) as startTime, max(end_time) as endTime from innovate_declaration_process_setting where declare_process_name = 2
+    </select>
+
 </mapper>
